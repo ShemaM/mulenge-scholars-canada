@@ -1,0 +1,88 @@
+/* MSNC v3 - Midnight Executive Theme */
+
+:root {
+  /* 1. Deep Neutral Foundation (Slightly Dark) */
+  --theme-bg: #0f172a;           /* Slate 900: Deep, authoritative background */
+  --theme-elevation-50: #1e293b;  /* Slate 800: Card backgrounds */
+  --theme-elevation-100: #334155; /* Slate 700: Borders and input strokes */
+  
+  /* Text & Contrast Fixes */
+  --theme-text: #f8fafc;         /* Slate 50: High-contrast primary text */
+  --theme-text-muted: #94a3b8;   /* Slate 400: Clear secondary text */
+  
+  /* 2. MSNC Brand Identity */
+  /* Navy deepened for dark mode to maintain 4.5:1 against Slate 50 */
+  --theme-primary: #38bdf8;      /* Sky 400: Brighter blue for actions in dark mode */
+  --theme-primary-hover: #7dd3fc;
+  
+  /* Sidebar & Navigation (Keep Brand Navy) */
+  --theme-nav-bg: #002147;       /* The MSNC Navy remains the anchor */
+  --theme-nav-text: #f1f5f9;
+  --theme-nav-item-active-bg: #0369a1; /* Sky 700 */
+  --theme-nav-item-active-text: #ffffff;
+
+  /* 3. Status & Accents (Accessible on Dark) */
+  --theme-error-400: #f87171;    /* Red 400: Vibrancy over dark bg */
+  --theme-success-400: #4ade80;  /* Green 400 */
+  --theme-warning-400: #fbbf24;
+
+  /* Typography */
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-header: 'Playfair Display', serif;
+}
+
+/* 4. Editorial UI Enhancements */
+
+/* Force Sidebar contrast */
+.nav {
+  padding: 2.5rem 1.25rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  
+  &__group-label {
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    font-weight: 900;
+    font-size: 0.7rem;
+    color: #64748b; /* Slate 500: Perfectly legible on Navy */
+    margin-bottom: 1.25rem;
+    margin-top: 2rem;
+  }
+}
+
+/* Button Refinement */
+.btn {
+  border-radius: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: transform 0.2s ease, filter 0.2s ease;
+
+  &--style-primary {
+    background-color: var(--theme-primary);
+    color: #002147 !important; /* Navy text on Sky button for max contrast */
+    box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.2);
+    
+    &:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.1);
+    }
+  }
+}
+
+/* Table & List View Contrast */
+.list-controls {
+  background: var(--theme-elevation-50);
+  border-bottom: 1px solid var(--theme-elevation-100);
+}
+
+/* Input Styles */
+input, select, textarea {
+  background-color: #1e293b !important;
+  border: 1px solid #334155 !important;
+  color: #f8fafc !important;
+  
+  &:focus {
+    border-color: var(--theme-primary) !important;
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.1) !important;
+  }
+}

@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+/* 1. THEME DEFINITION - MSNC BRAND DESIGN SYSTEM v3 */
+@theme {
+  /* Core Brand Colors - High Contrast (AA/AAA Compliant) */
+  --color-background: #ffffff;
+  --color-foreground: #0f172a; /* Slate 900: Perfect for long-form reading */
+
+  /* MSNC Navy (#002147) - High Contrast on White: 15.3:1 */
+  --color-primary: #002147;
+  --color-primary-foreground: #ffffff;
+
+  /* Sky Blue - Deepened to Slate/Sky 700 to pass 4.5:1 on White */
+  --color-secondary: #0369a1; 
+  --color-secondary-foreground: #ffffff;
+
+  /* Canadian Red - Deepened to Red 600 for Accessibility */
+  --color-accent: #dc2626;
+  --color-accent-foreground: #ffffff;
+
+  /* Neutral UI Tokens - Solid values prevent contrast failure */
+  --color-muted: #f8fafc;
+  --color-muted-foreground: #475569; /* Slate 600: Minimum for sub-text */
+  --color-border: #e2e8f0; /* Slate 200 */
+  --color-input: #e2e8f0;
+  --color-ring: #0369a1;
+
+  /* Editorial Typography */
+  --font-sans: 'Inter', ui-sans-serif, system-ui;
+  --font-display: 'Playfair Display', ui-serif, Georgia;
+  --font-syne: 'Syne', sans-serif;
+
+  /* Custom Design Tokens */
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2.5rem;
+  
+  --shadow-brand: 0 20px 40px -15px rgba(0, 33, 71, 0.12);
+  --shadow-editorial: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+}
+
+/* 2. BASE STYLES - Global Reset & Accessibility */
+@layer base {
+  * {
+    border-color: var(--color-border);
+    /* Improve focus visibility for keyboard navigation */
+    outline-color: var(--color-ring);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* High-Impact Editorial Typography */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    color: var(--color-primary);
+    line-height: 1.1;
+  }
+
+  p {
+    /* Solid Slate 700 for body prose: Excellent readability */
+    color: #334155; 
+    max-width: 75ch; /* Optimal line length for reading */
+  }
+
+  /* Accessible Selection Color */
+  ::selection {
+    background-color: #0369a1;
+    color: white;
+  }
+}
+
+/* 3. COMPONENTS - Editorial Layout System */
+@layer components {
+  .container-editorial {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .container-editorial { padding: 0 3rem; }
+  }
+
+  .glass {
+    backdrop-filter: blur(16px);
+    background-color: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(226, 232, 240, 0.5);
+    box-shadow: var(--shadow-editorial);
+  }
+
+  /* Button Overrides for high-contrast */
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-secondary transition-colors duration-300;
+  }
+}
+
+/* 4. UTILITIES - Design Flair */
+@layer utilities {
+  .text-gradient-brand {
+    background-image: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Narrative Section Dividers */
+  .editorial-divider {
+    @apply h-px w-full bg-linear-to-r from-transparent via-slate-200 to-transparent my-12;
+  }
+}
+
+/* 5. CUSTOM SCROLLBAR - Branded Experience */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9; /* Slate 100 */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1; /* Slate 300 */
+  border: 2px solid #f1f5f9;
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-secondary);
+}
