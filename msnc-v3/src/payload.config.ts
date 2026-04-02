@@ -21,6 +21,29 @@ import { SiteSettings } from './globals/SiteSettings'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+const isProduction = process.env.NODE_ENV === 'production'
+
+function getDatabaseConnectionString() {
+  const rawConnectionString = process.env.DATABASE_URL || ''
+
+  if (!rawConnectionString || !isProduction) {
+    return rawConnectionString
+  }
+
+  try {
+    const url = new URL(rawConnectionString)
+
+    // Supabase pooler URLs often use sslmode=require; pg now interprets that
+    // more strictly unless libpq-compatible semantics are explicitly enabled.
+    if (url.searchParams.get('sslmode') === 'require' && !url.searchParams.has('uselibpqcompat')) {
+      url.searchParams.set('uselibpqcompat', 'true')
+    }
+
+    return url.toString()
+  } catch {
+    return rawConnectionString
+  }
+}
 
 export default buildConfig({
   admin: {
@@ -71,9 +94,9 @@ export default buildConfig({
 
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URL || '',
+      connectionString: getDatabaseConnectionString(),
       max: 10,
-      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+      ssl: isProduction ? { rejectUnauthorized: false } : false,
     },
   }),
 
