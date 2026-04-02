@@ -25,6 +25,8 @@ export const metadata = {
   description: 'Join MSNC workshops, summits, and mentorship sessions across Canada and globally.',
 };
 
+export const dynamic = 'force-dynamic';
+
 async function getEventsData(): Promise<MSNCEvent[]> {
   try {
     const payload = await getCachedPayload();
@@ -35,7 +37,9 @@ async function getEventsData(): Promise<MSNCEvent[]> {
     // Cast the Payload docs to our interface
     return docs.length > 0 ? (docs as unknown as MSNCEvent[]) : (fallbackEvents as MSNCEvent[]);
   } catch (error) {
-    console.error("Payload Fetch Error [getEventsData]:", error);
+    if ((error as Error)?.message !== 'PAYLOAD_BUILD_SKIP') {
+      console.error("Payload Fetch Error [getEventsData]:", error);
+    }
     return fallbackEvents as MSNCEvent[];
   }
 }

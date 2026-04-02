@@ -20,7 +20,7 @@ const coreValues = [
     title: 'Empowerment',
     icon: TrendingUp,
     badge: 'Agency & Growth',
-    description: 'Equipping Mulenge youth with the knowledge and skills to achieve their absolute potential.',
+    description: 'Equipping Mulenge youth with the knowledge, skills, and confidence to overcome barriers and reach their full potential.',
     colorClass: 'text-secondary',
     bgClass: 'bg-secondary/10',
     borderClass: 'border-secondary/20'
@@ -29,7 +29,7 @@ const coreValues = [
     title: 'Community',
     icon: Users2,
     badge: 'Unity in Action',
-    description: 'We believe in the sheer strength of unity. Fostering an inclusive space for lifelong connections.',
+    description: 'Building a supportive, inclusive network where youth feel valued, connected, and inspired to grow.',
     colorClass: 'text-red-500',
     bgClass: 'bg-red-50',
     borderClass: 'border-red-100'
@@ -38,7 +38,7 @@ const coreValues = [
     title: 'Integrity',
     icon: Shield,
     badge: 'Unwavering Trust',
-    description: 'Upholding relentless honesty and transparency in every program we deliver.',
+    description: 'Acting with honesty, transparency, and accountability in everything we do and every partner we serve.',
     colorClass: 'text-primary',
     bgClass: 'bg-primary/5',
     borderClass: 'border-primary/10'
@@ -47,7 +47,7 @@ const coreValues = [
     title: 'Collaboration',
     icon: Handshake,
     badge: 'Strategic Alliances',
-    description: 'Building bridges with global institutions to expand horizons for our scholars.',
+    description: 'Working with partners and community leaders to expand resources, opportunities, and collective impact.',
     colorClass: 'text-secondary',
     bgClass: 'bg-secondary/10',
     borderClass: 'border-secondary/20'
@@ -56,7 +56,7 @@ const coreValues = [
     title: 'Resilience',
     icon: Anchor,
     badge: 'Persistent Spirit',
-    description: 'Turning challenges into stepping stones through unwavering adaptability and grit.',
+    description: 'Promoting perseverance and adaptability, especially for youth facing displacement and underserved conditions.',
     colorClass: 'text-red-500',
     bgClass: 'bg-red-50',
     borderClass: 'border-red-100'
@@ -65,7 +65,7 @@ const coreValues = [
     title: 'Excellence',
     icon: Star,
     badge: 'High Standards',
-    description: 'Refusing mediocrity in academic pursuits and community leadership roles.',
+    description: 'Holding high standards in programs and initiatives to create lasting, meaningful outcomes.',
     colorClass: 'text-primary',
     bgClass: 'bg-primary/5',
     borderClass: 'border-primary/10'
@@ -92,7 +92,7 @@ export default function AboutPage() {
             </h1>
 
             <p className="text-xl md:text-2xl text-slate-500 max-w-2xl font-medium leading-relaxed border-l-2 border-secondary pl-8 mb-12">
-              Founded by Mulenge scholars in Canada, MSNC is a defiant response to the barriers facing our youth. We are architects of opportunity.
+              Founded by Mulenge scholars in Canada, MSNC was created to address barriers to academic guidance, mentorship, networking, and leadership opportunities for Mulenge youth.
             </p>
 
             <div className="flex items-center gap-6">
@@ -124,7 +124,7 @@ export default function AboutPage() {
                 <span className="italic text-secondary">Refused to Ignore.</span>
               </h2>
               <p className="text-xl text-slate-500 font-medium leading-relaxed mb-12">
-                MSNC was born from a shared reality. We saw brilliant Mulenge youth struggling to access academic guidance and navigate complex systems alone.
+                MSNC was born from a shared reality. We saw brilliant Mulenge youth struggling to access guidance, navigate the Canadian education system, and find mentorship and opportunity.
               </p>
               
               <div className="p-10 rounded-[2.5rem] bg-slate-50 border border-slate-100 relative">
@@ -140,13 +140,13 @@ export default function AboutPage() {
                   title: 'The Diaspora Challenge', 
                   icon: BookOpen, 
                   color: 'text-secondary', 
-                  text: 'For youth arriving in Canada, the education system can feel like an unsolvable maze. We provide the roadmap—demystifying university admissions and networking.' 
+                  text: 'For youth arriving in Canada, the education system can feel overwhelming. We provide academic guidance, mentorship, and support for admissions, scholarships, and career pathways.' 
                 },
                 { 
                   title: 'The Camp Reality', 
                   icon: MapPin, 
                   color: 'text-red-500', 
-                  text: 'We are deeply aware of the realities in refugee camps. We act as a digital bridge back home, offering the tools required to rise.' 
+                  text: 'We are deeply aware of the limited access to quality education and resources in refugee camps. We connect youth across borders to mentorship and opportunities that help them rise.' 
                 }
               ].map((item, idx) => (
                 <article key={idx} className="p-12 rounded-[3rem] border border-slate-100 bg-white hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500 group">
@@ -181,7 +181,7 @@ export default function AboutPage() {
                 <Star className="w-3 h-3 text-secondary" /> Our Vision
               </div>
               <p className="text-3xl md:text-4xl font-display font-black leading-tight relative z-10">
-                "To build a united community where Mulenge youth discover their absolute potential and grow into global leaders."
+                "To build a united and empowered community where Mulenge youth discover their potential, thrive academically and professionally, and grow into leaders who contribute meaningfully to society."
               </p>
             </div>
 
@@ -191,7 +191,7 @@ export default function AboutPage() {
                 <Target className="w-3 h-3 text-red-500" /> Our Mission
               </div>
               <p className="text-2xl md:text-3xl font-medium text-slate-700 leading-relaxed relative z-10">
-                To support and uplift Mulenge youth globally through rigorous mentorship, academic guidance, and leadership development.
+                To support and uplift Mulenge youth in Canada and around the world through mentorship, academic guidance, and leadership development, while building partnerships that advance education and community empowerment.
               </p>
             </div>
           </div>

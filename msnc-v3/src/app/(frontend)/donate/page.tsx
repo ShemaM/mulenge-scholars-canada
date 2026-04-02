@@ -1,11 +1,14 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { initiateDonation } from "@/actions/donate";
 import { Heart, ShieldCheck, Globe, Zap, ArrowRight, Award, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import Container from "@/components/ui/Container";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const impactTiers = [
   {
@@ -37,6 +40,21 @@ const impactTiers = [
 
 export default function DonatePage() {
   const [state, formAction, isPending] = useActionState(initiateDonation, null);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!state?.message) return;
+    if (state.success) {
+      toast.success(state.message);
+      if (state.redirectUrl) {
+        window.location.href = state.redirectUrl;
+        return;
+      }
+      router.push('/success/donate');
+      return;
+    }
+    toast.error(state.message);
+  }, [state]);
 
   return (
     <main className="min-h-screen bg-white selection:bg-secondary/20">
@@ -109,6 +127,7 @@ export default function DonatePage() {
                 <form action={formAction}>
                   <input type="hidden" name="amount" value={tier.amount} />
                   <input type="hidden" name="tier" value={tier.label} />
+                  <input type="hidden" name="name" value="Anonymous" />
                   <Button 
                     type="submit"
                     disabled={isPending}
@@ -177,6 +196,17 @@ export default function DonatePage() {
                       className="w-full h-16 bg-white rounded-2xl pl-12 pr-6 text-primary font-black text-xl focus:outline-none focus:ring-4 focus:ring-secondary/20 transition-all placeholder:text-slate-300"
                     />
                   </div>
+                  <Input
+                    name="name"
+                    placeholder="Full name (optional)"
+                    className="h-14 rounded-2xl bg-white text-primary font-medium px-6"
+                  />
+                  <Input
+                    name="email"
+                    type="email"
+                    placeholder="Email for receipt (optional)"
+                    className="h-14 rounded-2xl bg-white text-primary font-medium px-6"
+                  />
                   <Button 
                     type="submit"
                     disabled={isPending}

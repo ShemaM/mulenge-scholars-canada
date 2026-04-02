@@ -19,6 +19,8 @@ export const metadata: Metadata = {
   description: 'Deep-dive narratives on the academic and community leadership of the Mulenge diaspora.',
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function BlogPage() {
   // 1. Fetch real data from Payload
   const allPosts = (await getBlogs()) as BlogPost[];

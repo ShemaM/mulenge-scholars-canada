@@ -1,159 +1,146 @@
-import { Metadata } from 'next';
+import { Metadata } from 'next'
 import { 
-  fallbackPartners, 
-  fallbackScholarships, 
-  fallbackTestimonials 
-} from '@/lib/fallbacks';
+  getScholars, 
+  getPartners, 
+  getEvents, 
+  getBlogs,
+  getPrograms,
+  getSiteSettings,
+  getTestimonials 
+} from '@/lib/payload'
 
-// Section Components
-import Hero from '@/components/sections/Hero';
-import StatsGrid from '@/components/sections/StatsGrid';
-import Features from '@/components/sections/Features';
-import Programs from '@/components/sections/Programs';
-import Services from '@/components/sections/Services';
-import ScholarshipList from '@/components/sections/ScholarshipList';
-import Testimonials from '@/components/sections/Testimonials';
-import EventPreview from '@/components/sections/EventPreview';
-import PartnerMarquee from '@/components/sections/PartnerMarquee';
-import CTA_Split from '@/components/sections/CTA_Split';
-import Contact from '@/components/sections/Contact';
-// Ensure global styles are imported for Tailwind and custom fonts/colors
-
-// Note: When you are ready for live data, import these:
-// import { getSiteSettings, getEvents, getPrograms } from '@/lib/payload';
+// UI Components
+import Hero from '@/components/sections/Hero'
+import StatsGrid from '@/components/sections/StatsGrid'
+import Features from '@/components/sections/Features'
+import Programs from '@/components/sections/Programs'
+import Services from '@/components/sections/Services'
+import ScholarshipList from '@/components/sections/ScholarshipList'
+import Testimonials from '@/components/sections/Testimonials'
+import EventPreview from '@/components/sections/EventPreview'
+import PartnerMarquee from '@/components/sections/PartnerMarquee'
+import CtaSplit from '@/components/sections/CTA_Split' 
+import Contact from '@/components/sections/Contact'
 
 export const metadata: Metadata = {
   title: 'Home | MSNC',
   description: 'Empowering Mulenge youth through education, mentorship, and leadership development.',
-};
+}
 
-/**
- * MSNC v3 HOMEPAGE
- * Modern Editorial Layout for the Mulenge Scholars' Network Canada
- */
-export default function HomePage() {
-  
-  // 1. DATA ORCHESTRATION 
-  // We use fallbacks here to keep the dev server lightning fast and error-free.
+export const dynamic = 'force-dynamic'
+
+export default async function HomePage() {
+  /**
+   * PERFORMANCE ARCHITECTURE:
+   * We use Promise.all to fetch all database records in a single round-trip.
+   * This drastically reduces Time to First Byte (TTFB).
+   */
+  const [
+    scholars, 
+    partners, 
+    upcomingEvents, 
+    recentBlogs, 
+    programs,
+    siteSettings,
+    testimonials
+  ] = await Promise.all([
+    getScholars(6),    
+    getPartners(20), 
+    getEvents({ upcoming: true, limit: 3 }),
+    getBlogs(3),
+    getPrograms(),
+    getSiteSettings(),
+    getTestimonials(5) 
+  ])
+
+  // Centralized site configuration with strict fallbacks
   const settings = {
-    heroTitle: "Empowering Mulenge Youth Through Education.",
-    featuredQuote: "MSNC showed me I belonged. They helped me navigate the system.",
-    youthEmpowered: '500',
-    successRate: '94',
-  };
+    heroTitle: siteSettings?.heroTitle || "Empowering Mulenge Youth Through Education.",
+    featuredQuote: siteSettings?.featuredQuote || "MSNC showed me I belonged.",
+    youthEmpowered: siteSettings?.youthCount || '500',
+    successRate: siteSettings?.successRate || '94',
+  }
 
-  const fallbackEvents = [
-    { 
-      id: '1', 
-      title: 'Leadership Summit 2026', 
-      date: '2026-06-15', 
-      excerpt: 'Empowering next generation leaders...',
-      _status: 'published'
-    },
-    { 
-      id: '2', 
-      title: 'Scholarship Awards', 
-      date: '2026-05-20', 
-      excerpt: 'Celebrating academic excellence...',
-      _status: 'published'
-    },
-  ];
-
-  const fallbackPrograms = [
-    { id: '1', title: 'Academic Support', description: 'University prep & tutoring', order: 1, _status: 'published' },
-    { id: '2', title: 'Leadership Training', description: 'Soft skills & public speaking', order: 2, _status: 'published' },
-    { id: '3', title: 'Mentorship Network', description: '1:1 guidance from professionals', order: 3, _status: 'published' },
-  ];
+  // Extract the top featured story for the Hero's dynamic glass card
+  const featuredStory = testimonials?.[0] || null
 
   return (
-    <main className="overflow-x-hidden bg-white selection:bg-sky-100 selection:text-sky-900">
+    <main className="overflow-x-hidden bg-white">
       
-      {/* --- HERO SECTION --- */}
-      <Hero settings={settings} />
-
-      {/* --- IMPACT TICKER --- */}
-      <div className="relative h-24 bg-white flex items-center overflow-hidden pointer-events-none select-none border-y border-slate-50">
-        <span className="absolute left-0 text-[10vh] font-black text-slate-50 uppercase tracking-tighter whitespace-nowrap -ml-20 animate-pulse">
-          Impact through data • Impact through data • Impact through data • Impact through data
-        </span>
+      {/* 1. HERO: Fully dynamic, pulling the latest story from Testimonials collection */}
+      <Hero settings={settings} featuredStory={featuredStory} />
+      
+      {/* 2. IMPACT TICKER: Animated marquee for visual momentum */}
+      <div className="relative h-24 bg-white flex items-center overflow-hidden border-y border-slate-100">
+        <div className="flex whitespace-nowrap animate-marquee">
+          {[1, 2, 3, 4].map((i) => (
+            <span key={i} className="text-[8vh] font-black text-slate-50 uppercase tracking-tighter mx-4 select-none">
+              Impact through data • Empowerment through Education • Leadership Excellence • 
+            </span>
+          ))}
+        </div>
       </div>
 
-      {/* --- STATS SECTION --- */}
-      <section className="relative py-24 md:py-32 bg-white">
+      {/* 3. METRICS: Visualizing the numbers from Site Settings */}
+      <section className="py-24 bg-white">
         <StatsGrid settings={settings} />
       </section>
 
-      <div className="relative h-16 w-full bg-slate-50 -skew-y-1 origin-left z-0" />
-
-      {/* --- FEATURES / CORE VALUES --- */}
-      <section className="relative py-24 md:py-32 bg-slate-50">
-        <div className="container mx-auto px-6">
-           <Features />
+      {/* 4. FEATURES: Our core value proposition */}
+      <section className="py-24 bg-slate-50/50">
+        <div className="container-editorial">
+          <Features />
         </div>
       </section>
 
-      {/* --- DECORATIVE DIVIDER --- */}
-      <div className="flex justify-center items-center py-16 bg-white">
-        <div className="h-px w-full bg-slate-100" />
-        <div className="px-8 flex gap-3">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="w-2 h-2 rounded-full bg-sky-400/20" />
-          ))}
-        </div>
-        <div className="h-px w-full bg-slate-100" />
-      </div>
-
-      {/* --- PROGRAMS ROADMAP --- */}
-      <section className="relative py-24 md:py-40 bg-white">
-        <Programs items={fallbackPrograms as any} />
+      {/* 5. PROGRAMS: Grid of our academic and mentorship tracks */}
+      <section className="py-24 bg-white">
+        <Programs data={programs || []} />
       </section>
 
-      {/* --- EDITORIAL QUOTE --- */}
-      <div className="bg-slate-900 py-24 border-y border-slate-800 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-sky-500 via-transparent to-transparent" />
-        <div className="container mx-auto px-6 text-center relative z-10">
-          <p className="italic text-3xl md:text-5xl font-display text-white/90 leading-tight max-w-4xl mx-auto tracking-tight">
-            "{settings.featuredQuote}"
-          </p>
+      {/* 6. EDITORIAL BREAK: Large-scale typography quote */}
+      <section className="bg-primary py-32 border-y border-slate-800 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops))] from-secondary via-transparent to-transparent" />
+        <div className="container-editorial text-center relative z-10">
+          <blockquote className="italic text-3xl md:text-5xl font-display text-white/95 leading-tight max-w-4xl mx-auto tracking-tight">
+            "{featuredStory?.quote || settings.featuredQuote}"
+          </blockquote>
         </div>
-      </div>
+      </section>
 
-      {/* --- SERVICES & SCHOLARSHIPS --- */}
-      <section className="relative py-24 md:py-32 bg-white">
+      {/* 7. SCHOLARS & SERVICES: Highlighting the Network's results */}
+      <section className="py-24 bg-white">
         <Services />
-        <div className="h-32 md:h-48" />
-        <ScholarshipList scholars={fallbackScholarships} />
+        <div className="h-px w-full bg-slate-100 my-24" />
+        <ScholarshipList scholars={scholars || []} />
       </section>
 
-      {/* --- TESTIMONIALS (The Museum Gallery) --- */}
-      <section className="relative">
-        <Testimonials data={fallbackTestimonials} />
+      {/* 8. TESTIMONIALS: Swiper component using real database docs */}
+      <section className="py-24 md:py-40 bg-slate-900 overflow-hidden">
+        <Testimonials data={testimonials || []} />
       </section>
 
-      {/* --- EVENTS PREVIEW --- */}
-      <section className="relative py-24 md:py-40 bg-white rounded-t-[5rem] -mt-20 z-20 shadow-[0_-30px_60px_-15px_rgba(0,0,0,0.05)]">
-        <EventPreview events={fallbackEvents as any} />
+      {/* 9. EVENTS & NEWS: Real-time upcoming gathering preview */}
+      <section className="bg-white rounded-t-[5rem] -mt-20 z-20 shadow-brand relative">
+        <EventPreview events={upcomingEvents || []} blogs={recentBlogs || []} /> 
       </section>
 
-      {/* --- PARTNER MARQUEE --- */}
-      <section className="relative py-24 bg-slate-50 overflow-hidden border-y border-slate-100">
+      {/* 10. PARTNERS: Logo marquee of global trusted institutions */}
+      <section className="py-24 bg-white overflow-hidden border-y border-slate-100">
         <div className="mb-16 text-center">
           <span className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400 block mb-4">Our Network</span>
-          <h3 className="text-2xl font-display font-bold text-slate-900">Trusted By Global Institutions</h3>
+          <h3 className="text-2xl font-display font-bold text-primary">Trusted By Global Institutions</h3>
         </div>
-        <PartnerMarquee partners={fallbackPartners} />
+        <PartnerMarquee partners={partners || []} />
       </section>
 
-      {/* --- CALL TO ACTION --- */}
-      <section className="relative">
-         <CTA_Split />
-      </section>
-
-      {/* --- CONTACT SECTION --- */}
-      <section id="contact" className="relative py-24 md:py-40 bg-white">
+      {/* 11. CTA & CONTACT: Conversion points for the footer transition */}
+      <CtaSplit /> 
+      
+      <section id="contact" className="py-24 bg-white">
         <Contact />
       </section>
 
     </main>
-  );
+  )
 }

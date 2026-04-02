@@ -1,28 +1,24 @@
 import React from 'react';
+import { cn } from '@/lib/utils';
 
-export const Logo = () => (
-  <div className="msnc-logo-wrapper" style={{ 
-    display: 'flex', 
-    alignItems: 'center', 
-    gap: '12px',
-    padding: '8px 0'
-  }}>
-    <div style={{ 
-      width: '36px', 
-      height: '36px', 
-      backgroundColor: '#002147', 
-      borderRadius: '10px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: 'white',
-      fontWeight: '900',
-      fontSize: '20px',
-      boxShadow: '0 4px 12px rgba(0, 33, 71, 0.2)',
-      border: '1px solid rgba(255,255,255,0.1)'
-    }}>
-      M
-    </div>
+type LogoProps = {
+  className?: string;
+};
+
+export const Logo = ({ className }: LogoProps) => (
+  <div className={cn("msnc-logo-wrapper flex items-center gap-3 py-2", className)}>
+    <img 
+      src="/media/logo.png"
+      alt="MSNC Logo"
+      style={{ 
+        width: '36px', 
+        height: '36px', 
+        borderRadius: '10px',
+        objectFit: 'contain',
+        boxShadow: '0 4px 12px rgba(0, 33, 71, 0.2)',
+        border: '1px solid rgba(255,255,255,0.1)'
+      }}
+    />
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <span style={{ 
         fontWeight: '900', 
@@ -46,3 +42,6 @@ export const Logo = () => (
     </div>
   </div>
 );
+
+// CRITICAL: Payload 3.0 requires this for the Admin Dashboard
+export default Logo;

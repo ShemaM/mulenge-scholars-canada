@@ -15,6 +15,8 @@ const DonateSchema = z.object({
 export async function initiateDonation(prevState: any, formData: FormData) {
   const rawAmount = formData.get("amount");
   const tier = formData.get("tier");
+  const donorName = formData.get("name");
+  const email = formData.get("email");
 
   // 2. Validate
   const validatedFields = DonateSchema.safeParse({
@@ -37,17 +39,16 @@ export async function initiateDonation(prevState: any, formData: FormData) {
 
     // 3. Log the "Intent to Donate" in Payload
     // This allows you to track abandoned "carts" or follow up with major donors
-    /* UNCOMMENT WHEN 'DONATIONS' COLLECTION IS READY:
     await payload.create({
       collection: 'donations',
       data: {
         amount,
         tier: tier || 'custom',
-        status: 'pending_stripe',
-        initiatedAt: new Date().toISOString(),
+        status: 'pending',
+        donorName: donorName ? String(donorName) : undefined,
+        email: email ? String(email) : undefined,
       },
     });
-    */
 
     console.log(`[Donate Action] High-Value Intent: $${amount} for ${tier || 'Custom'} tier`);
 

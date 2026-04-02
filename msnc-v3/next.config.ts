@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  experimental: {
+    workerThreads: true,
+  },
   // 2. Remove the turbopack.root and webpack alias overrides. 
   // Payload 3.0 handles the TS-to-JS mapping internally.
 }

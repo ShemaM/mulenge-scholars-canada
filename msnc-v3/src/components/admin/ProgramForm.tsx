@@ -1,6 +1,6 @@
 'use client';
 
-import { upsertEvent } from '@/app/actions/admin'; // Reuse for now, adapt later
+import { upsertEvent, upsertProgram } from '@/app/actions/admin';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/Label';
 import { useState } from 'react';
 import { Loader2, ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 export default function ProgramForm({ initialData }: { initialData?: any }) {
   const [loading, setLoading] = useState(false);
@@ -16,7 +17,15 @@ export default function ProgramForm({ initialData }: { initialData?: any }) {
     <form 
       action={async (formData) => {
         setLoading(true);
-        await upsertEvent(formData, initialData?.id);
+        try {
+          await upsertProgram(formData, initialData?.id);
+          toast.success(initialData ? "Program updated successfully." : "Program published successfully.");
+        } catch (error) {
+          console.error(error);
+          toast.error("We could not save the program. Please try again.");
+        } finally {
+          setLoading(false);
+        }
       }} 
       className="space-y-8 max-w-4xl mx-auto bg-white p-10 rounded-[2.5rem] border border-slate-200 shadow-xl"
     >
@@ -85,4 +94,3 @@ export default function ProgramForm({ initialData }: { initialData?: any }) {
     </form>
   );
 }
-

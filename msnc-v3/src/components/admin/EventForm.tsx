@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function EventForm({ initialData }: { initialData?: any }) {
   const [loading, setLoading] = useState(false);
@@ -14,7 +15,15 @@ export default function EventForm({ initialData }: { initialData?: any }) {
     <form 
       action={async (formData) => {
         setLoading(true);
-        await upsertEvent(formData, initialData?.id);
+        try {
+          await upsertEvent(formData, initialData?.id);
+          toast.success(initialData ? "Event updated successfully." : "Event published successfully.");
+        } catch (error) {
+          console.error(error);
+          toast.error("We could not save the event. Please try again.");
+        } finally {
+          setLoading(false);
+        }
       }} 
       className="space-y-8 max-w-4xl mx-auto bg-white p-10 rounded-[2.5rem] border border-slate-200"
     >
@@ -42,7 +51,7 @@ export default function EventForm({ initialData }: { initialData?: any }) {
 
       <div className="space-y-2">
         <label className="text-xs font-bold uppercase tracking-widest text-primary/90 ml-2">Description</label>
-        <Textarea name="description" defaultValue={initialData?.description} rows={6} className="rounded-3xl p-6" />
+<Textarea name="description" defaultValue={initialData?.description} rows={6} className="rounded-3xl p-6" />
       </div>
 
       <Button disabled={loading} className="w-full bg-blue-600 h-16 rounded-2xl font-bold text-lg">

@@ -45,8 +45,8 @@ const features = [
     title: "Collaboration",
     description: "Strength found in collective effort and strategic partnership.",
     className: "lg:col-span-1 bg-white border-slate-100",
-    iconBg: "bg-blue-50 text-blue-600",
-    accent: "text-blue-600",
+    iconBg: "bg-secondary/10 text-secondary",
+    accent: "text-secondary",
     descriptionClass: "text-slate-600"
   },
   {
@@ -63,8 +63,8 @@ const features = [
     title: "Resilience",
     description: "Adaptability as a superpower for building a better future.",
     className: "lg:col-span-1 bg-white border-slate-100",
-    iconBg: "bg-red-50 text-red-600",
-    accent: "text-red-600",
+    iconBg: "bg-accent/10 text-accent",
+    accent: "text-accent",
     descriptionClass: "text-slate-600"
   },
 ];

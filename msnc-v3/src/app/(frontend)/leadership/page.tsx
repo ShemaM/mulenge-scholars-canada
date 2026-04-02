@@ -18,6 +18,8 @@ export const metadata: Metadata = {
   },
 };
 
+export const dynamic = 'force-dynamic';
+
 interface LeadershipMember {
   id: string;
   name: string;
@@ -41,7 +43,9 @@ async function getTeamData(): Promise<LeadershipMember[]> {
     });
     return docs as unknown as LeadershipMember[];
   } catch (error) {
-    console.error("Payload Fetch Error [getTeamData]:", error);
+    if ((error as Error)?.message !== 'PAYLOAD_BUILD_SKIP') {
+      console.error("Payload Fetch Error [getTeamData]:", error);
+    }
     return []; 
   }
 }
@@ -205,7 +209,7 @@ function TeamMemberCard({ member, index }: { member: LeadershipMember; index: nu
         
         {/* Editorial Link */}
         <Link 
-          href={`/about/team/${member.slug || member.id}`}
+          href={`/leadership/${member.slug || member.id}`}
           className="inline-flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.4em] text-primary group/link"
         >
           Explore Journey

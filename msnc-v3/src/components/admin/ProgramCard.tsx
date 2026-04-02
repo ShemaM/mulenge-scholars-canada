@@ -3,7 +3,7 @@
 import { Edit3, Trash2, ChevronRight } from "lucide-react";
 import { Button } from '@/components/ui/Button';
 import Link from 'next/link';
-import { deleteEvent } from '@/app/actions/admin'; // Reuse
+import { deleteProgram } from '@/app/actions/admin';
 import { useState } from 'react';
 
 export function ProgramCard({ program }: { program: any }) {
@@ -12,7 +12,7 @@ export function ProgramCard({ program }: { program: any }) {
   const handleDelete = async () => {
     if (confirm("Delete this program pillar? Cannot be undone.")) {
       setIsDeleting(true);
-      await deleteEvent(program.id); // Reuse, adapt ID
+      await deleteProgram(program.id);
       setIsDeleting(false);
     }
   };

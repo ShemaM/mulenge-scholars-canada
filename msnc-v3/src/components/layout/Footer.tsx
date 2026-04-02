@@ -17,13 +17,12 @@ export default function Footer() {
           
           {/* Brand Column */}
           <div className="space-y-8">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-primary" />
-              </div>
-              <span className="text-xl font-display font-black text-white tracking-tighter uppercase">
-                MSNC
-              </span>
+<div className="flex items-center gap-3">
+              <img 
+                src="/media/logo.png"
+                alt="MSNC Logo"
+                className="w-12 h-12 object-contain"
+              />
             </div>
             <p className="text-lg leading-relaxed text-slate-400 font-medium">
               Empowering the Mulenge diaspora through strategic education, mentorship, and leadership excellence.

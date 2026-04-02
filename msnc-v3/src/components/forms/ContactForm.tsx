@@ -1,12 +1,14 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { submitContactForm } from "@/actions/contact";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { Loader2, Send } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function ContactForm() {
   // 1. Hook into the Server Action
@@ -14,6 +16,17 @@ export default function ContactForm() {
   // [formAction] is what we pass to the <form action={...}>
   // [isPending] is true while the server is processing
   const [state, formAction, isPending] = useActionState(submitContactForm, null);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!state?.message) return;
+    if (state.success) {
+      toast.success(state.message);
+      router.push('/success/contact');
+      return;
+    }
+    toast.error(state.message);
+  }, [state]);
 
   return (
     <form action={formAction} className="space-y-8">
@@ -36,7 +49,7 @@ export default function ContactForm() {
             name="name" 
             placeholder="e.g. Manassé N." 
             required 
-            className="rounded-2xl border-slate-100 focus:border-secondary h-14"
+            className="rounded-2xl border-slate-200 focus:border-secondary h-14"
           />
           {state?.errors?.name && <p className="text-xs text-red-500 ml-4">{state.errors.name}</p>}
         </div>
@@ -48,7 +61,7 @@ export default function ContactForm() {
             type="email" 
             placeholder="your@email.com" 
             required 
-            className="rounded-2xl border-slate-100 focus:border-secondary h-14"
+            className="rounded-2xl border-slate-200 focus:border-secondary h-14"
           />
           {state?.errors?.email && <p className="text-xs text-red-500 ml-4">{state.errors.email}</p>}
         </div>
@@ -60,7 +73,7 @@ export default function ContactForm() {
           name="subject" 
           placeholder="How can we collaborate?" 
           required 
-          className="rounded-2xl border-slate-100 focus:border-secondary h-14"
+          className="rounded-2xl border-slate-200 focus:border-secondary h-14"
         />
       </div>
 
@@ -70,7 +83,7 @@ export default function ContactForm() {
           name="message" 
           placeholder="Tell us about your journey or inquiry..." 
           required 
-          className="min-h-[160px] rounded-[2rem] border-slate-100 focus:border-secondary p-6"
+          className="min-h-[160px] rounded-[2rem] border-slate-200 focus:border-secondary p-6"
         />
         {state?.errors?.message && <p className="text-xs text-red-500 ml-4">{state.errors.message}</p>}
       </div>

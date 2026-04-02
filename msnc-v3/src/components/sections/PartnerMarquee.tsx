@@ -17,8 +17,8 @@ export default function PartnerMarquee({ partners = [] }: { partners?: Partner[]
       <div className="container mx-auto px-6 mb-10">
         <div className="text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 backdrop-blur-md border border-slate-200/60 mb-4">
-            <div className="w-1.5 h-1.5 rounded-full bg-sky-600" />
-            <span className="text-[10px] font-bold text-slate-900 uppercase tracking-[0.2em]">
+            <div className="w-1.5 h-1.5 rounded-full bg-secondary" />
+            <span className="text-[10px] font-bold text-primary uppercase tracking-[0.2em]">
               Institutional Trust
             </span>
           </div>

@@ -38,8 +38,8 @@ const services = [
     subtitle: "Purpose-Driven Training",
     description: "Workshops to build communication and decision-making skills for tomorrow's community leaders.",
     pillar: "03",
-    color: "text-blue-600",
-    bg: "bg-blue-50"
+    color: "text-secondary",
+    bg: "bg-secondary/10"
   },
   {
     icon: Globe,

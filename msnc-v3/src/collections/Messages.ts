@@ -4,6 +4,7 @@ const Messages: CollectionConfig = {
   slug: 'messages',
   admin: {
     useAsTitle: 'name',
+    group: 'Submissions',
     defaultColumns: ['name', 'email', 'subject', 'createdAt'],
   },
   access: {

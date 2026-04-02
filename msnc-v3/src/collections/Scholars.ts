@@ -1,3 +1,4 @@
+// src/collections/Scholars.ts
 import { CollectionConfig } from 'payload'
 
 export const Scholars: CollectionConfig = {
@@ -13,6 +14,13 @@ export const Scholars: CollectionConfig = {
     { name: 'recipientName', type: 'text', required: true },
     { name: 'university', type: 'text', required: true },
     { name: 'year', type: 'text', required: true, admin: { placeholder: '2024 - 2025' } },
-    { name: 'amount', type: 'text', required: true, admin: { placeholder: '$5,000' } },
+    { 
+      name: 'amount', 
+      type: 'number', // CHANGED: Now the database can do math
+      required: true, 
+      admin: { 
+        placeholder: '5000' // Enter as a pure number now
+      } 
+    },
   ],
 }

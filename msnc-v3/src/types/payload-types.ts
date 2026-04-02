@@ -78,6 +78,7 @@ export interface Config {
     events: Event;
     messages: Message;
     'join-submissions': JoinSubmission;
+    donations: Donation;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -96,6 +97,7 @@ export interface Config {
     events: EventsSelect<false> | EventsSelect<true>;
     messages: MessagesSelect<false> | MessagesSelect<true>;
     'join-submissions': JoinSubmissionsSelect<false> | JoinSubmissionsSelect<true>;
+    donations: DonationsSelect<false> | DonationsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -243,7 +245,7 @@ export interface Scholar {
   recipientName: string;
   university: string;
   year: string;
-  amount: string;
+  amount: number;
   updatedAt: string;
   createdAt: string;
 }
@@ -385,7 +387,24 @@ export interface JoinSubmission {
   id: number;
   fullName: string;
   email: string;
+  phone?: string | null;
+  interest: 'volunteer' | 'scholar';
   message?: string | null;
+  status?: ('new' | 'reviewed' | 'archived') | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "donations".
+ */
+export interface Donation {
+  id: number;
+  donorName?: string | null;
+  email?: string | null;
+  amount: number;
+  tier?: string | null;
+  status?: ('pending' | 'completed' | 'failed') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -456,6 +475,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'join-submissions';
         value: number | JoinSubmission;
+      } | null)
+    | ({
+        relationTo: 'donations';
+        value: number | Donation;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -695,7 +718,23 @@ export interface MessagesSelect<T extends boolean = true> {
 export interface JoinSubmissionsSelect<T extends boolean = true> {
   fullName?: T;
   email?: T;
+  phone?: T;
+  interest?: T;
   message?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "donations_select".
+ */
+export interface DonationsSelect<T extends boolean = true> {
+  donorName?: T;
+  email?: T;
+  amount?: T;
+  tier?: T;
+  status?: T;
   updatedAt?: T;
   createdAt?: T;
 }

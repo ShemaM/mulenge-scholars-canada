@@ -1,11 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { Mail, Phone, MapPin, Send, Share2, Users, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Textarea } from "@/components/ui/Textarea";
 import { Label } from "@/components/ui/Label";
+import { submitContactForm } from "@/actions/contact";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 const contactInfo = [
   {
@@ -42,27 +46,19 @@ export default function Contact() {
     phone: "",
     message: "",
   });
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [state, formAction, isPending] = useActionState(submitContactForm, null);
+  const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus("loading");
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        setStatus("success");
-        setFormData({ firstName: "", lastName: "", email: "", phone: "", message: "" });
-      } else {
-        setStatus("error");
-      }
-    } catch {
-      setStatus("error");
+  useEffect(() => {
+    if (!state?.message) return;
+    if (state.success) {
+      toast.success(state.message);
+      setFormData({ firstName: "", lastName: "", email: "", phone: "", message: "" });
+      router.push('/success/contact');
+      return;
     }
-  };
+    toast.error(state.message);
+  }, [state]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -141,7 +137,7 @@ export default function Contact() {
             <div className="p-10 md:p-14 rounded-[3rem] bg-white border border-slate-100 shadow-brand">
               <h3 className="font-display text-3xl font-black text-primary mb-10">Send Us a Message</h3>
               
-              <form onSubmit={handleSubmit} className="space-y-8">
+              <form action={formAction} className="space-y-8">
                 <div className="grid sm:grid-cols-2 gap-8">
                   <div className="space-y-3">
                     <Label htmlFor="firstName" className="text-xs font-black uppercase tracking-widest text-primary/60">First Name</Label>
@@ -184,6 +180,7 @@ export default function Contact() {
                 </div>
 
                 <div className="space-y-3">
+                  <input type="hidden" name="subject" value="General Inquiry" />
                   <Label htmlFor="message" className="text-xs font-black uppercase tracking-widest text-primary/60">Your Message</Label>
                   <Textarea
                     id="message"
@@ -197,26 +194,28 @@ export default function Contact() {
                   />
                 </div>
 
-                {status === "success" && (
-                  <div className="p-5 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-800 font-bold flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    Success! Your message is on its way.
-                  </div>
-                )}
-
-                {status === "error" && (
-                  <div className="p-5 rounded-2xl bg-red-50 border border-red-100 text-red-800 font-bold">
-                    Transmission error. Please try again or email us directly.
+                {state?.message && (
+                  <div className={cn(
+                    "p-5 rounded-2xl border font-bold flex items-center gap-3",
+                    state.success
+                      ? "bg-emerald-50 border-emerald-100 text-emerald-800"
+                      : "bg-accent/10 border-accent/20 text-accent"
+                  )}>
+                    <div className={cn(
+                      "w-2 h-2 rounded-full",
+                      state.success ? "bg-emerald-500 animate-pulse" : "bg-accent"
+                    )} />
+                    {state.message}
                   </div>
                 )}
 
                 <Button
                   type="submit"
                   size="lg"
-                  disabled={status === "loading"}
+                  disabled={isPending}
                   className="w-full h-16 rounded-2xl bg-primary hover:bg-secondary text-white font-black uppercase tracking-widest text-sm shadow-xl hover:shadow-secondary/20 transition-all duration-500"
                 >
-                  {status === "loading" ? "Dispatching..." : "Dispatch Message"}
+                  {isPending ? "Dispatching..." : "Dispatch Message"}
                   <Send className="ml-3 w-5 h-5" />
                 </Button>
               </form>
