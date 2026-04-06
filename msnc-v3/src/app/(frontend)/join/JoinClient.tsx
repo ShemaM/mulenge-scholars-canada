@@ -1,263 +1,250 @@
 "use client";
 
-import { useActionState, useEffect, useState } from 'react';
+import { useActionState, useEffect, useState, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Textarea } from '@/components/ui/Textarea';
 import Container from '@/components/ui/Container';
-import { Sparkles, Heart, GraduationCap, ArrowRight, Link, Loader2 } from 'lucide-react';
+import { GraduationCap, Heart, Building2, ArrowRight, Loader2, ShieldCheck, Sparkles, UserPlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { submitJoinApplication } from '@/actions/join';
+// FIX: Ensure this matches your new unified action
+import { submitUnifiedInquiry } from '@/actions/inquiries'; 
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
 
-export default function JoinClient() {
+type InterestType = 'scholar' | 'volunteer' | 'partner' | 'support' | 'general';
+
+function JoinForm() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const roleParam = searchParams.get('role');
+
+  const getInitialInterest = (): InterestType => {
+    if (roleParam === 'highschool' || roleParam === 'support') return 'support';
+    if (roleParam === 'student' || roleParam === 'scholar') return 'scholar';
+    if (roleParam === 'partner') return 'partner';
+    if (roleParam === 'mentor' || roleParam === 'volunteer') return 'volunteer';
+    return 'general';
+  };
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
     phone: '',
-    interest: 'volunteer',
+    interest: getInitialInterest(),
     message: '',
   });
 
-  const [state, formAction, isPending] = useActionState(submitJoinApplication, null);
-  const router = useRouter();
+  // FIX: Updated to use the correct action variable
+  const [state, formAction, isPending] = useActionState(submitUnifiedInquiry, null);
+
+  useEffect(() => {
+    setFormData(prev => ({ ...prev, interest: getInitialInterest() }));
+  }, [roleParam]);
 
   useEffect(() => {
     if (!state?.message) return;
     if (state.success) {
       toast.success(state.message);
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        interest: 'volunteer',
-        message: '',
-      });
       router.push('/success/join');
-      return;
+    } else {
+      toast.error(state.message);
     }
-    toast.error(state.message);
-  }, [state]);
+  }, [state, router]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const contentMap = {
+    support: {
+      badge: "High School Support",
+      title: "The Path to Post-Secondary.",
+      desc: "For Grade 11-12 students seeking localized tutoring and university application guidance.",
+      label: "Current School & Academic Needs",
+      placeholder: "Which high school do you attend? What subjects do you need help with?...",
+      button: "Apply for Academic Support",
+      accent: "#4A90D9",
+      bg: "bg-[#4A90D9]"
+    },
+    scholar: {
+      badge: "University Scholars",
+      title: "Elevate Your Career.",
+      desc: "Connect with mentors in your field of study and join a network of excellence across Canada.",
+      label: "Program of Study & Goals",
+      placeholder: "What are you studying? What career paths are you exploring?...",
+      button: "Apply as a Scholar",
+      accent: "#002147",
+      bg: "bg-[#002147]"
+    },
+    volunteer: {
+      badge: "Mentorship Network",
+      title: "Steward the Future.",
+      desc: "Share your professional journey to help bridge the gap for the next generation of Mulenge leaders.",
+      label: "Professional Background",
+      placeholder: "Tell us about your career and how you'd like to support our youth...",
+      button: "Join as a Mentor",
+      accent: "#D97706",
+      bg: "bg-[#D97706]"
+    },
+    partner: {
+      badge: "Institutional Alliance",
+      title: "Building Global Impact.",
+      desc: "Collaborate with MSNC to provide resources, funding, or organizational support to refugee youth.",
+      label: "Organization Details",
+      placeholder: "Tell us about your organization and your vision for partnership...",
+      button: "Inquire about Partnership",
+      accent: "#6F4763",
+      bg: "bg-[#6F4763]"
+    },
+    general: {
+      badge: "Network Inquiry",
+      title: "Join the Dialogue.",
+      desc: "Interested in MSNC but not sure where you fit? Send us a message and we'll connect you.",
+      label: "Your Inquiry",
+      placeholder: "How can we help you today?...",
+      button: "Send Message",
+      accent: "#1E293B",
+      bg: "bg-[#1E293B]"
+    }
+  };
+
+  const current = contentMap[formData.interest];
+
   return (
-    <main className="min-h-screen bg-white selection:bg-secondary/20">
-      <section className="relative pt-40 pb-16 md:pt-48 border-b border-slate-100 overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-slate-50 -skew-x-12 transform origin-top pointer-events-none" />
+    <main className="min-h-screen bg-white">
+      <section className="relative pt-48 pb-20 overflow-hidden bg-slate-50">
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-white -skew-x-12 translate-x-32 pointer-events-none border-l border-slate-100" />
+        <div className="absolute right-10 top-1/2 -translate-y-1/2 text-[12vw] font-black text-primary/5 font-display select-none pointer-events-none leading-none uppercase">
+          {formData.interest}
+        </div>
         
         <Container className="relative z-10">
-          <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 text-accent font-black uppercase tracking-widest text-sm mb-6">
-              <span className="w-8 h-0.5 bg-accent" />
-              Take Your Place
-            </div>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-primary leading-[1.05] tracking-tight font-display mb-8">
-              Join the <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent">
-                Network.
+          <div className="max-w-4xl space-y-8">
+            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white border border-slate-200 shadow-sm">
+              <Sparkles className="w-4 h-4" style={{ color: current.accent }} />
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">
+                {current.badge}
               </span>
+            </div>
+            <h1 className="text-6xl md:text-8xl font-black text-primary font-display leading-[0.85] tracking-tighter">
+              {current.title}
             </h1>
-            <p className="text-xl md:text-2xl text-foreground/70 leading-relaxed font-medium max-w-2xl border-l-4 border-secondary pl-6">
-              Whether you are here to share your expertise or to find your academic path, you are part of a global movement for Mulenge youth.
+            <p className="text-xl text-slate-500 max-w-2xl font-medium leading-relaxed border-l-4 pl-8 italic" style={{ borderColor: current.accent }}>
+              {current.desc}
             </p>
           </div>
         </Container>
       </section>
 
-      <section className="py-24 bg-white">
+      <section className="py-24">
         <Container>
-          <div className="grid lg:grid-cols-12 gap-16 items-start">
+          <div className="grid lg:grid-cols-12 gap-20 items-start">
             
-            <div className="lg:col-span-5 space-y-12 lg:sticky lg:top-32">
-              <div className="space-y-8">
-                <h2 className="text-4xl font-black text-primary font-display leading-tight">
-                  Choose Your <br />
-                  <span className="text-secondary">Impact Pathway</span>
-                </h2>
-                
-                <button 
-                  onClick={() => setFormData({ ...formData, interest: 'volunteer' })}
-                  className={cn(
-                    "w-full text-left p-8 rounded-[2.5rem] border-2 transition-all duration-500 group",
-                    formData.interest === 'volunteer' 
-                      ? "bg-secondary/5 border-secondary shadow-xl shadow-secondary/10" 
-                      : "bg-white border-slate-100 hover:border-slate-200"
-                  )}
-                >
-                  <div className="flex items-center gap-6">
+            {/* Pathway Selector */}
+            <div className="lg:col-span-5 space-y-4 lg:sticky lg:top-32">
+              <h2 className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300 mb-8">Step 01 — Select Your Pathway</h2>
+              
+              {(Object.keys(contentMap) as Array<InterestType>).map((key) => {
+                const item = contentMap[key];
+                const isActive = formData.interest === key;
+                return (
+                  <button 
+                    key={key}
+                    onClick={() => setFormData({ ...formData, interest: key })}
+                    className={cn(
+                      "w-full text-left p-6 rounded-[2.5rem] border-2 transition-all duration-500 group flex items-center gap-6",
+                      isActive ? "bg-white shadow-brand border-transparent scale-[1.02]" : "bg-slate-50 border-slate-50 hover:bg-white hover:border-slate-200"
+                    )}
+                  >
                     <div className={cn(
-                      "w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500",
-                      formData.interest === 'volunteer' ? "bg-secondary text-white" : "bg-slate-100 text-primary/90 group-hover:bg-slate-200"
-                    )}>
-                      <Heart className="w-8 h-8" />
+                      "w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-500 shadow-sm",
+                      isActive ? "text-white" : "bg-white text-slate-300"
+                    )} style={isActive ? { backgroundColor: item.accent } : {}}>
+                        {key === 'scholar' && <GraduationCap className="w-5 h-5" />}
+                        {key === 'support' && <UserPlus className="w-5 h-5" />}
+                        {key === 'volunteer' && <Heart className="w-5 h-5" />}
+                        {key === 'partner' && <Building2 className="w-5 h-5" />}
+                        {key === 'general' && <ArrowRight className="w-5 h-5" />}
                     </div>
-                    <div>
-                      <h3 className="text-xl font-black text-primary mb-1">Volunteer as Mentor</h3>
-                      <p className="text-sm font-medium text-foreground/60">Share skills and guide the next generation.</p>
-                    </div>
-                  </div>
-                </button>
+                    <span className={cn("text-sm font-bold tracking-tight transition-colors", isActive ? "text-primary" : "text-slate-400")}>
+                      {item.badge}
+                    </span>
+                  </button>
+                );
+              })}
 
-                <button 
-                  onClick={() => setFormData({ ...formData, interest: 'scholar' })}
-                  className={cn(
-                    "w-full text-left p-8 rounded-[2.5rem] border-2 transition-all duration-500 group",
-                    formData.interest === 'scholar' 
-                      ? "bg-accent/5 border-accent shadow-xl shadow-accent/10" 
-                      : "bg-white border-slate-100 hover:border-slate-200"
-                  )}
-                >
-                  <div className="flex items-center gap-6">
-                    <div className={cn(
-                      "w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-500",
-                      formData.interest === 'scholar' ? "bg-accent text-white" : "bg-slate-100 text-primary/90 group-hover:bg-slate-200"
-                    )}>
-                      <GraduationCap className="w-8 h-8" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-black text-primary mb-1">Apply as a Scholar</h3>
-                      <p className="text-sm font-medium text-foreground/60">Access academic support and mentorship.</p>
-                    </div>
-                  </div>
-                </button>
-              </div>
-
-              <div className="p-8 rounded-[2.5rem] bg-slate-50 border border-slate-100">
-                <div className="flex items-center gap-3 text-primary font-bold mb-4">
-                  <Sparkles className="w-5 h-5 text-secondary" />
-                  What happens next?
-                </div>
-                <p className="text-sm text-foreground/70 leading-relaxed font-medium">
-                  After submission, our leadership committee reviews your profile. Expect a personalized response within 2-3 business days to discuss the next steps in your journey.
+              <div className="mt-12 p-8 rounded-[3rem] bg-slate-50 border border-slate-100 flex items-start gap-4">
+                <ShieldCheck className="w-6 h-6 text-secondary shrink-0" />
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-loose">
+                  All submissions are encrypted and reviewed strictly by the MSNC Executive Board.
                 </p>
               </div>
             </div>
 
+            {/* Form */}
             <div className="lg:col-span-7">
-              <div className="bg-white p-8 md:p-14 rounded-[3rem] border border-slate-100 shadow-brand relative">
-                <div className="mb-12">
-                  <h2 className="text-sm font-black text-slate-400 uppercase tracking-[0.3em] mb-4">02. Digital Dispatch</h2>
-                  <h3 className="text-4xl font-black text-primary font-display leading-tight">
-                    Start the <span className="text-accent italic font-normal">Conversation.</span>
+              <div className="bg-white p-8 md:p-16 rounded-[4rem] border border-slate-100 shadow-2xl shadow-slate-200/40">
+                <header className="mb-12">
+                  <h2 className="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em] mb-4">Step 02 — Digital Intake</h2>
+                  <h3 className="text-4xl font-black text-primary font-display tracking-tight">
+                    Submit your <span className="italic" style={{ color: current.accent }}>Application.</span>
                   </h3>
-                </div>
-                
-                <form action={formAction} className="space-y-8">
+                </header>
+
+                <form action={formAction} className="space-y-10">
                   <div className="grid md:grid-cols-2 gap-8">
-                    <div className="space-y-2">
-                      <Label htmlFor="firstName" className="text-xs font-black uppercase tracking-widest text-primary/90">First Name</Label>
-                      <Input 
-                        id="firstName"
-                        name="firstName"
-                        placeholder="Jean"
-                        className="h-14 rounded-2xl border-slate-100 focus:ring-secondary"
-                        value={formData.firstName}
-                        onChange={handleChange}
-                        required
-                      />
+                    <div className="space-y-3">
+                      <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-2">First Name</Label>
+                      <Input name="firstName" required value={formData.firstName} onChange={handleChange} className="h-16 rounded-2xl border-slate-100 bg-slate-50 focus:bg-white focus:ring-secondary transition-all" />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="lastName" className="text-xs font-black uppercase tracking-widest text-primary/90">Last Name</Label>
-                      <Input 
-                        id="lastName"
-                        name="lastName"
-                        placeholder="Claude"
-                        className="h-14 rounded-2xl border-slate-100 focus:ring-secondary"
-                        value={formData.lastName}
-                        onChange={handleChange}
-                        required
-                      />
+                    <div className="space-y-3">
+                      <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-2">Last Name</Label>
+                      <Input name="lastName" required value={formData.lastName} onChange={handleChange} className="h-16 rounded-2xl border-slate-100 bg-slate-50 focus:bg-white focus:ring-secondary transition-all" />
                     </div>
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-8">
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-xs font-black uppercase tracking-widest text-primary/90">Email Address</Label>
-                      <Input 
-                        id="email"
-                        name="email"
-                        type="email"
-                        placeholder="jean@example.com"
-                        className="h-14 rounded-2xl border-slate-100 focus:ring-secondary"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                      />
+                    <div className="space-y-3">
+                      <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-2">Email Address</Label>
+                      <Input type="email" name="email" required value={formData.email} onChange={handleChange} className="h-16 rounded-2xl border-slate-100 bg-slate-50 focus:bg-white focus:ring-secondary transition-all" />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-xs font-black uppercase tracking-widest text-primary/90">Phone (Optional)</Label>
-                      <Input 
-                        id="phone"
-                        name="phone"
-                        placeholder="+1 (555) 000-0000"
-                        className="h-14 rounded-2xl border-slate-100 focus:ring-secondary"
-                        value={formData.phone}
-                        onChange={handleChange}
-                      />
+                    <div className="space-y-3">
+                      <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-2">Phone Number</Label>
+                      <Input name="phone" value={formData.phone} onChange={handleChange} placeholder="+1..." className="h-16 rounded-2xl border-slate-100 bg-slate-50 focus:bg-white focus:ring-secondary transition-all" />
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="message" className="text-xs font-black uppercase tracking-widest text-primary/90">
-                      {formData.interest === 'volunteer' ? 'Skills & Availability' : 'Academic Goals & Challenges'}
-                    </Label>
+                  <div className="space-y-3">
+                    <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-2">{current.label}</Label>
                     <Textarea 
-                      id="message"
-                      name="message"
-                      rows={6}
-                      className="rounded-[2rem] border-slate-100 focus:ring-secondary p-6"
-                      value={formData.message}
-                      onChange={handleChange}
-                      placeholder={formData.interest === 'volunteer' 
-                        ? "Tell us about your professional background and how you'd like to help..." 
-                        : "Tell us about your educational background and where you need support..."
-                      }
-                      required
+                      name="message" 
+                      required 
+                      rows={6} 
+                      value={formData.message} 
+                      onChange={handleChange} 
+                      placeholder={current.placeholder} 
+                      className="rounded-[2.5rem] border-slate-100 bg-slate-50 focus:bg-white focus:ring-secondary p-8 leading-relaxed transition-all" 
                     />
                   </div>
 
                   <input type="hidden" name="interest" value={formData.interest} />
 
-                  {state?.message && (
-                    <div className={cn(
-                      "p-4 rounded-2xl text-sm font-bold border",
-                      state.success
-                        ? "bg-emerald-50 border-emerald-100 text-emerald-700"
-                        : "bg-red-50 border-red-100 text-red-700"
-                    )}>
-                      {state.message}
-                    </div>
-                  )}
-
                   <Button 
                     type="submit" 
                     disabled={isPending}
                     className={cn(
-                      "w-full h-16 rounded-2xl text-lg font-black transition-all duration-500 shadow-xl",
-                      formData.interest === 'volunteer' 
-                        ? "bg-primary hover:bg-secondary text-white shadow-secondary/20" 
-                        : "bg-accent hover:bg-red-700 text-white shadow-accent/20"
+                      "w-full h-20 rounded-full text-[11px] font-black uppercase tracking-[0.5em] transition-all duration-500 shadow-2xl text-white",
+                      current.bg
                     )}
                   >
                     {isPending ? (
-                      <span className="flex items-center gap-2">
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        Submitting...
-                      </span>
+                      <Loader2 className="w-6 h-6 animate-spin" />
                     ) : (
-                      <span className="flex items-center gap-2">
-                        Submit Application
-                        <ArrowRight className="w-5 h-5" />
+                      <span className="flex items-center gap-3">
+                        {current.button} <ArrowRight className="w-5 h-5" />
                       </span>
                     )}
                   </Button>
@@ -267,21 +254,14 @@ export default function JoinClient() {
           </div>
         </Container>
       </section>
-
-      <section className="py-24 bg-slate-50 border-t border-slate-100">
-        <Container>
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-2xl font-bold text-primary mb-4">Are you an organization looking to partner?</h2>
-            <p className="text-foreground/60 mb-8 font-medium">For corporate, academic, or NGO collaborations, please use our institutional channel.</p>
-            <Link 
-              href="/contact" 
-              className="text-sm font-black uppercase tracking-[0.2em] text-secondary hover:text-primary transition-colors"
-            >
-              Contact Partnerships Team â†’
-            </Link>
-          </div>
-        </Container>
-      </section>
     </main>
+  );
+}
+
+export default function JoinClient() {
+  return (
+    <Suspense fallback={<div className="h-screen bg-white" />}>
+      <JoinForm />
+    </Suspense>
   );
 }

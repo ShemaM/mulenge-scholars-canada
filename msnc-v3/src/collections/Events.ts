@@ -4,11 +4,10 @@ export const Events: CollectionConfig = {
   slug: 'events',
   admin: { 
     useAsTitle: 'title',
-    defaultColumns: ['title', 'date', '_status'], // Shows status in the list view
+    defaultColumns: ['title', 'eventDate', '_status'],
     group: 'Editorial',
   },
   access: { read: () => true },
-  // Enable Drafts (replaces your isPublished checkbox with a pro workflow)
   versions: {
     drafts: true,
   },
@@ -28,7 +27,7 @@ export const Events: CollectionConfig = {
       }
     },
     { 
-      name: 'date', 
+      name: 'eventDate', 
       type: 'date', 
       required: true,
       admin: {
@@ -44,7 +43,7 @@ export const Events: CollectionConfig = {
       admin: { placeholder: 'e.g., Nairobi, Kenya or Virtual (Zoom)' }
     },
     {
-      name: 'description', // Added: Needed for the card preview text
+      name: 'description', 
       type: 'textarea',
       required: true,
       admin: { description: 'Short summary for the homepage card' }
@@ -55,13 +54,13 @@ export const Events: CollectionConfig = {
       admin: { description: 'Link to Eventbrite, Zoom, or Google Form' }
     },
     { 
-      name: 'image', // Renamed from thumbnail to match EventPreview.tsx logic
+      name: 'image', 
       type: 'upload', 
       relationTo: 'media',
       required: true,
     },
     {
-      name: 'content', // Added: For the actual event page details
+      name: 'content', 
       type: 'richText',
     }
   ],

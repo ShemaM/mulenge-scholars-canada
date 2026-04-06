@@ -8,7 +8,7 @@ const JoinSchema = z.object({
   lastName: z.string().min(2, "Last name must be at least 2 characters."),
   email: z.string().email("Please enter a valid email address."),
   phone: z.string().optional(),
-  interest: z.enum(["volunteer", "scholar"]),
+  interest: z.enum(["volunteer", "scholar", "partner"]),
   message: z.string().min(10, "Please add at least 10 characters about your goals."),
 });
 

@@ -1,9 +1,7 @@
-# Payload TypeError Fixes Progress
+# Favicon Implementation TODO
 
-## Steps:
-- [x] Review files and confirm plan
-- [ ] Edit EventPreview.tsx interface to add blogs?: any[];
-- [ ] Create src/types/declarations.d.ts for @payloadcms/next/css
-- [ ] Test pnpm build
+- [x] Step 1: Add metadata export with favicon to src/app/(frontend)/layout.tsx
+- [x] Step 2: Verify in browser after dev server restart
+- [ ] Step 2: Verify in browser after dev server restart
+- [x] Step 3: Mark complete
 
-## Status: Implementing edits...

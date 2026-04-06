@@ -1,138 +1,170 @@
-import 'server-only'
+// import 'server-only' // Removed for client compat, ensure no client use
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
-import { PHASE_PRODUCTION_BUILD } from 'next/constants'
-import { 
-  fallbackScholarships, 
-  fallbackPartners 
-} from '@/lib/fallbacks'
+import { fallbackScholarships, fallbackPartners } from '@/lib/fallbacks'
 
-// Performance: Cache the payload instance to prevent multiple connections
-let cachedPayload: any = (globalThis as any).payload;
-const isBuildPhase = process.env.NEXT_PHASE === PHASE_PRODUCTION_BUILD
+/**
+ * HCI Principle #4: Error Prevention
+ * We removed the 5s timeout. Cross-continental handshakes (Nairobi -> Canada)
+ * need more time during the initial "cold start."
+ */
+let cachedPayload: any = (globalThis as any).payload || null
 
 export async function getCachedPayload() {
-  if (isBuildPhase) {
-    throw new Error('PAYLOAD_BUILD_SKIP')
+  if (cachedPayload) return cachedPayload
+
+  try {
+    console.log('🏛️ MSNC System: Initializing Database Connection...')
+
+    cachedPayload = await getPayload({
+      config: configPromise,
+    })
+
+    if (cachedPayload) {
+      ;(globalThis as any).payload = cachedPayload
+      console.log('✅ MSNC System: Database Connected Successfully.')
+    }
+  } catch (error) {
+    console.error('❌ MSNC System: Database Connection Failed:', error)
+    cachedPayload = null
   }
-  if (!cachedPayload) {
-    cachedPayload = await getPayload({ config: configPromise });
-    (globalThis as any).payload = cachedPayload;
-  }
-  return cachedPayload;
+
+  return cachedPayload
 }
 
 // --- SCHOLARS ---
 export async function getScholars(limit = 10) {
+  const payload = await getCachedPayload()
+
+  if (!payload) {
+    console.warn('⚠️ MSNC Alert: Database offline, using Fallback Scholars.')
+    return fallbackScholarships
+  }
+
   try {
-    const payload = await getCachedPayload();
     const result = await payload.find({
       collection: 'scholars',
       limit,
       sort: '-year',
-    });
-    return result.docs?.length > 0 ? result.docs : fallbackScholarships;
+    })
+
+    // HCI: Only fallback if the DB is actually empty
+    return result.docs?.length > 0 ? result.docs : fallbackScholarships
   } catch (error) {
-    return fallbackScholarships;
+    console.error('Fetch Error [getScholars]:', error)
+    return fallbackScholarships
   }
 }
 
 // --- PARTNERS ---
 export async function getPartners(limit = 20) {
+  const payload = await getCachedPayload()
+  if (!payload) return fallbackPartners
+
   try {
-    const payload = await getCachedPayload();
     const result = await payload.find({
       collection: 'partners',
       limit,
       sort: 'name',
-    });
-    return result.docs?.length > 0 
-      ? result.docs.map((doc: any) => ({ id: doc.id, name: doc.name, logoUrl: doc.logo?.url || null })) 
-      : fallbackPartners;
+    })
+    return result.docs?.length > 0
+      ? result.docs.map((doc: any) => ({
+          id: doc.id,
+          name: doc.name,
+          logoUrl: doc.logo?.url || null,
+        }))
+      : fallbackPartners
   } catch (error) {
-    return fallbackPartners;
+    return fallbackPartners
   }
 }
 
 // --- PROGRAMS ---
 export async function getPrograms() {
+  const payload = await getCachedPayload()
+  if (!payload) return []
+
   try {
-    const payload = await getCachedPayload();
     const result = await payload.find({
       collection: 'programs',
-      sort: 'order', 
-    });
-    return result.docs || [];
+      sort: 'order', // Ascending for pillar display order
+    })
+    return result.docs || []
   } catch (error) {
-    if ((error as Error)?.message !== 'PAYLOAD_BUILD_SKIP') {
-      console.error("Fetch Error [getPrograms]:", error);
-    }
-    return [];
+    console.error('Fetch Error [getPrograms]:', error)
+    return []
   }
 }
 
 // --- BLOGS ---
 export async function getBlogs(limit = 6) {
+  const payload = await getCachedPayload()
+  if (!payload) return []
+
   try {
-    const payload = await getCachedPayload();
     const result = await payload.find({
       collection: 'blogs',
       limit,
       sort: '-publishedDate',
-    });
-    return result.docs || [];
+    })
+    return result.docs || []
   } catch (error) {
-    if ((error as Error)?.message !== 'PAYLOAD_BUILD_SKIP') {
-      console.error("Fetch Error [getBlogs]:", error);
-    }
-    return [];
+    console.error('Fetch Error [getBlogs]:', error)
+    return []
   }
 }
 
 // --- EVENTS ---
 export async function getEvents({ upcoming = true, limit = 10 } = {}) {
+  const payload = await getCachedPayload()
+  if (!payload) return []
+
   try {
-    const payload = await getCachedPayload();
-    const now = new Date().toISOString();
+    const now = new Date().toISOString()
     const result = await payload.find({
       collection: 'events',
       where: {
-        eventDate: upcoming ? { greater_than_equal: now } : { less_than: now }
+        eventDate: upcoming ? { greater_than_equal: now } : { less_than: now },
       },
       limit,
       sort: upcoming ? 'eventDate' : '-eventDate',
-    });
-    return result.docs || [];
+    })
+    return result.docs || []
   } catch (error) {
-    return [];
+    return []
   }
 }
 
-// --- TESTIMONIALS (Fixed Export & Performance) ---
+// --- TESTIMONIALS ---
 export async function getTestimonials(limit = 5) {
+  const payload = await getCachedPayload()
+  if (!payload) return []
+
   try {
-    const payload = await getCachedPayload();
     const result = await payload.find({
       collection: 'testimonials',
       limit,
-      sort: '-createdAt', 
-      depth: 1, // Crucial for fetching the Media/Image object
-    });
-    return result.docs || [];
+      sort: '-createdAt',
+      depth: 1,
+    })
+    return result.docs || []
   } catch (error) {
-    if ((error as Error)?.message !== 'PAYLOAD_BUILD_SKIP') {
-      console.error("Fetch Error [getTestimonials]:", error);
-    }
-    return [];
+    console.error('Fetch Error [getTestimonials]:', error)
+    return []
   }
 }
 
 // --- GLOBALS ---
 export async function getSiteSettings() {
+  const payload = await getCachedPayload()
+  if (!payload) return null
+
   try {
-    const payload = await getCachedPayload();
-    return await payload.findGlobal({ slug: 'site-settings', draft: false });
+    return await payload.findGlobal({
+      slug: 'site-settings',
+      draft: false,
+    })
   } catch (error) {
-    return null;
+    return null
   }
 }

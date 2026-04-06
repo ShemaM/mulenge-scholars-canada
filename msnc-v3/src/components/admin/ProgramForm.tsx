@@ -1,6 +1,6 @@
 'use client';
 
-import { upsertEvent, upsertProgram } from '@/app/actions/admin';
+import { upsertProgram } from '@/app/actions/admin';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
@@ -12,6 +12,31 @@ import { toast } from 'sonner';
 
 export default function ProgramForm({ initialData }: { initialData?: any }) {
   const [loading, setLoading] = useState(false);
+
+  const pillarOptions = [
+    { value: 'workshops', label: 'Workshops & Community Engagement' },
+    { value: 'high-school', label: 'High School Support Program' },
+    { value: 'adult-learning', label: 'Adult Learning & Career Pathways' },
+    { value: 'rebuilding-futures', label: 'Rebuilding Futures Initiative' }
+  ];
+
+  const colorOptions = [
+    { value: 'sky', label: 'Sky (Blue)' },
+    { value: 'navy', label: 'Navy (Indigo)' },
+    { value: 'slate', label: 'Slate' },
+    { value: 'red', label: 'Red' }
+  ];
+
+  const themeOptions = [
+    { value: 'light', label: 'Light' },
+    { value: 'alt', label: 'Alt' }
+  ];
+
+  const phaseOptions = [
+    { value: 'foundation', label: 'Foundation' },
+    { value: 'growth', label: 'Growth' },
+    { value: 'impact', label: 'Impact' }
+  ];
 
   return (
     <form 
@@ -31,49 +56,97 @@ export default function ProgramForm({ initialData }: { initialData?: any }) {
     >
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <Label className="text-xs font-bold uppercase tracking-widest text-primary/90">Pillar #</Label>
-          <Input name="pillar" defaultValue={initialData?.pillar} placeholder="01" required className="h-14 rounded-2xl font-mono tracking-widest text-xl" />
+          <Label className="text-xs font-bold uppercase tracking-widest text-primary/90">Index</Label>
+          <Input name="index" defaultValue={initialData?.index} placeholder="01" required className="h-14 rounded-2xl font-mono tracking-widest text-xl" />
         </div>
+        <div className="space-y-2">
+          <Label className="text-xs font-bold uppercase tracking-widest text-primary/90">Pillar</Label>
+          <select name="pillar" defaultValue={initialData?.pillar} className="h-14 rounded-2xl px-4 text-lg bg-slate-50 border-slate-200 focus:ring-primary font-medium" required>
+            <option value="">Select Pillar</option>
+            {pillarOptions.map(option => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <Label className="text-xs font-bold uppercase tracking-widest text-primary/90">Title</Label>
           <Input name="title" defaultValue={initialData?.title} placeholder="Academic Support" required className="h-14 rounded-2xl" />
         </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <Label className="text-xs font-bold uppercase tracking-widest text-primary/90">Slug</Label>
           <Input name="slug" defaultValue={initialData?.slug} placeholder="academic-support" required className="h-14 rounded-2xl font-mono" />
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <Label className="text-xs font-bold uppercase tracking-widest text-primary/90">Phase</Label>
-          <select name="phase" defaultValue={initialData?.phase} className="h-14 rounded-2xl px-4 text-lg bg-slate-50 border-slate-200 focus:ring-primary font-medium" required>
-            <option value="">Select Phase</option>
-            <option value="foundation">Foundation</option>
-            <option value="growth">Growth</option>
-            <option value="impact">Impact</option>
+          <Label className="text-xs font-bold uppercase tracking-widest text-primary/90">Order</Label>
+          <Input name="order" type="number" defaultValue={initialData?.order} placeholder="1" required className="h-14 rounded-2xl" />
+        </div>
+        <div className="space-y-2">
+          <Label className="text-xs font-bold uppercase tracking-widest text-primary/90">Color</Label>
+          <select name="color" defaultValue={initialData?.color} className="h-14 rounded-2xl px-4 text-lg bg-slate-50 border-slate-200 focus:ring-primary font-medium">
+            <option value="">Select Color</option>
+            {colorOptions.map(option => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
           </select>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2 md:col-span-1">
-          <Label className="text-xs font-bold uppercase tracking-widest text-primary/90">Status</Label>
-          <select name="status" defaultValue={initialData?.status} className="h-14 rounded-2xl px-4 text-lg bg-slate-50 border-slate-200 focus:ring-primary font-medium">
-            <option value="active">Active</option>
-            <option value="on-hold">On Hold</option>
-            <option value="suspended">Suspended</option>
+        <div className="space-y-2">
+          <Label className="text-xs font-bold uppercase tracking-widest text-primary/90">Phase</Label>
+          <select name="phase" defaultValue={initialData?.phase} className="h-14 rounded-2xl px-4 text-lg bg-slate-50 border-slate-200 focus:ring-primary font-medium" required>
+            <option value="">Select Phase</option>
+            {phaseOptions.map(option => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
           </select>
         </div>
-        <div className="space-y-2 md:col-span-1">
-          <Label className="text-xs font-bold uppercase tracking-widest text-primary/90">Featured Image</Label>
-          <Input name="featuredImage" defaultValue={initialData?.featuredImage} placeholder="Image URL" className="h-14 rounded-2xl" />
+        <div className="space-y-2">
+          <Label className="text-xs font-bold uppercase tracking-widest text-primary/90">Theme</Label>
+          <select name="theme" defaultValue={initialData?.theme} className="h-14 rounded-2xl px-4 text-lg bg-slate-50 border-slate-200 focus:ring-primary font-medium">
+            <option value="">Select Theme</option>
+            {themeOptions.map(option => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
+          </select>
         </div>
       </div>
 
       <div className="space-y-2">
         <Label className="text-xs font-bold uppercase tracking-widest text-primary/90">Description</Label>
         <Textarea name="description" defaultValue={initialData?.description} rows={8} className="rounded-3xl p-6 font-medium text-lg leading-relaxed" />
+      </div>
+
+      <div className="space-y-2">
+        <Label className="text-xs font-bold uppercase tracking-widest text-primary/90">Tagline</Label>
+        <Input name="tagline" defaultValue={initialData?.tagline} placeholder="Community & Growth" className="h-12 rounded-2xl" />
+      </div>
+
+      <div className="space-y-2">
+        <Label className="text-xs font-bold uppercase tracking-widest text-primary/90">Stat Value</Label>
+        <Input name="statValue" defaultValue={initialData?.statValue} placeholder="300+" className="h-12 rounded-2xl font-mono" />
+      </div>
+
+      <div className="space-y-2">
+        <Label className="text-xs font-bold uppercase tracking-widest text-primary/90">Stat Label</Label>
+        <Input name="statLabel" defaultValue={initialData?.statLabel} placeholder="Youth Reached" className="h-12 rounded-2xl" />
+      </div>
+
+      <div className="space-y-2">
+        <Label className="text-xs font-bold uppercase tracking-widest text-primary/90">Featured Image URL</Label>
+        <Input name="featuredImage" defaultValue={initialData?.featuredImage} placeholder="Media ID or URL" className="h-14 rounded-2xl" />
+      </div>
+
+      {/* Features Array - Simplified for now */}
+      <div className="space-y-2">
+        <Label className="text-xs font-bold uppercase tracking-widest text-primary/90">Features (JSON)</Label>
+        <Textarea name="features" defaultValue={JSON.stringify(initialData?.features || [], null, 2)} rows={6} className="rounded-3xl p-6 font-mono text-sm" placeholder='[{"label": "Feature 1", "desc": "Description", "icon": "Users"}]'/>
       </div>
 
       <div className="flex gap-4">
@@ -87,7 +160,7 @@ export default function ProgramForm({ initialData }: { initialData?: any }) {
           {loading ? (
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
           ) : (
-            initialData ? "Update Program" : "Create & Publish"
+            initialData ? "Update Pillar" : "Create Pillar"
           )}
         </Button>
       </div>

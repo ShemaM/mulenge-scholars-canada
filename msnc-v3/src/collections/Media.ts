@@ -6,6 +6,23 @@ import { fileURLToPath } from 'url'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+function getBlobBaseUrl() {
+  const token = process.env.BLOB_READ_WRITE_TOKEN
+  const storeId = token?.match(/^vercel_blob_rw_([a-z\d]+)_[a-z\d]+$/i)?.[1]?.toLowerCase()
+
+  return storeId ? `https://${storeId}.public.blob.vercel-storage.com` : null
+}
+
+function getBlobUrl(filename?: string | null) {
+  const baseUrl = getBlobBaseUrl()
+
+  if (!baseUrl || !filename) {
+    return null
+  }
+
+  return `${baseUrl}/${encodeURIComponent(filename)}`
+}
+
 export const Media: CollectionConfig = {
   slug: 'media',
   access: {
@@ -15,6 +32,50 @@ export const Media: CollectionConfig = {
   admin: {
     useAsTitle: 'alt',
     description: 'Central asset vault for MSNC v3. All images are automatically optimized.',
+  },
+  hooks: {
+    afterRead: [
+      ({ doc }) => {
+        if (!doc) {
+          return doc
+        }
+
+        const nextDoc = { ...doc }
+        const directUrl = getBlobUrl(nextDoc.filename)
+
+        if (directUrl) {
+          nextDoc.url = directUrl
+        }
+
+        if (nextDoc.thumbnailURL) {
+          const thumbnailFilename = typeof nextDoc.sizes?.thumbnail?.filename === 'string'
+            ? nextDoc.sizes.thumbnail.filename
+            : nextDoc.thumbnailURL.split('/').pop()
+
+          nextDoc.thumbnailURL = getBlobUrl(thumbnailFilename) || nextDoc.thumbnailURL
+        }
+
+        if (nextDoc.sizes && typeof nextDoc.sizes === 'object') {
+          nextDoc.sizes = Object.fromEntries(
+            Object.entries(nextDoc.sizes).map(([sizeName, sizeValue]) => {
+              if (!sizeValue || typeof sizeValue !== 'object') {
+                return [sizeName, sizeValue]
+              }
+
+              const typedSize = sizeValue as { filename?: string; url?: string | null }
+              const nextUrl = getBlobUrl(typedSize.filename)
+
+              return [
+                sizeName,
+                nextUrl ? { ...typedSize, url: nextUrl } : typedSize,
+              ]
+            }),
+          )
+        }
+
+        return nextDoc
+      },
+    ],
   },
   upload: {
     // Points directly to /public/media for Next.js to serve them statically

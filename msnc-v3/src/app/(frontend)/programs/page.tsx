@@ -1,227 +1,217 @@
-import { Metadata } from 'next';
+/**
+ * MSNC Programs Orchestrator (Executive Revamp)
+ * ─────────────────────────────────────────────────────────────────────────
+ * INTERACTIVE UPDATES:
+ * • Dynamic Navigation: Hover-active program directory.
+ * • Data Integrity: Removed unverified stats; focused on the three core PDF pillars.
+ * • UX Flow: "Learn More" links now point to specialized sub-pages.
+ * • Visuals: High-contrast bento-style layout with sticky sidebars.
+ */
+
+import { Metadata, Viewport } from 'next';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import Container from '@/components/ui/Container';
-import { Button } from '@/components/ui/Button';
-import { 
-  ArrowRight, BookOpen, Users, Megaphone, 
-  HeartHandshake, Award, Globe2, Wrench 
+import { getCachedPayload } from '@/lib/payload';
+import {
+  ArrowRight,
+  Users,
+  GraduationCap,
+  Briefcase,
+  Globe,
+  Calendar,
+  Sparkles,
+  Zap,
+  ArrowUpRight
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
-  title: 'Our Ecosystem | MSNC',
-  description: 'Explore the MSNC journey. From academic grounding to systemic advocacy.',
+  title: "Programs & Impact | Mulenge Scholars' Network Canada",
+  description: 'Targeted support systems for high school students, adult learners, and global refugee initiatives.',
 };
 
-const journeyPhases = [
+export const viewport: Viewport = {
+  themeColor: '#ffffff',
+};
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+// Data structure based strictly on the MSNC Document
+const STRATEGIC_PILLARS = [
   {
-    phase: "Phase 01: Grounding & Growth",
-    description: "Building the foundational skills required to navigate new economic landscapes.",
-    programs: [
-      {
-        id: "01",
-        anchor: "pillar-01", // FIXED: Matches your incoming links
-        title: "Academic Support",
-        desc: "Transforming academic barriers into launchpads through strategic tutoring and resource mapping.",
-        icon: BookOpen,
-        href: "/programs/academic-support",
-        color: "text-blue-600",
-        bg: "bg-blue-50"
-      },
-      {
-        id: "02",
-        anchor: "pillar-02", // FIXED: Matches the 404 URL
-        title: "Technical & Vocational",
-        desc: "Facilitating practical, high-demand skills training for immediate pathways to independence.",
-        icon: Wrench,
-        href: "/programs/technical-vocational",
-        color: "text-slate-700",
-        bg: "bg-slate-100"
-      }
-    ]
+    id: 'workshops',
+    slug: 'workshops-community',
+    icon: Users,
+    title: 'Workshops & Community Engagement',
+    summary: 'Interactive sessions focused on academic success, career development, and student life.',
+    details: 'These sessions create safe and engaging spaces where youth can learn, connect, and grow through virtual and in-person mentorship.',
+    color: 'text-[#4A90D9]',
+    bg: 'bg-[#EEF5FD]',
+    border: 'border-[#4A90D9]/20'
   },
   {
-    phase: "Phase 02: Connection & Culture",
-    description: "Weaving a safety net of shared experience and intergenerational wisdom.",
-    programs: [
-      {
-        id: "03",
-        anchor: "pillar-03",
-        title: "Global Mentorship",
-        desc: "Pairing ambitious youth with established Mulenge professionals for 1-on-1 career guidance.",
-        icon: Users,
-        href: "/programs/mentorship",
-        color: "text-indigo-600",
-        bg: "bg-indigo-50"
-      },
-      {
-        id: "04",
-        anchor: "pillar-04",
-        title: "Community Empowerment",
-        desc: "Rebuilding a sense of belonging through workshops that ensure youth remain deeply rooted.",
-        icon: HeartHandshake,
-        href: "/programs/community-empowerment",
-        color: "text-emerald-600",
-        bg: "bg-emerald-50"
-      }
-    ]
+    id: 'high-school',
+    slug: 'high-school-support',
+    icon: GraduationCap,
+    title: 'High School Support',
+    tagline: 'Grades 11 – 12',
+    summary: 'Targeted support to help students transition successfully into post-secondary education.',
+    details: 'Tutoring, course selection guidance, and hands-on assistance with college and university applications.',
+    color: 'text-[#002147]',
+    bg: 'bg-[#F8FAFC]',
+    border: 'border-[#002147]/10'
   },
   {
-    phase: "Phase 03: Power & Purpose",
-    description: "Equipped and connected, our youth transition from navigating the system to leading it.",
-    programs: [
-      {
-        id: "05",
-        anchor: "pillar-05",
-        title: "Leadership Pipeline",
-        desc: "Equipping the next generation with strategic tools and platforms to lead their communities.",
-        icon: Award,
-        href: "/programs/leadership",
-        color: "text-amber-600",
-        bg: "bg-amber-50"
-      },
-      {
-        id: "06",
-        anchor: "pillar-06",
-        title: "Systemic Advocacy",
-        desc: "Dismantling systemic barriers by taking lived experiences directly to global policymakers.",
-        icon: Megaphone,
-        href: "/programs/advocacy",
-        color: "text-red-600",
-        bg: "bg-red-50"
-      },
-      {
-        id: "07",
-        anchor: "pillar-07",
-        title: "Strategic Partnerships",
-        desc: "Collaborating with global NGOs and corporations to unlock exclusive scholarships.",
-        icon: Globe2,
-        href: "/programs/partnerships",
-        color: "text-cyan-600",
-        bg: "bg-cyan-50"
-      }
-    ]
+    id: 'adult-learning',
+    slug: 'adult-learning-pathways',
+    icon: Briefcase,
+    title: 'Adult Learning & Career Pathways',
+    summary: 'Support for adult learners who want to upgrade their education or explore new career opportunities.',
+    details: 'Guidance on prerequisite courses, adult education enrollment, and information on skilled trades.',
+    color: 'text-[#6F4763]', // Unity Plum blend
+    bg: 'bg-[#FAF7F9]',
+    border: 'border-[#6F4763]/10'
   }
 ];
 
-export default function ProgramsPage() {
+const FOCUS_BASE = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#4A90D9]';
+
+export default async function ProgramsPage() {
   return (
-    <main className="min-h-screen bg-white selection:bg-red-100 selection:text-red-900">
+    <div className="min-h-screen bg-white selection:bg-[#4A90D9]/10">
       
-      {/* Editorial Hero */}
-      <section className="relative pt-40 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-white border-b border-slate-100">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-slate-50/50 -skew-x-12 transform origin-top pointer-events-none" />
-        
+      {/* ─── EDITORIAL HERO SECTION ─── */}
+      <section className="relative pt-40 pb-24 overflow-hidden bg-[#F8FAFC]">
+        {/* Abstract Architectural Background */}
+        <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:40px_40px] opacity-40" />
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 text-[25vw] font-black text-slate-900/[0.02] leading-none pointer-events-none select-none font-display">
+          PILLARS
+        </div>
+
         <Container className="relative z-10">
-          <div className="grid lg:grid-cols-12 gap-12 items-end">
-            <div className="lg:col-span-8 space-y-8">
-              <div className="inline-flex items-center gap-2 text-red-600 font-black uppercase tracking-widest text-xs">
-                <span className="w-8 h-0.5 bg-red-600" />
-                The MSNC Ecosystem
-              </div>
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-primary leading-[1.05] tracking-tight font-display">
-                Not Just Programs. <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
-                  A Pathway to Power.
-                </span>
-              </h1>
+          <div className="max-w-4xl space-y-8">
+            <div className="flex items-center gap-3">
+              <span className="w-12 h-px bg-[#4A90D9]" />
+              <span className="font-bold text-[10px] uppercase tracking-[0.4em] text-[#4A90D9]">Strategic Framework</span>
             </div>
-            <div className="lg:col-span-4">
-              <p className="text-lg text-slate-600 leading-relaxed font-medium border-l-4 border-red-500 pl-6">
-                Our 7 strategic pillars form a holistic ecosystem designed to take youth from survival to systemic leadership.
-              </p>
-            </div>
+            <h1 className="text-5xl md:text-8xl font-black text-[#002147] font-display leading-[0.9] tracking-tighter">
+              Bespoke Paths.<br />
+              <em className="not-italic text-[#4A90D9]">Proven Results.</em>
+            </h1>
+            <p className="text-xl md:text-2xl text-slate-600 font-medium max-w-2xl leading-relaxed border-l-4 border-[#4A90D9]/30 pl-8">
+              We move beyond generic aid. Our programs are designed to address the specific systemic barriers faced by Banyamulenge youth in the Canadian education landscape.
+            </p>
           </div>
         </Container>
       </section>
 
-      {/* The Journey */}
-      <section className="relative py-24 bg-white">
+      {/* ─── INTERACTIVE PROGRAM EXPLORER ─── */}
+      <section className="py-32">
         <Container>
-          <div className="max-w-7xl mx-auto space-y-40">
-            {journeyPhases.map((phaseData, phaseIndex) => (
-              <div key={phaseIndex} className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-start">
-                
-                {/* HEURISTIC #1: System Status (Sticky Phase Indicator) */}
-                <div className="lg:col-span-4 lg:sticky lg:top-32 space-y-6">
-                  <div className="space-y-2">
-                    <h2 className="text-xs font-black text-slate-400 uppercase tracking-[0.3em]">
-                      {phaseData.phase.split(':')[0]}
-                    </h2>
-                    <h3 className="text-4xl font-black text-primary font-display leading-tight">
-                      {phaseData.phase.split(':')[1]}
-                    </h3>
-                  </div>
-                  <p className="text-lg text-slate-600 leading-relaxed font-medium">
-                    {phaseData.description}
-                  </p>
-                </div>
+          <div className="grid lg:grid-cols-12 gap-16 items-start">
+            
+            {/* Sticky Sidebar Navigation */}
+            <div className="lg:col-span-4 lg:sticky lg:top-32 space-y-10">
+              <div className="space-y-4">
+                <h2 className="text-4xl font-black text-[#002147] font-display tracking-tight">Core Programs</h2>
+                <p className="text-slate-500 font-medium leading-relaxed">
+                  Select a pillar to view the strategic intervention we provide for our scholars.
+                </p>
+              </div>
 
-                {/* Staggered Cards */}
-                <div className="lg:col-span-8 space-y-12">
-                  {phaseData.programs.map((program, progIndex) => (
-                    <div 
-                      key={program.id} 
-                      id={program.anchor} // CRITICAL FIX: Resolves the Hash 404
-                      className="scroll-mt-32" // Prevents being hidden by the fixed Navbar
-                    >
-                      <Link 
-                        href={program.href}
-                        className={cn(
-                          "group block relative bg-white border border-slate-200 rounded-[2.5rem] p-8 md:p-12 hover:border-primary/10 hover:shadow-brand transition-all duration-500 overflow-hidden",
-                          progIndex % 2 !== 0 ? 'lg:ml-12' : 'lg:mr-12'
+              <nav className="flex flex-col gap-2" aria-label="Program quick links">
+                {STRATEGIC_PILLARS.map((p) => (
+                  <a 
+                    key={p.id}
+                    href={`#${p.id}`}
+                    className="group flex items-center justify-between p-5 rounded-2xl border border-slate-100 bg-white hover:border-[#4A90D9]/30 hover:shadow-lg transition-all duration-300"
+                  >
+                    <span className="font-bold text-[#002147] group-hover:text-[#4A90D9] transition-colors">{p.title}</span>
+                    <ArrowUpRight className="w-4 h-4 text-slate-300 group-hover:text-[#4A90D9] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </a>
+                ))}
+              </nav>
+            </div>
+
+            {/* Vertical Content Flow */}
+            <div className="lg:col-span-8 space-y-32">
+              {STRATEGIC_PILLARS.map((pillar) => (
+                <article 
+                  key={pillar.id} 
+                  id={pillar.id} 
+                  className="group relative scroll-mt-32"
+                >
+                  <div className={`p-10 md:p-16 rounded-[3rem] ${pillar.bg} border border-transparent transition-all duration-500 hover:shadow-2xl`}>
+                    <div className="flex flex-col md:flex-row md:items-center gap-8 mb-10">
+                      <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center shadow-sm">
+                        <pillar.icon className={`w-8 h-8 ${pillar.color}`} />
+                      </div>
+                      <div>
+                        {pillar.tagline && (
+                          <span className={`text-[10px] font-bold uppercase tracking-widest ${pillar.color} mb-1 block`}>
+                            {pillar.tagline}
+                          </span>
                         )}
+                        <h3 className="text-3xl md:text-4xl font-black text-[#002147] font-display leading-tight">
+                          {pillar.title}
+                        </h3>
+                      </div>
+                    </div>
+
+                    <div className="space-y-6 mb-12">
+                      <p className="text-xl text-[#002147] font-bold leading-snug">
+                        {pillar.summary}
+                      </p>
+                      <p className="text-lg text-slate-600 font-medium leading-relaxed">
+                        {pillar.details}
+                      </p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-4 pt-8 border-t border-black/5">
+                      <Link 
+                        href={`/programs/${pillar.slug}`}
+                        className={`inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#002147] text-white font-bold text-sm hover:bg-[#4A90D9] transition-all shadow-xl shadow-slate-200 group ${FOCUS_BASE}`}
                       >
-                        <div className="absolute -bottom-10 -right-4 text-[12rem] font-black text-slate-50 leading-none pointer-events-none font-display group-hover:text-slate-100 transition-colors z-0">
-                          {program.id}
-                        </div>
-
-                        <div className="relative z-10">
-                          <div className="flex items-start justify-between mb-10">
-                            <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform duration-500", program.bg)}>
-                              <program.icon className={cn("w-8 h-8", program.color)} />
-                            </div>
-                            <div className="w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-all">
-                              <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-white" />
-                            </div>
-                          </div>
-
-                          <h4 className="text-3xl font-black text-primary mb-4 font-display group-hover:text-secondary transition-colors">
-                            {program.title}
-                          </h4>
-                          <p className="text-lg text-slate-600 leading-relaxed font-medium max-w-lg">
-                            {program.desc}
-                          </p>
-                        </div>
+                        Learn More Details
+                        <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
                       </Link>
                     </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative py-32 bg-primary overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:32px_32px]" />
-        <Container className="relative z-10">
-          <div className="max-w-4xl mx-auto text-center bg-white/5 backdrop-blur-xl border border-white/10 p-12 md:p-20 rounded-[3.5rem] shadow-2xl">
-            <h2 className="text-4xl md:text-5xl font-black text-white mb-8 font-display">
-              Ready to join the network?
-            </h2>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="h-14 px-10 rounded-full bg-accent text-white font-bold hover:shadow-brand transition-all">
-                <Link href="/join">Apply as a Scholar</Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="h-14 px-10 rounded-full border-white/20 text-white hover:bg-white/5 font-bold">
-                <Link href="/contact">Partner With Us</Link>
-              </Button>
+                  </div>
+                </article>
+              ))}
             </div>
           </div>
         </Container>
       </section>
-    </main>
+
+      {/* ─── GLOBAL IMPACT / REBUILDING FUTURES ─── */}
+      <section className="py-24 bg-[#002147] relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#4A90D9_1px,transparent_1px)] [background-size:24px_24px]" />
+        <Container className="relative z-10">
+          <div className="bg-white/5 border border-white/10 backdrop-blur-md p-12 md:p-20 rounded-[4rem] text-center max-w-5xl mx-auto space-y-10">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#4A90D9] text-white text-[10px] font-bold uppercase tracking-widest">
+              <Globe className="w-3 h-3" /> Rebuilding Futures
+            </div>
+            <h2 className="text-4xl md:text-7xl font-black text-white font-display tracking-tight leading-none">
+              Impacting Beyond <br /> <span className="italic text-[#4A90D9]">Boundaries.</span>
+            </h2>
+            <p className="text-xl text-slate-300 font-medium leading-relaxed max-w-2xl mx-auto">
+              Supporting Banyamulenge youth in refugee camps across Kenya, Uganda, and Burundi with high-demand vocational skills.
+            </p>
+            <div className="pt-6">
+              <Link 
+                href="/impact/rebuilding-futures"
+                className="inline-flex items-center gap-3 px-10 py-5 rounded-full bg-white text-[#002147] font-bold hover:bg-[#4A90D9] hover:text-white transition-all group"
+              >
+                Explore Global Initiative
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+              </Link>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+    </div>
   );
 }

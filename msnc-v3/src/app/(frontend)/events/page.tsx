@@ -1,231 +1,316 @@
-import { fallbackEvents } from '@/lib/fallbacks';
-import { Calendar, ArrowRight, Globe, Sparkles, Camera } from "lucide-react";
-import { Button } from '@/components/ui/Button';
+import { Metadata } from 'next';
+import { Calendar, ArrowRight, Sparkles, MapPin, Clock, ChevronRight } from "lucide-react";
 import Container from '@/components/ui/Container';
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import Image from "next/image";
 import { getCachedPayload } from '@/lib/payload';
+import { fallbackEvents } from '@/lib/fallbacks';
 
-// 1. Define the Interface to fix 'unknown' type errors
+// ─── Route Segment Config ─────────────────────────────────────────────────
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: 'Impact Chronicles & Events | MSNC',
+  description: 'Documenting the global movement and strategic initiatives of the Mulenge Scholars Network Canada.',
+};
+
+// ─── Types & Constants ────────────────────────────────────────────────────
 interface MSNCEvent {
   id: string;
   title: string;
   slug: string;
-  eventDate: string;
-  category: string;
+  date: string; 
   description: string;
-  mainImage?: {
-    url: string;
-  };
+  mainImage?: { url: string } | any;
   location?: string;
 }
 
-export const metadata = {
-  title: 'Events & Community Impact | MSNC',
-  description: 'Join MSNC workshops, summits, and mentorship sessions across Canada and globally.',
-};
+const FOCUS_BASE = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2';
 
-export const dynamic = 'force-dynamic';
-
+// ─── Data Fetching ────────────────────────────────────────────────────────
 async function getEventsData(): Promise<MSNCEvent[]> {
   try {
     const payload = await getCachedPayload();
+    if (!payload) return fallbackEvents as MSNCEvent[];
+
     const { docs } = await payload.find({
       collection: 'events',
-      sort: '-eventDate',
+      depth: 2,
+      overrideAccess: true,
+      sort: '-date', 
     });
-    // Cast the Payload docs to our interface
-    return docs.length > 0 ? (docs as unknown as MSNCEvent[]) : (fallbackEvents as MSNCEvent[]);
+
+    return docs as unknown as MSNCEvent[];
   } catch (error) {
-    if ((error as Error)?.message !== 'PAYLOAD_BUILD_SKIP') {
-      console.error("Payload Fetch Error [getEventsData]:", error);
-    }
+    console.error("❌ FETCH ERROR:", error);
     return fallbackEvents as MSNCEvent[];
   }
 }
 
+// ─── Helper Functions ─────────────────────────────────────────────────────
+function formatEventDate(raw: string): string {
+  try {
+    return new Date(raw).toLocaleDateString('en-CA', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  } catch {
+    return 'Date unavailable';
+  }
+}
+
+function getSafeImageUrl(imageObj: any): string {
+  const rawUrl = typeof imageObj === 'object' ? imageObj?.url : null;
+  return rawUrl ? encodeURI(rawUrl) : "https://onwq4czaexzxtq41.public.blob.vercel-storage.com/ILO%20LOGO.png";
+}
+
+// ─── Main Page Component ──────────────────────────────────────────────────
 export default async function EventsPage() {
   const allEvents = await getEventsData();
   const now = new Date();
 
-  // 2. Fix the sorting type warnings
+  // Upcoming: closest dates first
   const upcoming = allEvents
-    .filter((e) => new Date(e.eventDate) >= now)
-    .sort((a, b) => new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime());
-    
+    .filter((e) => new Date(e.date) >= now)
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  
+  // Past: most recent first
   const past = allEvents
-    .filter((e) => new Date(e.eventDate) < now)
-    .sort((a, b) => new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime());
+    .filter((e) => new Date(e.date) < now)
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
-    <main className="min-h-screen bg-white selection:bg-secondary/20">
+    <div className="relative flex flex-col min-h-screen bg-white selection:bg-[#4A90D9]/20">
       
-      {/* Editorial Hero */}
-      <section className="relative pt-40 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-white border-b border-slate-100">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-slate-50/50 -skew-x-12 transform origin-top pointer-events-none" />
-        
-        <div 
-          aria-hidden="true"
-          className="absolute inset-0 opacity-[0.03] pointer-events-none" 
-          style={{ 
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23002147' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` 
-          }} 
-        />
+      {/* Skip to Content for Accessibility */}
+      <a 
+        href="#events-content" 
+        className={`sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[#002147] focus:text-white focus:text-sm focus:font-bold ${FOCUS_BASE} focus-visible:ring-[#4A90D9]`}
+      >
+        Skip to events
+      </a>
 
-        <Container className="relative z-10">
-          <div className="grid lg:grid-cols-12 gap-12 items-end">
-            <div className="lg:col-span-8 space-y-8">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 text-secondary text-xs font-black uppercase tracking-[0.2em]">
-                <Globe className="w-3.5 h-3.5" />
-                Global Engagement 2026
-              </div>
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-primary leading-[1.05] tracking-tighter font-display">
-                Events & <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
-                  Impact.
-                </span>
-              </h1>
+      <main id="events-content" className="flex-grow overflow-x-hidden">
+        
+        {/* ════════════════════════════════════════════════════════════
+            LIGHT HERO SECTION
+        ════════════════════════════════════════════════════════════ */}
+        <section className="relative min-h-[70svh] flex flex-col justify-end pb-24 overflow-hidden bg-[#F8FAFC]" aria-label="Events overview">
+          <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:32px_32px] opacity-60" aria-hidden />
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 text-[30vw] font-black text-slate-900/[0.02] leading-none select-none pointer-events-none font-display tracking-tighter" aria-hidden>EVENTS</div>
+
+          <Container className="relative z-10 space-y-10 mt-32">
+            <div className="flex items-center gap-3" role="presentation">
+              <span className="block w-8 h-px bg-[#4A90D9]" aria-hidden />
+              <span className="text-[#4A90D9] font-bold text-[10px] uppercase tracking-[0.35em]">Strategic Initiatives</span>
             </div>
-            <div className="lg:col-span-4 lg:pb-4">
-              <p className="text-xl text-slate-500 leading-relaxed font-medium border-l-4 border-accent pl-6 italic">
-                Connecting Mulenge youth across borders to the mentorship and knowledge required to rise.
+            
+            <h1 className="text-[clamp(3.5rem,8vw,8.5rem)] font-black text-[#002147] leading-[0.9] tracking-tighter font-display max-w-5xl">
+              Impact <br /><em className="not-italic text-[#4A90D9]">Chronicles.</em>
+            </h1>
+            
+            <p className="text-xl text-slate-600 max-w-3xl font-medium leading-relaxed border-l-4 border-[#4A90D9]/30 pl-6">
+              Documenting the global movement of Mulenge scholars across borders, disciplines, and leadership summits.
+            </p>
+
+            <nav aria-label="Jump to section" className="pt-4">
+              <ul className="flex flex-wrap gap-3" role="list">
+                <li>
+                  <a href="#upcoming" className={`group flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-slate-200 hover:border-[#4A90D9]/50 hover:bg-[#EEF5FD] text-slate-600 hover:text-[#002147] shadow-sm transition-all duration-200 ${FOCUS_BASE} focus-visible:ring-[#4A90D9]`}>
+                    <span className="font-bold text-[10px] text-[#4A90D9] tracking-widest">01</span>
+                    <span className="text-xs font-bold">Active Missions</span>
+                    <ChevronRight className="w-3 h-3 text-slate-300 group-hover:text-[#4A90D9] transition-colors" aria-hidden />
+                  </a>
+                </li>
+                <li>
+                  <a href="#archive" className={`group flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-slate-200 hover:border-[#4A90D9]/50 hover:bg-[#EEF5FD] text-slate-600 hover:text-[#002147] shadow-sm transition-all duration-200 ${FOCUS_BASE} focus-visible:ring-[#4A90D9]`}>
+                    <span className="font-bold text-[10px] text-[#4A90D9] tracking-widest">02</span>
+                    <span className="text-xs font-bold">Historical Legacy</span>
+                    <ChevronRight className="w-3 h-3 text-slate-300 group-hover:text-[#4A90D9] transition-colors" aria-hidden />
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </Container>
+        </section>
+
+        {/* ════════════════════════════════════════════════════════════
+            ACTIVE MISSIONS (UPCOMING)
+        ════════════════════════════════════════════════════════════ */}
+        <section id="upcoming" className="relative py-32 bg-white">
+          <Container>
+            <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-start">
+              
+              <div className="lg:col-span-4 space-y-8 lg:sticky lg:top-32">
+                <div className="w-16 h-16 rounded-[1.25rem] flex items-center justify-center border bg-[#EEF5FD] border-[#4A90D9]/20 shadow-sm" aria-hidden>
+                  <Sparkles className="w-8 h-8 text-[#4A90D9]" strokeWidth={1.5} aria-hidden />
+                </div>
+                <div>
+                  <h2 className="text-4xl lg:text-5xl font-black font-display text-[#002147] leading-tight mb-4">
+                    Active <br/> Missions.
+                  </h2>
+                  <p className="text-slate-600 font-medium leading-relaxed">
+                    The summits, dialogues, and workshops currently being planned and executed by the Executive Board.
+                  </p>
+                </div>
+              </div>
+
+              <div className="lg:col-span-8">
+                {upcoming.length > 0 ? (
+                  <div className="grid gap-8">
+                    {upcoming.map((event, idx) => (
+                      <FeaturedEventCard key={event.id} event={event} index={idx} />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="py-20 text-center rounded-[2.5rem] bg-[#F8FAFC] border border-slate-200 shadow-sm">
+                    <div className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center mx-auto mb-4">
+                      <Calendar className="w-5 h-5 text-slate-400" aria-hidden />
+                    </div>
+                    <h3 className="text-xl font-black text-[#002147] mb-2 font-display">Summit Pending</h3>
+                    <p className="text-slate-500 font-medium max-w-sm mx-auto">
+                      The next major initiative is currently being finalized. Check back soon.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </Container>
+        </section>
+
+        {/* ════════════════════════════════════════════════════════════
+            HISTORICAL LEGACY (ARCHIVE)
+        ════════════════════════════════════════════════════════════ */}
+        <section id="archive" className="relative py-32 bg-[#F8FAFC] border-t border-slate-200">
+          <Container>
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3" role="presentation">
+                  <span className="block w-6 h-px bg-slate-400" aria-hidden />
+                  <span className="text-slate-500 font-bold text-[10px] uppercase tracking-[0.35em]">The Archive</span>
+                </div>
+                <h2 className="text-4xl lg:text-5xl font-black font-display text-[#002147] leading-tight">
+                  Historical Legacy.
+                </h2>
+              </div>
+              <p className="text-slate-500 font-medium max-w-md">
+                A repository of past summits, community engagements, and global dialogues that have shaped our foundation.
               </p>
             </div>
-          </div>
-        </Container>
-      </section>
 
-      <Container className="py-24 space-y-40">
-        <section id="upcoming" className="relative scroll-mt-32">
-          <div className="flex items-center gap-4 mb-16">
-            <h2 className="text-xs font-black uppercase tracking-[0.4em] text-primary/40">01. Upcoming Initiatives</h2>
-            <div className="h-px flex-grow bg-slate-100" />
-            <Sparkles className="w-5 h-5 text-secondary animate-pulse" />
-          </div>
-
-          {upcoming.length > 0 ? (
-            <div className="grid grid-cols-1 gap-24">
-              {upcoming.map((event, idx) => (
-                <FeaturedEventCard key={event.id} event={event} index={idx} />
-              ))}
-            </div>
-          ) : (
-            <EmptyState 
-              title="Planning in Progress" 
-              message="Our 2026 leadership retreats and summits are being finalized. Check back shortly for registration details." 
-            />
-          )}
+            {past.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                {past.map((event) => (
+                  <PastEventCard key={event.id} event={event} />
+                ))}
+              </div>
+            ) : (
+              <p className="text-slate-400 font-medium italic">No historical events found in the database.</p>
+            )}
+          </Container>
         </section>
 
-        <section id="gallery" className="relative scroll-mt-32">
-          <div className="flex items-center gap-4 mb-16">
-            <h2 className="text-xs font-black uppercase tracking-[0.4em] text-primary/40">02. Historical Impact</h2>
-            <div className="h-px flex-grow bg-slate-100" />
-            <Camera className="w-5 h-5 text-slate-300" />
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {past.slice(0, 6).map((event) => (
-              <GalleryCard key={event.id} event={event} />
-            ))}
-          </div>
-
-          <div className="mt-20 text-center">
-            <Button variant="outline" className="rounded-full px-12 h-14 font-black uppercase tracking-widest border-2 hover:bg-slate-50 transition-all">
-              View Full Archive
-            </Button>
-          </div>
-        </section>
-      </Container>
-    </main>
+      </main>
+    </div>
   );
 }
 
-// 3. Components updated with MSNCEvent type
+// ─── Sub-Components ───────────────────────────────────────────────────────
+
 function FeaturedEventCard({ event, index }: { event: MSNCEvent; index: number }) {
-  const isEven = index % 2 === 0;
-  const dateObj = new Date(event.eventDate);
+  const safeUrl = getSafeImageUrl(event.mainImage);
 
   return (
-    <div className={cn(
-      "group relative grid lg:grid-cols-12 gap-8 lg:gap-20 items-center",
-      !isEven && "lg:flex-row-reverse"
-    )}>
-      <div className={cn(
-        "lg:col-span-7 relative aspect-[16/10] overflow-hidden rounded-[2.5rem] bg-slate-100 border-8 border-white shadow-brand transition-all duration-700 group-hover:shadow-2xl",
-        !isEven && "lg:order-2"
-      )}>
-        {event.mainImage?.url ? (
-          <img 
-            src={event.mainImage.url} 
-            alt={event.title} 
-            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000 ease-out" 
+    <div className="group relative bg-white rounded-[2.5rem] border border-slate-200 hover:border-[#4A90D9]/40 overflow-hidden shadow-sm hover:shadow-[0_8px_30px_rgba(0,33,71,0.06)] transition-all duration-300">
+      <div className="grid sm:grid-cols-12 items-stretch">
+        
+        <div className="sm:col-span-5 relative aspect-[4/3] sm:aspect-auto overflow-hidden border-b sm:border-b-0 sm:border-r border-slate-100">
+          <Image 
+            src={safeUrl} 
+            alt={event.title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-700"
+            unoptimized
           />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center bg-slate-50 text-slate-200 font-black text-9xl font-display">MSNC</div>
-        )}
-      </div>
-
-      <div className={cn("lg:col-span-5 space-y-6", !isEven && "lg:order-1 text-right")}>
-        <div className={cn("flex items-center gap-3 text-secondary font-black uppercase tracking-[0.2em] text-[10px]", !isEven && "justify-end")}>
-          <Calendar className="w-4 h-4" />
-          {dateObj.toLocaleDateString('en-CA', { month: 'long', day: 'numeric', year: 'numeric' })}
+          {event.location && (
+            <div className="absolute bottom-4 left-4 right-4 lg:right-auto">
+              <div className="px-4 py-2 bg-white/95 backdrop-blur shadow-sm rounded-xl text-[10px] font-bold text-[#002147] uppercase tracking-wider flex items-center gap-2">
+                <MapPin className="w-3 h-3 text-[#4A90D9]" aria-hidden /> 
+                <span className="truncate">{event.location}</span>
+              </div>
+            </div>
+          )}
         </div>
-        
-        <h3 className="text-4xl md:text-5xl font-black text-primary leading-tight font-display group-hover:text-secondary transition-colors">
-          {event.title}
-        </h3>
-        
-        <p className="text-slate-500 text-lg leading-relaxed font-medium line-clamp-3">
-          {event.description}
-        </p>
-        
-        <Link 
-          href={`/events/${event.slug}`}
-          className={cn("inline-flex items-center gap-4 group/link pt-4", !isEven && "flex-row-reverse")}
-        >
-          <div className="w-14 h-14 rounded-2xl bg-primary text-white flex items-center justify-center group-hover/link:bg-secondary transition-all duration-300 shadow-lg active:scale-95">
-            <ArrowRight className={cn("w-6 h-6 transition-transform", isEven ? "group-hover/link:translate-x-1" : "group-hover/link:-translate-x-1 rotate-180")} />
+
+        <div className="sm:col-span-7 p-8 md:p-10 flex flex-col justify-center">
+          <div className="flex items-center gap-2 text-[#4A90D9] font-bold text-[10px] uppercase tracking-widest mb-4">
+            <Clock className="w-3 h-3" aria-hidden />
+            {formatEventDate(event.date)}
           </div>
-          <span className="text-primary font-black uppercase tracking-widest text-[10px]">Join Initiative</span>
-        </Link>
+          
+          <h3 className="text-3xl lg:text-4xl font-black text-[#002147] font-display leading-[1.1] mb-4">
+            {event.title}
+          </h3>
+          
+          <p className="text-slate-600 font-medium leading-relaxed line-clamp-3 mb-8">
+            {event.description}
+          </p>
+          
+          <div className="mt-auto flex items-center justify-between pt-4 border-t border-slate-100">
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+              Initiative 0{index + 1}
+            </span>
+            <Link 
+              href={`/events/${event.slug}`} 
+              className={`inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#EEF5FD] text-[#002147] text-xs font-bold hover:bg-[#002147] hover:text-white transition-all duration-300 ${FOCUS_BASE} focus-visible:ring-[#4A90D9]`}
+              aria-label={`View full details for ${event.title}`}
+            >
+              Full Details 
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1" aria-hidden />
+            </Link>
+          </div>
+        </div>
+
       </div>
     </div>
   );
 }
 
-function GalleryCard({ event }: { event: MSNCEvent }) {
+function PastEventCard({ event }: { event: MSNCEvent }) {
+  const safeUrl = getSafeImageUrl(event.mainImage);
+
   return (
     <Link 
       href={`/events/${event.slug}`} 
-      className="group block relative aspect-[4/5] rounded-[2rem] overflow-hidden border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-500"
+      className={`group flex flex-col bg-white rounded-[2rem] border border-slate-200 hover:border-[#4A90D9]/30 overflow-hidden shadow-sm hover:shadow-[0_8px_30px_rgba(0,33,71,0.06)] transition-all duration-300 ${FOCUS_BASE} focus-visible:ring-[#4A90D9]`}
+      aria-label={`View historical event: ${event.title}`}
     >
-      {event.mainImage?.url && (
-        <img 
-          src={event.mainImage.url} 
-          alt={event.title} 
-          className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-all duration-1000" 
+      <div className="relative aspect-[16/10] overflow-hidden bg-slate-100 border-b border-slate-100">
+        <Image 
+          src={safeUrl} 
+          alt={event.title}
+          fill
+          className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+          unoptimized
         />
-      )}
-      <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+        <div className="absolute top-4 right-4">
+          <div className="px-3 py-1.5 bg-white/95 backdrop-blur rounded-lg shadow-sm text-[10px] font-bold text-[#002147] uppercase tracking-wider flex items-center gap-1.5">
+            <Calendar className="w-3 h-3 text-slate-400" aria-hidden />
+            {new Date(event.date).getFullYear()}
+          </div>
+        </div>
+      </div>
       
-      <div className="absolute inset-0 flex flex-col justify-end p-8">
-        <p className="text-[10px] font-black text-secondary uppercase tracking-[0.3em] mb-2">Past Chapter</p>
-        <h3 className="text-xl font-bold text-white leading-snug font-display">{event.title}</h3>
-        <div className="mt-4 h-1 w-0 bg-secondary group-hover:w-12 transition-all duration-500" />
+      <div className="p-6 md:p-8 flex flex-col flex-grow">
+        <h4 className="text-xl font-black text-[#002147] font-display leading-tight mb-2 group-hover:text-[#4A90D9] transition-colors">
+          {event.title}
+        </h4>
+        <p className="text-sm text-slate-500 font-medium line-clamp-2 mt-auto pt-4">
+          {event.location || "Global Archive"}
+        </p>
       </div>
     </Link>
-  );
-}
-
-function EmptyState({ title, message }: { title: string; message: string }) {
-  return (
-    <div className="py-32 text-center rounded-[3rem] bg-slate-50 border-2 border-dashed border-slate-200">
-      <h3 className="text-3xl font-black text-primary font-display mb-4">{title}</h3>
-      <p className="text-slate-400 max-w-sm mx-auto text-sm font-medium leading-relaxed px-6">{message}</p>
-      <Button asChild variant="outline" className="mt-8 rounded-full border-2">
-        <Link href="/contact">Notify Me of Updates</Link>
-      </Button>
-    </div>
   );
 }

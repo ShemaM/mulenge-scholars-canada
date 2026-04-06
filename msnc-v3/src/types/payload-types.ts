@@ -225,13 +225,33 @@ export interface Leadership {
   id: number;
   name: string;
   role: string;
-  pillar: 'Tech' | 'Academic' | 'Policy' | 'Community' | 'Strategic';
-  order?: number | null;
-  image?: (number | null) | Media;
-  bio: string;
+  pillar: 'Tech' | 'Academic' | 'Policy' | 'Community' | 'Strategic' | 'Executive';
+  image: number | Media;
+  bio: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
   email?: string | null;
   linkedinUrl?: string | null;
   twitterUrl?: string | null;
+  /**
+   * Lower numbers appear first in the list.
+   */
+  order?: number | null;
+  /**
+   * The URL-friendly name (e.g., pacific-muhumure)
+   */
   slug?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -285,13 +305,34 @@ export interface Partner {
  */
 export interface Program {
   id: number;
-  pillar: string;
+  index: string;
+  /**
+   * Main pillar category
+   */
+  pillar: 'workshops' | 'high-school' | 'adult-learning' | 'rebuilding-futures';
   title: string;
   slug: string;
   description: string;
+  tagline?: string | null;
   phase: 'foundation' | 'growth' | 'impact';
   status?: ('active' | 'on-hold' | 'suspended') | null;
+  order: number;
+  color?: ('sky' | 'navy' | 'slate' | 'red') | null;
+  theme?: ('light' | 'alt') | null;
   featuredImage?: (number | null) | Media;
+  features?:
+    | {
+        label: string;
+        desc?: string | null;
+        /**
+         * Lucide icon name
+         */
+        icon?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  statValue?: string | null;
+  statLabel?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -335,7 +376,7 @@ export interface Event {
    * URL-friendly name (e.g., leadership-summit-2026)
    */
   slug: string;
-  date: string;
+  eventDate: string;
   location: string;
   /**
    * Short summary for the homepage card
@@ -605,12 +646,12 @@ export interface LeadershipSelect<T extends boolean = true> {
   name?: T;
   role?: T;
   pillar?: T;
-  order?: T;
   image?: T;
   bio?: T;
   email?: T;
   linkedinUrl?: T;
   twitterUrl?: T;
+  order?: T;
   slug?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -657,13 +698,28 @@ export interface PartnersSelect<T extends boolean = true> {
  * via the `definition` "programs_select".
  */
 export interface ProgramsSelect<T extends boolean = true> {
+  index?: T;
   pillar?: T;
   title?: T;
   slug?: T;
   description?: T;
+  tagline?: T;
   phase?: T;
   status?: T;
+  order?: T;
+  color?: T;
+  theme?: T;
   featuredImage?: T;
+  features?:
+    | T
+    | {
+        label?: T;
+        desc?: T;
+        icon?: T;
+        id?: T;
+      };
+  statValue?: T;
+  statLabel?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -688,7 +744,7 @@ export interface BlogsSelect<T extends boolean = true> {
 export interface EventsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
-  date?: T;
+  eventDate?: T;
   location?: T;
   description?: T;
   registrationLink?: T;
