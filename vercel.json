@@ -1,0 +1,6 @@
+{
+  "buildCommand": "cd msnc-v3 && pnpm install && pnpm build",
+  "installCommand": "cd msnc-v3 && pnpm install",
+  "outputDirectory": "msnc-v3/.next",
+  "framework": "nextjs"
+}
