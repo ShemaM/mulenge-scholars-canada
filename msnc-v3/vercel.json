@@ -1,5 +1,5 @@
 {
   "framework": "nextjs",
-  "buildCommand": "cd msnc-v3 && pnpm build",
-  "outputDirectory": "msnc-v3/.next"
+  "buildCommand": "next build",
+  "outputDirectory": ".next"
 }
