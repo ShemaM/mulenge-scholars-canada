@@ -1,6 +1,6 @@
 {
-  "buildCommand": "npm install -g pnpm && cd msnc-v3 && pnpm install && pnpm build",
-  "installCommand": "npm install -g pnpm && cd msnc-v3 && pnpm install",
-  "outputDirectory": "msnc-v3/.next",
+  "buildCommand": "pnpm build",
+  "installCommand": "pnpm install",
+  "outputDirectory": ".next",
   "framework": "nextjs"
 }

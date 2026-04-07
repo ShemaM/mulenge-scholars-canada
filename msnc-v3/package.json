@@ -1,5 +1,6 @@
 {
   "name": "msnc-v3",
+  "packageManager": "pnpm@9.15.0",
   "version": "1.0.0",
   "description": "Mulenge Scholars Network Canada - Production Enterprise Core",
   "license": "MIT",
