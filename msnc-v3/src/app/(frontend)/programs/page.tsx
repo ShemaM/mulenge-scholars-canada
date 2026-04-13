@@ -82,7 +82,8 @@ export default async function ProgramsPage() {
     <div className="min-h-screen bg-white selection:bg-[#4A90D9]/10">
       
       {/* ─── EDITORIAL HERO SECTION ─── */}
-      <section className="relative pt-40 pb-24 overflow-hidden bg-[#F8FAFC]">
+      <section className="relative pt-12 md:pt-16 pb-12 md:pb-16 overflow-hidden bg-[#F8FAFC] flex flex-col items-center justify-center text-center mx-auto max-w-5xl">
+
         {/* Abstract Architectural Background */}
         <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:40px_40px] opacity-40" />
         <div className="absolute right-0 top-1/2 -translate-y-1/2 text-[25vw] font-black text-slate-900/[0.02] leading-none pointer-events-none select-none font-display">

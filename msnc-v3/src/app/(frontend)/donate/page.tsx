@@ -60,7 +60,8 @@ export default function DonatePage() {
     <main className="min-h-screen bg-white selection:bg-secondary/20">
       
       {/* 1. Impact Hero */}
-      <section className="relative pt-40 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-white border-b border-slate-100">
+      <section className="relative pt-12 md:pt-16 pb-12 md:pb-16 overflow-hidden bg-white border-b border-slate-100 flex flex-col items-center justify-center text-center mx-auto max-w-5xl">
+
         <div className="absolute top-0 right-0 w-1/2 h-full bg-slate-50/50 -skew-x-12 transform origin-top pointer-events-none" />
         
         <div 
@@ -192,6 +193,8 @@ export default function DonatePage() {
                       name="amount"
                       type="number" 
                       placeholder="Enter custom amount" 
+                      min="1"
+                      step="0.01"
                       required
                       className="w-full h-16 bg-white rounded-2xl pl-12 pr-6 text-primary font-black text-xl focus:outline-none focus:ring-4 focus:ring-secondary/20 transition-all placeholder:text-slate-300"
                     />

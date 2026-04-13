@@ -2,12 +2,22 @@ import { withPayload } from '@payloadcms/next/withPayload'
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  // 1. Bypass strict checks to prevent 'exit 1' during deployment
+  // 1. Dev stability + build bypass
   typescript: {
     ignoreBuildErrors: true,
   },
   eslint: {
     ignoreDuringBuilds: true,
+  },
+
+  // Fix source map issues in dev
+  productionBrowserSourceMaps: false,
+
+
+
+  sassOptions: {
+    includePaths: ['./src/app/(payload)'],
+    prependData: `@import "custom.scss";`,
   },
 
   // 2. Image Optimization for Vercel Blob & Supabase
@@ -28,7 +38,6 @@ const nextConfig: NextConfig = {
 
   // 3. Payload 3.0 Specific Tuning
   experimental: {
-    // This helps resolve potential hangs on the Home Page
     serverActions: {
       bodySizeLimit: '10mb',
     },

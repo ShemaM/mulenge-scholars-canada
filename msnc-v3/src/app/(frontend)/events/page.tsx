@@ -20,7 +20,7 @@ interface MSNCEvent {
   id: string;
   title: string;
   slug: string;
-  date: string; 
+  date: string;
   description: string;
   mainImage?: { url: string } | any;
   location?: string;
@@ -38,7 +38,7 @@ async function getEventsData(): Promise<MSNCEvent[]> {
       collection: 'events',
       depth: 2,
       overrideAccess: true,
-      sort: '-date', 
+      sort: '-date',
     });
 
     return docs as unknown as MSNCEvent[];
@@ -63,7 +63,9 @@ function formatEventDate(raw: string): string {
 
 function getSafeImageUrl(imageObj: any): string {
   const rawUrl = typeof imageObj === 'object' ? imageObj?.url : null;
-  return rawUrl ? encodeURI(rawUrl) : "https://onwq4czaexzxtq41.public.blob.vercel-storage.com/ILO%20LOGO.png";
+  return rawUrl
+    ? encodeURI(rawUrl)
+    : "https://onwq4czaexzxtq41.public.blob.vercel-storage.com/ILO%20LOGO.png";
 }
 
 // ─── Main Page Component ──────────────────────────────────────────────────
@@ -71,61 +73,80 @@ export default async function EventsPage() {
   const allEvents = await getEventsData();
   const now = new Date();
 
-  // Upcoming: closest dates first
   const upcoming = allEvents
     .filter((e) => new Date(e.date) >= now)
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  
-  // Past: most recent first
+
   const past = allEvents
     .filter((e) => new Date(e.date) < now)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   return (
     <div className="relative flex flex-col min-h-screen bg-white selection:bg-[#4A90D9]/20">
-      
-      {/* Skip to Content for Accessibility */}
-      <a 
-        href="#events-content" 
+
+      {/* Skip to Content */}
+      <a
+        href="#events-content"
         className={`sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[#002147] focus:text-white focus:text-sm focus:font-bold ${FOCUS_BASE} focus-visible:ring-[#4A90D9]`}
       >
         Skip to events
       </a>
 
       <main id="events-content" className="flex-grow overflow-x-hidden">
-        
+
         {/* ════════════════════════════════════════════════════════════
             LIGHT HERO SECTION
         ════════════════════════════════════════════════════════════ */}
-        <section className="relative min-h-[70svh] flex flex-col justify-end pb-24 overflow-hidden bg-[#F8FAFC]" aria-label="Events overview">
-          <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:32px_32px] opacity-60" aria-hidden />
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 text-[30vw] font-black text-slate-900/[0.02] leading-none select-none pointer-events-none font-display tracking-tighter" aria-hidden>EVENTS</div>
+        <section
+          className="relative pt-12 md:pt-16 pb-12 md:pb-16 overflow-hidden bg-[#F8FAFC] flex flex-col items-center justify-center text-center"
+          aria-label="Events overview"
+        >
+          <div
+            className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:32px_32px] opacity-60"
+            aria-hidden
+          />
+          <div
+            className="absolute right-0 top-1/2 -translate-y-1/2 text-[30vw] font-black text-slate-900/[0.02] leading-none select-none pointer-events-none font-display tracking-tighter"
+            aria-hidden
+          >
+            EVENTS
+          </div>
 
           <Container className="relative z-10 space-y-10 mt-32">
             <div className="flex items-center gap-3" role="presentation">
               <span className="block w-8 h-px bg-[#4A90D9]" aria-hidden />
-              <span className="text-[#4A90D9] font-bold text-[10px] uppercase tracking-[0.35em]">Strategic Initiatives</span>
+              <span className="text-[#4A90D9] font-bold text-[10px] uppercase tracking-[0.35em]">
+                Strategic Initiatives
+              </span>
             </div>
-            
+
             <h1 className="text-[clamp(3.5rem,8vw,8.5rem)] font-black text-[#002147] leading-[0.9] tracking-tighter font-display max-w-5xl">
-              Impact <br /><em className="not-italic text-[#4A90D9]">Chronicles.</em>
+              Impact <br />
+              <em className="not-italic text-[#4A90D9]">Chronicles.</em>
             </h1>
-            
+
             <p className="text-xl text-slate-600 max-w-3xl font-medium leading-relaxed border-l-4 border-[#4A90D9]/30 pl-6">
-              Documenting the global movement of Mulenge scholars across borders, disciplines, and leadership summits.
+              Documenting the global movement of Mulenge scholars across borders,
+              disciplines, and leadership summits.
             </p>
 
             <nav aria-label="Jump to section" className="pt-4">
               <ul className="flex flex-wrap gap-3" role="list">
                 <li>
-                  <a href="#upcoming" className={`group flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-slate-200 hover:border-[#4A90D9]/50 hover:bg-[#EEF5FD] text-slate-600 hover:text-[#002147] shadow-sm transition-all duration-200 ${FOCUS_BASE} focus-visible:ring-[#4A90D9]`}>
+                  <a
+                    href="#upcoming"
+                    className={`group flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-slate-200 hover:border-[#4A90D9]/50 hover:bg-[#EEF5FD] text-slate-600 hover:text-[#002147] shadow-sm transition-all duration-200 ${FOCUS_BASE} focus-visible:ring-[#4A90D9]`}
+                  >
                     <span className="font-bold text-[10px] text-[#4A90D9] tracking-widest">01</span>
                     <span className="text-xs font-bold">Active Missions</span>
                     <ChevronRight className="w-3 h-3 text-slate-300 group-hover:text-[#4A90D9] transition-colors" aria-hidden />
                   </a>
                 </li>
                 <li>
-                  <a href="#archive" className={`group flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-slate-200 hover:border-[#4A90D9]/50 hover:bg-[#EEF5FD] text-slate-600 hover:text-[#002147] shadow-sm transition-all duration-200 ${FOCUS_BASE} focus-visible:ring-[#4A90D9]`}>
+                  <a
+                    href="#archive"
+                    className={`group flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-slate-200 hover:border-[#4A90D9]/50 hover:bg-[#EEF5FD] text-slate-600 hover:text-[#002147] shadow-sm transition-all duration-200 ${FOCUS_BASE} focus-visible:ring-[#4A90D9]`}
+                  >
                     <span className="font-bold text-[10px] text-[#4A90D9] tracking-widest">02</span>
                     <span className="text-xs font-bold">Historical Legacy</span>
                     <ChevronRight className="w-3 h-3 text-slate-300 group-hover:text-[#4A90D9] transition-colors" aria-hidden />
@@ -142,17 +163,21 @@ export default async function EventsPage() {
         <section id="upcoming" className="relative py-32 bg-white">
           <Container>
             <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-start">
-              
+
               <div className="lg:col-span-4 space-y-8 lg:sticky lg:top-32">
-                <div className="w-16 h-16 rounded-[1.25rem] flex items-center justify-center border bg-[#EEF5FD] border-[#4A90D9]/20 shadow-sm" aria-hidden>
+                <div
+                  className="w-16 h-16 rounded-[1.25rem] flex items-center justify-center border bg-[#EEF5FD] border-[#4A90D9]/20 shadow-sm"
+                  aria-hidden
+                >
                   <Sparkles className="w-8 h-8 text-[#4A90D9]" strokeWidth={1.5} aria-hidden />
                 </div>
                 <div>
                   <h2 className="text-4xl lg:text-5xl font-black font-display text-[#002147] leading-tight mb-4">
-                    Active <br/> Missions.
+                    Active <br /> Missions.
                   </h2>
                   <p className="text-slate-600 font-medium leading-relaxed">
-                    The summits, dialogues, and workshops currently being planned and executed by the Executive Board.
+                    The summits, dialogues, and workshops currently being planned
+                    and executed by the Executive Board.
                   </p>
                 </div>
               </div>
@@ -169,7 +194,9 @@ export default async function EventsPage() {
                     <div className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center mx-auto mb-4">
                       <Calendar className="w-5 h-5 text-slate-400" aria-hidden />
                     </div>
-                    <h3 className="text-xl font-black text-[#002147] mb-2 font-display">Summit Pending</h3>
+                    <h3 className="text-xl font-black text-[#002147] mb-2 font-display">
+                      Summit Pending
+                    </h3>
                     <p className="text-slate-500 font-medium max-w-sm mx-auto">
                       The next major initiative is currently being finalized. Check back soon.
                     </p>
@@ -189,14 +216,17 @@ export default async function EventsPage() {
               <div className="space-y-4">
                 <div className="flex items-center gap-3" role="presentation">
                   <span className="block w-6 h-px bg-slate-400" aria-hidden />
-                  <span className="text-slate-500 font-bold text-[10px] uppercase tracking-[0.35em]">The Archive</span>
+                  <span className="text-slate-500 font-bold text-[10px] uppercase tracking-[0.35em]">
+                    The Archive
+                  </span>
                 </div>
                 <h2 className="text-4xl lg:text-5xl font-black font-display text-[#002147] leading-tight">
                   Historical Legacy.
                 </h2>
               </div>
               <p className="text-slate-500 font-medium max-w-md">
-                A repository of past summits, community engagements, and global dialogues that have shaped our foundation.
+                A repository of past summits, community engagements, and global
+                dialogues that have shaped our foundation.
               </p>
             </div>
 
@@ -207,7 +237,9 @@ export default async function EventsPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-slate-400 font-medium italic">No historical events found in the database.</p>
+              <p className="text-slate-400 font-medium italic">
+                No historical events found in the database.
+              </p>
             )}
           </Container>
         </section>
@@ -225,10 +257,10 @@ function FeaturedEventCard({ event, index }: { event: MSNCEvent; index: number }
   return (
     <div className="group relative bg-white rounded-[2.5rem] border border-slate-200 hover:border-[#4A90D9]/40 overflow-hidden shadow-sm hover:shadow-[0_8px_30px_rgba(0,33,71,0.06)] transition-all duration-300">
       <div className="grid sm:grid-cols-12 items-stretch">
-        
+
         <div className="sm:col-span-5 relative aspect-[4/3] sm:aspect-auto overflow-hidden border-b sm:border-b-0 sm:border-r border-slate-100">
-          <Image 
-            src={safeUrl} 
+          <Image
+            src={safeUrl}
             alt={event.title}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -237,7 +269,7 @@ function FeaturedEventCard({ event, index }: { event: MSNCEvent; index: number }
           {event.location && (
             <div className="absolute bottom-4 left-4 right-4 lg:right-auto">
               <div className="px-4 py-2 bg-white/95 backdrop-blur shadow-sm rounded-xl text-[10px] font-bold text-[#002147] uppercase tracking-wider flex items-center gap-2">
-                <MapPin className="w-3 h-3 text-[#4A90D9]" aria-hidden /> 
+                <MapPin className="w-3 h-3 text-[#4A90D9]" aria-hidden />
                 <span className="truncate">{event.location}</span>
               </div>
             </div>
@@ -249,25 +281,25 @@ function FeaturedEventCard({ event, index }: { event: MSNCEvent; index: number }
             <Clock className="w-3 h-3" aria-hidden />
             {formatEventDate(event.date)}
           </div>
-          
+
           <h3 className="text-3xl lg:text-4xl font-black text-[#002147] font-display leading-[1.1] mb-4">
             {event.title}
           </h3>
-          
+
           <p className="text-slate-600 font-medium leading-relaxed line-clamp-3 mb-8">
             {event.description}
           </p>
-          
+
           <div className="mt-auto flex items-center justify-between pt-4 border-t border-slate-100">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
               Initiative 0{index + 1}
             </span>
-            <Link 
-              href={`/events/${event.slug}`} 
+            <Link
+              href={`/events/${event.slug}`}
               className={`inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#EEF5FD] text-[#002147] text-xs font-bold hover:bg-[#002147] hover:text-white transition-all duration-300 ${FOCUS_BASE} focus-visible:ring-[#4A90D9]`}
               aria-label={`View full details for ${event.title}`}
             >
-              Full Details 
+              Full Details
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1" aria-hidden />
             </Link>
           </div>
@@ -282,14 +314,14 @@ function PastEventCard({ event }: { event: MSNCEvent }) {
   const safeUrl = getSafeImageUrl(event.mainImage);
 
   return (
-    <Link 
-      href={`/events/${event.slug}`} 
+    <Link
+      href={`/events/${event.slug}`}
       className={`group flex flex-col bg-white rounded-[2rem] border border-slate-200 hover:border-[#4A90D9]/30 overflow-hidden shadow-sm hover:shadow-[0_8px_30px_rgba(0,33,71,0.06)] transition-all duration-300 ${FOCUS_BASE} focus-visible:ring-[#4A90D9]`}
       aria-label={`View historical event: ${event.title}`}
     >
       <div className="relative aspect-[16/10] overflow-hidden bg-slate-100 border-b border-slate-100">
-        <Image 
-          src={safeUrl} 
+        <Image
+          src={safeUrl}
           alt={event.title}
           fill
           className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
@@ -302,7 +334,7 @@ function PastEventCard({ event }: { event: MSNCEvent }) {
           </div>
         </div>
       </div>
-      
+
       <div className="p-6 md:p-8 flex flex-col flex-grow">
         <h4 className="text-xl font-black text-[#002147] font-display leading-tight mb-2 group-hover:text-[#4A90D9] transition-colors">
           {event.title}

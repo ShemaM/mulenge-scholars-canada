@@ -6,9 +6,9 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="bg-slate-900 text-slate-300 pt-24 pb-12 overflow-hidden relative">
-      {/* Background Brand Decoration */}
-      <div className="absolute -bottom-10 -right-10 text-[20vw] font-black text-white/5 select-none pointer-events-none leading-none">
+    <footer className="bg-slate-50 text-slate-600 pt-24 pb-12 overflow-hidden relative border-t border-slate-200">
+      {/* Background Brand Decoration - Softened for light theme */}
+      <div className="absolute -bottom-10 -right-10 text-[20vw] font-black text-[#002147]/[0.03] select-none pointer-events-none leading-none">
         MSNC
       </div>
 
@@ -20,21 +20,21 @@ export default function Footer() {
               <img
                 src="/media/logo-original.png"
                 alt="MSNC Logo"
-                className="w-30 h-30 object-fit rounded-full border-2 border-secondary p-1"
+                className="w-16 h-16 object-contain rounded-full border border-slate-200 p-1 bg-white shadow-sm"
               />
             </div>
-            <p className="text-lg leading-relaxed text-slate-400 font-medium">
+            <p className="text-sm leading-relaxed text-slate-600 font-medium">
               Empowering the Mulenge diaspora through strategic education, mentorship, and
               leadership excellence.
             </p>
 
             {/* SOCIAL SVGS */}
-            <div className="flex gap-4">
+            <div className="flex gap-3">
               {/* X (Formerly Twitter) SVG */}
               <Button
                 variant="outline"
                 size="icon"
-                className="rounded-full border-slate-700 bg-transparent text-slate-400 hover:text-white hover:border-white transition-all p-2.5"
+                className="rounded-full border-slate-200 bg-white text-slate-400 hover:text-blue-600 hover:border-blue-600 hover:bg-blue-50 transition-all p-2.5 shadow-sm"
                 asChild
               >
                 <a
@@ -53,7 +53,7 @@ export default function Footer() {
               <Button
                 variant="outline"
                 size="icon"
-                className="rounded-full border-slate-700 bg-transparent text-slate-400 hover:text-white hover:border-white transition-all p-2.5"
+                className="rounded-full border-slate-200 bg-white text-slate-400 hover:text-blue-600 hover:border-blue-600 hover:bg-blue-50 transition-all p-2.5 shadow-sm"
                 asChild
               >
                 <a
@@ -70,10 +70,9 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* ... Rest of the Footer (Quick Links, Contact, Newsletter) remains the same */}
           {/* Quick Links */}
           <div className="space-y-8">
-            <h4 className="text-xs font-black uppercase tracking-[0.3em] text-white">
+            <h4 className="text-xs font-black uppercase tracking-[0.3em] text-[#002147]">
               The Network
             </h4>
             <nav className="flex flex-col gap-4">
@@ -81,7 +80,7 @@ export default function Footer() {
                 <Link
                   key={item}
                   href={`/${item.toLowerCase().replace(' ', '-')}`}
-                  className="text-lg font-medium hover:text-secondary transition-colors"
+                  className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors"
                 >
                   {item}
                 </Link>
@@ -91,31 +90,31 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div className="space-y-8">
-            <h4 className="text-xs font-black uppercase tracking-[0.3em] text-white">
+            <h4 className="text-xs font-black uppercase tracking-[0.3em] text-[#002147]">
               Direct Access
             </h4>
             <div className="space-y-6">
               <div className="flex items-start gap-4">
-                <Mail className="w-5 h-5 text-secondary mt-1" />
+                <Mail className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
                 <div>
-                  <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">
+                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">
                     Email
                   </div>
                   <a
                     href="mailto:info@msnc.ca"
-                    className="text-lg font-medium text-white hover:text-secondary transition-colors"
+                    className="text-sm font-medium text-slate-700 hover:text-blue-600 transition-colors"
                   >
                     info@msnc.ca
                   </a>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <MapPin className="w-5 h-5 text-secondary mt-1" />
+                <MapPin className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
                 <div>
-                  <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">
+                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">
                     Office
                   </div>
-                  <span className="text-lg font-medium text-white">
+                  <span className="text-sm font-medium text-slate-700">
                     Nairobi, Kenya • Winnipeg, MB
                   </span>
                 </div>
@@ -125,19 +124,19 @@ export default function Footer() {
 
           {/* Newsletter */}
           <div className="space-y-8">
-            <h4 className="text-xs font-black uppercase tracking-[0.3em] text-white">
+            <h4 className="text-xs font-black uppercase tracking-[0.3em] text-[#002147]">
               Join the briefing
             </h4>
-            <p className="text-sm text-slate-400 leading-relaxed">
+            <p className="text-sm text-slate-600 leading-relaxed">
               Stay updated with the latest breakthroughs and narratives.
             </p>
             <div className="flex flex-col gap-3">
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="h-12 bg-slate-800 border-none rounded-xl px-4 text-white placeholder:text-slate-500 focus:ring-2 focus:ring-secondary transition-all outline-none"
+                className="h-12 bg-white border border-slate-200 rounded-xl px-4 text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none shadow-sm"
               />
-              <Button variant="accent" className="w-full">
+              <Button className="w-full bg-[#002147] hover:bg-blue-900 text-white">
                 Subscribe
               </Button>
             </div>
@@ -145,20 +144,20 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-12 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-xs font-bold uppercase tracking-widest text-slate-500">
+        <div className="pt-8 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
             © {currentYear} Mulenge Scholars' Network Canada.
           </p>
           <div className="flex gap-8">
             <Link
               href="/privacy"
-              className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-colors"
+              className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 transition-colors"
             >
               Privacy
             </Link>
             <Link
               href="/terms"
-              className="text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-colors"
+              className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 transition-colors"
             >
               Terms
             </Link>

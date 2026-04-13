@@ -1,5 +1,4 @@
 import Link from "next/link";
-import BreadcrumbWrapper from "./BreadcrumbWrapper";
 
 export default function NavBar() {
   return (
@@ -21,9 +20,6 @@ export default function NavBar() {
         </nav>
 
       </div>
-      
-      {/* Client-side Breadcrumb injected safely into the Server Component Header */}
-      <BreadcrumbWrapper />
     </header>
   );
 }

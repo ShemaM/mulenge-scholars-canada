@@ -56,9 +56,18 @@ export default function Testimonials({ data }: { data: TestimonialRecord[] }) {
   const initial = displayName.charAt(0) || "M";
   
   const journeySteps = currentTestimonial.journey ? currentTestimonial.journey.split('→') : [];
-  const impactStats = currentTestimonial.stats 
-    ? (typeof currentTestimonial.stats === 'string' ? JSON.parse(currentTestimonial.stats) : currentTestimonial.stats) 
-    : {};
+  let impactStats = {};
+  if (currentTestimonial.stats) {
+    if (typeof currentTestimonial.stats === 'string') {
+      try {
+        impactStats = JSON.parse(currentTestimonial.stats);
+      } catch (e) {
+        console.error("Failed to parse impact stats:", e);
+      }
+    } else {
+      impactStats = currentTestimonial.stats;
+    }
+  }
 
   return (
     <section className="relative py-32 md:py-40 bg-gradient-to-b from-white via-slate-50/30 to-white overflow-hidden">

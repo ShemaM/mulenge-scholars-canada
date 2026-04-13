@@ -1,14 +1,8 @@
 /**
  * MSNC Leadership Gallery (Production-Ready + SEO Optimized)
- * ─────────────────────────────────────────────────────────────────────────
- * FEATURES:
- * • JSON-LD Structured Data: Helps Google recognize the Executive Board.
- * • Dynamic Metadata: Standardized for social sharing and search ranking.
- * • Editorial Storytelling: High-end typography and asymmetric layouts.
- * • Lexical Extraction: Safely renders RichText previews.
  */
 
-import { Mail, Globe, ArrowRight, Sparkles, ShieldCheck } from "lucide-react";
+import { ArrowRight, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
@@ -17,30 +11,32 @@ import { cn } from "@/lib/utils";
 import { Metadata } from "next";
 import { LinkedInIcon } from "@/components/ui/SocialIcons";
 
-// --- 1. SEARCH ENGINE OPTIMIZATION (Static) ---
+// --- 1. METADATA ---
 export const metadata: Metadata = {
   title: "Leadership & Executive Board | MSNC",
-  description: "Meet the architects of resilience. Our multidisciplinary leadership team bridges the gap between Mulenge potential and global opportunity through strategic stewardship.",
+  description:
+    "Meet the architects of resilience. Our multidisciplinary leadership team bridges the gap between Mulenge potential and global opportunity through strategic stewardship.",
   openGraph: {
     title: "MSNC Leadership: Architects of Resilience",
-    description: "The executive board leading diaspora excellence and academic transformation.",
+    description:
+      "The executive board leading diaspora excellence and academic transformation.",
     images: [{ url: "/images/og-leadership.jpg", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "MSNC Leadership",
     description: "Guiding the next generation of Mulenge scholars.",
-  }
+  },
 };
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 interface LeadershipMember {
   id: string;
   name: string;
   role: string;
   pillar: string;
-  bio: any; 
+  bio: any;
   email?: string;
   linkedinUrl?: string;
   twitterUrl?: string;
@@ -48,15 +44,21 @@ interface LeadershipMember {
   slug?: string;
 }
 
-// --- 2. DATA ORCHESTRATION ---
+// --- 2. DATA HELPERS ---
 function getBioPreview(bio: any): string {
-  if (typeof bio === 'string') return bio;
+  if (typeof bio === "string") return bio;
   if (!bio || !bio.root) return "The story of impact is being written...";
   try {
-    const firstParagraph = bio.root.children.find((child: any) => child.type === 'paragraph');
-    if (!firstParagraph || !firstParagraph.children) return "Explore the journey to learn more.";
-    return firstParagraph.children.map((node: any) => node.text || "").join("") || "Explore the journey.";
-  } catch (e) {
+    const firstParagraph = bio.root.children.find(
+      (child: any) => child.type === "paragraph"
+    );
+    if (!firstParagraph || !firstParagraph.children)
+      return "Explore the journey to learn more.";
+    return (
+      firstParagraph.children.map((node: any) => node.text || "").join("") ||
+      "Explore the journey."
+    );
+  } catch {
     return "Explore the journey to learn more.";
   }
 }
@@ -65,36 +67,36 @@ async function getTeamData(): Promise<LeadershipMember[]> {
   try {
     const payload = await getCachedPayload();
     const { docs } = await payload.find({
-      collection: 'leadership',
-      sort: 'order',
+      collection: "leadership",
+      sort: "order",
     });
     return docs as unknown as LeadershipMember[];
-  } catch (error) {
-    return []; 
+  } catch {
+    return [];
   }
 }
 
+// --- 3. PAGE ---
 export default async function LeadershipPage() {
   const team = await getTeamData();
 
-  // --- 3. STRUCTURED DATA (JSON-LD) ---
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "itemListElement": team.map((member, index) => ({
+    itemListElement: team.map((member, index) => ({
       "@type": "ListItem",
-      "position": index + 1,
-      "item": {
+      position: index + 1,
+      item: {
         "@type": "Person",
-        "name": member.name,
-        "jobTitle": member.role,
-        "url": `https://msnc.ca/leadership/${member.slug}`,
-        "worksFor": {
+        name: member.name,
+        jobTitle: member.role,
+        url: `https://msnc.ca/leadership/${member.slug}`,
+        worksFor: {
           "@type": "Organization",
-          "name": "Mulenge Scholars' Network Canada"
-        }
-      }
-    }))
+          name: "Mulenge Scholars' Network Canada",
+        },
+      },
+    })),
   };
 
   return (
@@ -105,11 +107,11 @@ export default async function LeadershipPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* 1. NARRATIVE HERO SECTION */}
-      <section className="relative pt-48 pb-24 md:pt-64 md:pb-40 overflow-hidden">
-        {/* Background Accents */}
+      {/* 1. HERO SECTION */}
+      <section className="relative pt-12 md:pt-16 pb-12 md:pb-16 overflow-hidden flex flex-col items-center justify-center text-center mx-auto max-w-5xl">
+        {/* Background Accent */}
         <div className="absolute top-0 right-0 w-1/2 h-full bg-slate-50 -skew-x-12 translate-x-32 pointer-events-none" />
-        
+
         <Container className="relative z-10">
           <div className="max-w-5xl">
             <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white border border-slate-200 text-primary text-[10px] font-black uppercase tracking-[0.3em] mb-12 shadow-sm">
@@ -129,7 +131,10 @@ export default async function LeadershipPage() {
               <div className="lg:col-span-4">
                 <div className="space-y-6 border-l-4 border-secondary pl-8 mt-4">
                   <p className="text-xl text-slate-700 leading-relaxed font-semibold">
-                    MSNC is anchored by a multidisciplinary board of scholars and advocates bridging the gap between <span className="text-secondary italic">potential</span> and <span className="text-secondary italic">opportunity.</span>
+                    MSNC is anchored by a multidisciplinary board of scholars
+                    and advocates bridging the gap between{" "}
+                    <span className="text-secondary italic">potential</span> and{" "}
+                    <span className="text-secondary italic">opportunity.</span>
                   </p>
                 </div>
               </div>
@@ -138,7 +143,7 @@ export default async function LeadershipPage() {
         </Container>
       </section>
 
-      {/* 2. THE GALLERY SECTION */}
+      {/* 2. GALLERY SECTION */}
       <section className="py-24">
         <Container>
           {team.length > 0 ? (
@@ -149,7 +154,9 @@ export default async function LeadershipPage() {
             </div>
           ) : (
             <div className="py-32 text-center rounded-[3rem] bg-slate-50 border-2 border-dashed border-slate-200">
-              <h3 className="text-primary font-display uppercase tracking-widest opacity-30">Directory Updating</h3>
+              <h3 className="text-primary font-display uppercase tracking-widest opacity-30">
+                Directory Updating
+              </h3>
             </div>
           )}
         </Container>
@@ -158,20 +165,29 @@ export default async function LeadershipPage() {
   );
 }
 
-function TeamMemberCard({ member, index }: { member: LeadershipMember; index: number }) {
+// --- 4. CARD COMPONENT ---
+function TeamMemberCard({
+  member,
+  index,
+}: {
+  member: LeadershipMember;
+  index: number;
+}) {
   const isStaggered = index % 2 !== 0;
 
   return (
-    <article className={cn(
-      "group relative flex flex-col transition-all duration-1000",
-      isStaggered && "md:mt-56"
-    )}>
-      {/* 1. Portrait */}
+    <article
+      className={cn(
+        "group relative flex flex-col transition-all duration-1000",
+        isStaggered && "md:mt-56"
+      )}
+    >
+      {/* Portrait */}
       <div className="relative aspect-[3/4] overflow-hidden rounded-[3rem] bg-slate-100 shadow-brand transition-all duration-700 border-8 border-white">
         {member.image?.url ? (
-          <Image 
-            src={member.image.url} 
-            alt={`Executive Portrait of ${member.name}`} 
+          <Image
+            src={member.image.url}
+            alt={`Executive Portrait of ${member.name}`}
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover transition-transform duration-1000 group-hover:scale-105"
@@ -181,7 +197,7 @@ function TeamMemberCard({ member, index }: { member: LeadershipMember; index: nu
             {member.name.charAt(0)}
           </div>
         )}
-        
+
         {/* Pillar Badge */}
         <div className="absolute bottom-8 left-8">
           <div className="bg-white/95 backdrop-blur-md px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl text-primary border border-slate-100">
@@ -190,7 +206,7 @@ function TeamMemberCard({ member, index }: { member: LeadershipMember; index: nu
         </div>
       </div>
 
-      {/* 2. Metadata */}
+      {/* Metadata */}
       <div className="mt-12 space-y-6 px-4">
         <header className="flex items-start justify-between border-b border-slate-100 pb-8">
           <div>
@@ -201,11 +217,13 @@ function TeamMemberCard({ member, index }: { member: LeadershipMember; index: nu
               {member.role}
             </p>
           </div>
-          
+
           {member.linkedinUrl && (
-            <a 
-              href={member.linkedinUrl} 
-              target="_blank" 
+            <a
+              href={member.linkedinUrl}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={`${member.name} on LinkedIn`}
               className="w-12 h-12 rounded-full border border-slate-100 flex items-center justify-center text-slate-400 hover:text-white hover:bg-[#0077b5] transition-all duration-500"
             >
               <LinkedInIcon className="w-4 h-4" />
@@ -214,10 +232,10 @@ function TeamMemberCard({ member, index }: { member: LeadershipMember; index: nu
         </header>
 
         <p className="text-slate-600 text-lg leading-relaxed font-medium line-clamp-3 italic">
-          "{getBioPreview(member.bio)}"
+          &ldquo;{getBioPreview(member.bio)}&rdquo;
         </p>
-        
-        <Link 
+
+        <Link
           href={`/leadership/${member.slug}`}
           className="inline-flex items-center gap-6 text-[11px] font-black uppercase tracking-[0.5em] text-primary group/link hover:text-secondary transition-colors"
         >

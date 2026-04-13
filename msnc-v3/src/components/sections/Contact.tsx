@@ -1,15 +1,17 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
-import { Mail, Phone, MapPin, Send, Share2, Users, X } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Textarea } from "@/components/ui/Textarea";
-import { Label } from "@/components/ui/Label";
-import { submitContactForm } from "@/actions/contact";
+import { useActionState, useEffect, useState } from 'react';
+import { Mail, Phone, MapPin, Share2, Users, X, Send } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
+import { Label } from '@/components/ui/Label';
+import { submitContactForm } from '@/actions/contact';
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+
+const FOCUS_BASE = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:ring-blue-600';
 
 const contactInfo = [
   {
@@ -33,9 +35,9 @@ const contactInfo = [
 ];
 
 const socialLinks = [
-{ name: "Instagram", icon: Share2, href: "https://instagram.com/msnccanada" },
-{ name: "LinkedIn", icon: Users, href: "https://linkedin.com/company/msnc" },
-{ name: "Twitter", icon: X, href: "https://twitter.com/msnccanada" },
+  { name: "Instagram", icon: Share2, href: "https://instagram.com/msnccanada" },
+  { name: "LinkedIn", icon: Users, href: "https://linkedin.com/company/msnc" },
+  { name: "Twitter", icon: X, href: "https://twitter.com/msnccanada" },
 ];
 
 export default function Contact() {
@@ -46,8 +48,13 @@ export default function Contact() {
     phone: "",
     message: "",
   });
+  
   const [state, formAction, isPending] = useActionState(submitContactForm, null);
   const router = useRouter();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   useEffect(() => {
     if (!state?.message) return;
@@ -58,53 +65,61 @@ export default function Contact() {
       return;
     }
     toast.error(state.message);
-  }, [state]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+  }, [state, router]);
 
   return (
-    <section className="relative py-24 md:py-32 bg-white overflow-hidden">
-      {/* Background Pattern - Low opacity to ensure text pop */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgb(0,33,71,0.03)_1px,transparent_0)] [background-size:40px_40px]" />
+    <section id="contact" className="relative py-24 md:py-32 bg-[#FAFAFA] overflow-hidden border-t border-slate-200">
+      
+      {/* Subtle Background Pattern */}
+      <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] bg-size-[24px_24px] opacity-40 mix-blend-multiply pointer-events-none" aria-hidden />
 
-      <div className="container-editorial relative z-10">
-        <div className="max-w-4xl mx-auto text-center mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-slate-200 mb-6">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-            <span className="text-xs font-black text-primary uppercase tracking-[0.2em]">
+      <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 relative z-10">
+        
+        <div className="max-w-4xl mb-16">
+          <div className="flex items-center gap-4 mb-6">
+            <span className="w-8 h-0.5 bg-blue-600" aria-hidden />
+            <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-blue-600">
               Get In Touch
             </span>
           </div>
           
-          <h2 className="font-display font-black text-5xl md:text-7xl text-primary mb-8 tracking-tight">
+          <h2 className="font-black text-5xl md:text-7xl text-slate-900 mb-8 tracking-tighter leading-[0.9]">
             We'd Love to <br />
-            <span className="text-secondary italic font-normal">Hear From You</span>
+            <span className="text-slate-500 font-serif italic font-light">Hear From You.</span>
           </h2>
           
-          <p className="text-xl text-primary/80 font-medium leading-relaxed max-w-2xl mx-auto">
+          <p className="text-xl text-slate-600 font-medium leading-relaxed max-w-2xl">
             Have questions about our programs or want to get involved? Reach out and our team will get back to you shortly.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-12 gap-12 items-start">
-          {/* Left: Contact Info */}
-          <div className="lg:col-span-4 space-y-6">
+        {/* Editorial Divider */}
+        <div className="w-full mb-16">
+          <div className="h-0.75 bg-slate-900 w-full" />
+          <div className="h-px bg-slate-200 w-full mt-1" />
+        </div>
+
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          
+          {/* Left: Contact Info & Socials */}
+          <div className="lg:col-span-4 flex flex-col gap-6">
             {contactInfo.map((info) => (
-              <div key={info.title} className="group p-6 rounded-[2rem] bg-white border border-slate-200 hover:border-secondary transition-all duration-300 shadow-sm hover:shadow-brand">
+              <div 
+                key={info.title} 
+                className="group p-8 rounded-3xl bg-white border border-slate-200 hover:border-blue-600 hover:bg-slate-50 hover:-translate-y-1 transition-all duration-500 ease-out"
+              >
                 <div className="flex items-center gap-5">
-                  <div className="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                    <info.icon className="w-5 h-5 text-primary group-hover:text-white" />
+                  <div className="w-14 h-14 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center group-hover:bg-blue-50 group-hover:border-blue-200 transition-colors duration-500">
+                    <info.icon className="w-6 h-6 text-slate-400 group-hover:text-blue-600 transition-colors duration-500" strokeWidth={1.5} />
                   </div>
                   <div>
-                    <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-1">{info.title}</h3>
-                    {info.href !== "#" ? (
-                      <a href={info.href} className="text-lg font-bold text-primary hover:text-secondary transition-colors">
+                    <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1.5">{info.title}</h3>
+                    {info.href === "#" ? (
+                      <p className="text-lg font-black text-slate-900 group-hover:text-blue-600 transition-colors">{info.value}</p>
+                    ) : (
+                      <a href={info.href} className={`text-lg font-black text-slate-900 group-hover:text-blue-600 transition-colors ${FOCUS_BASE}`}>
                         {info.value}
                       </a>
-                    ) : (
-                      <p className="text-lg font-bold text-primary">{info.value}</p>
                     )}
                   </div>
                 </div>
@@ -112,9 +127,11 @@ export default function Contact() {
             ))}
 
             {/* Social Block */}
-            <div className="p-10 rounded-[2.5rem] bg-primary text-white shadow-brand">
-              <h3 className="font-display text-2xl font-bold mb-2 text-white">Follow Us</h3>
-              <p className="text-white/70 mb-8 text-sm font-medium">Stay connected with our community through our global channels.</p>
+            <div className="p-10 rounded-3xl bg-slate-900 border border-slate-800 text-white mt-2 hover:-translate-y-1 transition-all duration-500">
+              <h3 className="text-3xl font-black mb-3">Follow Us</h3>
+              <p className="text-slate-400 mb-8 text-sm font-medium leading-relaxed">
+                Stay connected with our community through our global channels.
+              </p>
               <div className="flex gap-4">
                 {socialLinks.map((social) => (
                   <a
@@ -122,10 +139,10 @@ export default function Contact() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/10 flex items-center justify-center hover:bg-secondary hover:border-secondary transition-all duration-500"
+                    className={`w-12 h-12 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center hover:bg-blue-600 hover:border-blue-500 transition-all duration-500 ease-out group ${FOCUS_BASE}`}
                     aria-label={social.name}
                   >
-                    <social.icon className="w-5 h-5" />
+                    <social.icon className="w-5 h-5 text-slate-300 group-hover:text-white transition-colors duration-500" strokeWidth={1.5} />
                   </a>
                 ))}
               </div>
@@ -134,13 +151,13 @@ export default function Contact() {
 
           {/* Right: Contact Form */}
           <div className="lg:col-span-8">
-            <div className="p-10 md:p-14 rounded-[3rem] bg-white border border-slate-100 shadow-brand">
-              <h3 className="font-display text-3xl font-black text-primary mb-10">Send Us a Message</h3>
+            <div className="p-8 md:p-14 rounded-3xl bg-white border border-slate-200 hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1 transition-all duration-500">
+              <h3 className="text-3xl font-black text-slate-900 mb-10">Send Us a Message</h3>
               
               <form action={formAction} className="space-y-8">
                 <div className="grid sm:grid-cols-2 gap-8">
                   <div className="space-y-3">
-                    <Label htmlFor="firstName" className="text-xs font-black uppercase tracking-widest text-primary/60">First Name</Label>
+                    <Label htmlFor="firstName" className="text-[10px] font-bold uppercase tracking-widest text-slate-500">First Name</Label>
                     <Input
                       id="firstName"
                       name="firstName"
@@ -148,11 +165,11 @@ export default function Contact() {
                       onChange={handleChange}
                       required
                       placeholder="Jean"
-                      className="h-14 rounded-2xl border-slate-200 focus:border-secondary focus:ring-secondary transition-all px-6 font-medium text-primary placeholder:text-slate-300"
+                      className={`h-14 rounded-2xl bg-slate-50 border-slate-200 focus:bg-white focus:border-blue-600 focus:ring-blue-600 transition-all duration-500 px-6 font-medium text-slate-900 placeholder:text-slate-400 ${FOCUS_BASE}`}
                     />
                   </div>
                   <div className="space-y-3">
-                    <Label htmlFor="lastName" className="text-xs font-black uppercase tracking-widest text-primary/60">Last Name</Label>
+                    <Label htmlFor="lastName" className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Last Name</Label>
                     <Input
                       id="lastName"
                       name="lastName"
@@ -160,13 +177,14 @@ export default function Contact() {
                       onChange={handleChange}
                       required
                       placeholder="Claude"
-                      className="h-14 rounded-2xl border-slate-200 focus:border-secondary focus:ring-secondary transition-all px-6 font-medium text-primary placeholder:text-slate-300"
+                      className={`h-14 rounded-2xl bg-slate-50 border-slate-200 focus:bg-white focus:border-blue-600 focus:ring-blue-600 transition-all duration-500 px-6 font-medium text-slate-900 placeholder:text-slate-400 ${FOCUS_BASE}`}
                     />
                   </div>
                 </div>
 
                 <div className="space-y-3">
-                  <Label htmlFor="email" className="text-xs font-black uppercase tracking-widest text-primary/60">Email Address</Label>
+                  <input type="hidden" name="subject" value="General Inquiry" />
+                  <Label htmlFor="email" className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Email Address</Label>
                   <Input
                     id="email"
                     name="email"
@@ -175,13 +193,12 @@ export default function Contact() {
                     onChange={handleChange}
                     required
                     placeholder="jean.claude@example.com"
-                    className="h-14 rounded-2xl border-slate-200 focus:border-secondary focus:ring-secondary transition-all px-6 font-medium text-primary placeholder:text-slate-300"
+                    className={`h-14 rounded-2xl bg-slate-50 border-slate-200 focus:bg-white focus:border-blue-600 focus:ring-blue-600 transition-all duration-500 px-6 font-medium text-slate-900 placeholder:text-slate-400 ${FOCUS_BASE}`}
                   />
                 </div>
 
                 <div className="space-y-3">
-                  <input type="hidden" name="subject" value="General Inquiry" />
-                  <Label htmlFor="message" className="text-xs font-black uppercase tracking-widest text-primary/60">Your Message</Label>
+                  <Label htmlFor="message" className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Your Message</Label>
                   <Textarea
                     id="message"
                     name="message"
@@ -190,7 +207,7 @@ export default function Contact() {
                     required
                     rows={6}
                     placeholder="How can we support your journey today?"
-                    className="rounded-[2rem] border-slate-200 focus:border-secondary focus:ring-secondary transition-all p-6 font-medium text-primary resize-none placeholder:text-slate-300"
+                    className={`rounded-3xl bg-slate-50 border-slate-200 focus:bg-white focus:border-blue-600 focus:ring-blue-600 transition-all duration-500 p-6 font-medium text-slate-900 resize-none placeholder:text-slate-400 ${FOCUS_BASE}`}
                   />
                 </div>
 
@@ -198,12 +215,12 @@ export default function Contact() {
                   <div className={cn(
                     "p-5 rounded-2xl border font-bold flex items-center gap-3",
                     state.success
-                      ? "bg-emerald-50 border-emerald-100 text-emerald-800"
-                      : "bg-accent/10 border-accent/20 text-accent"
+                      ? "bg-emerald-50 border-emerald-200 text-emerald-800"
+                      : "bg-red-50 border-red-200 text-red-800"
                   )}>
                     <div className={cn(
                       "w-2 h-2 rounded-full",
-                      state.success ? "bg-emerald-500 animate-pulse" : "bg-accent"
+                      state.success ? "bg-emerald-500 animate-pulse" : "bg-red-500"
                     )} />
                     {state.message}
                   </div>
@@ -213,16 +230,18 @@ export default function Contact() {
                   type="submit"
                   size="lg"
                   disabled={isPending}
-                  className="w-full h-16 rounded-2xl bg-primary hover:bg-secondary text-white font-black uppercase tracking-widest text-sm shadow-xl hover:shadow-secondary/20 transition-all duration-500"
+                  className={`group w-full h-16 rounded-2xl bg-slate-900 hover:bg-blue-600 text-white font-bold uppercase tracking-widest text-sm transition-all duration-500 hover:shadow-2xl hover:shadow-blue-600/25 hover:scale-[1.02] ${FOCUS_BASE}`}
                 >
                   {isPending ? "Dispatching..." : "Dispatch Message"}
-                  <Send className="ml-3 w-5 h-5" />
+                  <Send className="ml-3 w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-500" />
                 </Button>
               </form>
             </div>
           </div>
+          
         </div>
       </div>
     </section>
   );
 }
+

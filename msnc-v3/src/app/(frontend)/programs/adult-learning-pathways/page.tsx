@@ -53,21 +53,20 @@ export default function RebuildingFuturesPage() {
             <ArrowLeft className="w-3 h-3" /> Back to Framework
           </Link>
 
-          <div className="max-w-4xl space-y-10">
+          <div className="max-w-6xl space-y-10">
             <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/20 shadow-lg">
               <Globe className="w-4 h-4 text-[#93C5FD]" />
               <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#93C5FD]">
                 Pillar 04: Kenya · Uganda · Burundi
               </span>
             </div>
-
             {/* Contrast Fix: Pure white H1 with Luminous Blue accent */}
             <h1 className="text-5xl md:text-8xl font-black text-white font-display leading-[0.95] tracking-tighter">
               Rebuilding <br />
               <em className="not-italic text-[#93C5FD]">Futures.</em>
             </h1>
 
-            <div className="max-w-2xl border-l-4 border-[#93C5FD] pl-8">
+            <div className="max-w-4xl border-l-4 border-[#93C5FD] pl-8">
               <p className="text-xl md:text-2xl text-white/80 font-medium leading-relaxed">
                 "The crisis did not end at the border. We deliver vocational training in high-demand trades so that wherever youth land next, they land with a future."
               </p>

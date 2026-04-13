@@ -115,7 +115,7 @@ function JoinForm() {
 
   return (
     <main className="min-h-screen bg-white">
-      <section className="relative pt-48 pb-20 overflow-hidden bg-slate-50">
+      <section className="relative pt-32 pb-16 overflow-hidden bg-slate-50">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-white -skew-x-12 translate-x-32 pointer-events-none border-l border-slate-100" />
         <div className="absolute right-10 top-1/2 -translate-y-1/2 text-[12vw] font-black text-primary/5 font-display select-none pointer-events-none leading-none uppercase">
           {formData.interest}
@@ -139,7 +139,7 @@ function JoinForm() {
         </Container>
       </section>
 
-      <section className="py-24">
+      <section className="py-16">
         <Container>
           <div className="grid lg:grid-cols-12 gap-20 items-start">
             
@@ -176,7 +176,7 @@ function JoinForm() {
                 );
               })}
 
-              <div className="mt-12 p-8 rounded-[3rem] bg-slate-50 border border-slate-100 flex items-start gap-4">
+              <div className="mt-8 p-6 rounded-[2.5rem] bg-slate-50 border border-slate-100 flex items-start gap-3">
                 <ShieldCheck className="w-6 h-6 text-secondary shrink-0" />
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-loose">
                   All submissions are encrypted and reviewed strictly by the MSNC Executive Board.
@@ -186,7 +186,7 @@ function JoinForm() {
 
             {/* Form */}
             <div className="lg:col-span-7">
-              <div className="bg-white p-8 md:p-16 rounded-[4rem] border border-slate-100 shadow-2xl shadow-slate-200/40">
+              <div className="bg-white p-6 md:p-12 rounded-[4rem] border border-slate-100 shadow-2xl shadow-slate-200/40">
                 <header className="mb-12">
                   <h2 className="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em] mb-4">Step 02 — Digital Intake</h2>
                   <h3 className="text-4xl font-black text-primary font-display tracking-tight">
@@ -194,7 +194,7 @@ function JoinForm() {
                   </h3>
                 </header>
 
-                <form action={formAction} className="space-y-10">
+                <form action={formAction} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-8">
                     <div className="space-y-3">
                       <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-2">First Name</Label>

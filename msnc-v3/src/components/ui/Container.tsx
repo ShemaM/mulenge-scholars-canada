@@ -17,8 +17,8 @@ export default function Container({
   return (
     <div
       className={cn(
-        "mx-auto w-full px-6 md:px-12 lg:px-20", // Generous editorial padding
-        !fullBleed && "max-w-[1440px]", // Wide-format for high-end feel
+        "mx-auto w-full px-4 md:px-8 lg:px-12 xl:px-16", // Tightened editorial padding
+        !fullBleed && "max-w-7xl", // Consistent max-w-7xl from globals .container-editorial
         className
       )}
     >

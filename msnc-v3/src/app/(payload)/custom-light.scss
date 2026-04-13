@@ -1,0 +1,55 @@
+/* MSNC Executive Board - Light Theme Production Patch */
+.nav {
+  /* Light background with contrast for readability */
+  background: #ffffff !important; 
+  border-bottom: 1px solid #e5e7eb !important;
+
+  /* Group Labels */
+  .nav__group-label {
+    color: #374151 !important; /* slate-700 */
+    font-weight: 700;
+    letter-spacing: 0.15em;
+  }
+
+  /* Inactive Links */
+  .nav__link {
+    color: #6b7280 !important; /* slate-500 */
+    opacity: 0.85;
+    
+    &:hover {
+      opacity: 1;
+      color: #1f2937 !important; /* slate-800 */
+      background: rgba(0, 33, 71, 0.05) !important;
+    }
+  }
+
+  /* Active State */
+  .nav__link--active {
+    background-color: #0369a1 !important;
+    color: #ffffff !important;
+    opacity: 1;
+    box-shadow: 0 0 15px rgba(3, 105, 161, 0.4);
+  }
+}
+
+/* Dashboard List Headers */
+.list-controls {
+  background: #ffffff !important;
+  border-bottom: 2px solid #e2e8f0 !important;
+  
+  .list-controls__label {
+    color: #002147 !important;
+    font-weight: 800;
+  }
+}
+
+/* Save Button contrast */
+.form-submit .btn--style-primary {
+  color: #ffffff !important;
+  background-color: #0369a1 !important;
+  
+  &:hover {
+    background-color: #002147 !important;
+  }
+}
+
