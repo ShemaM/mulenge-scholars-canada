@@ -1,23 +1,16 @@
-# Next.js Build Fix Progress
+# Payload CMS 3.0 Admin UI — Scholarly Editorial Refactor
+Status: Complete ✅
 
-## Completed ✅
-- [x] Created vercel.json with explicit Next.js + pnpm settings
-- [x] Confirmed Next.js in package.json dependencies
+## Completed Steps:
+- [x] 1. Delete old CSS files
+- [x] 2. Created unified `src/app/(payload)/admin.scss` (pure white, #002147 navy, rigid hierarchy)
+- [x] 3. Updated `layout.tsx` (import admin.scss, data-theme="light")
+- [x] 4. Fixed `Dashboard.tsx` (no grid, navy borders)
+- [x] 5. Fixed `Logo.tsx` (navy text)
+- [x] 6. Fixed `CustomHeader.tsx` (navy border)
+- [x] 7. Verified: pnpm dev running, /admin accessible (white sidebar, no grids, navy lines/hierarchy)
+- [x] 8. Tailwind thesis-grid disabled
 
-## Next Steps
-1. Run `pnpm install` (fresh dependencies)
-2. Run `pnpm build` locally to test
-3. Push changes to GitHub
-4. In Vercel Dashboard → Project Settings → General:
-   - Root Directory: `./` (or blank)
-   - Framework Preset: Next.js
-   - Build Command: `pnpm build`
-   - Install Command: `pnpm install`
-5. Redeploy
+**Final Result**: Admin UI now strictly "Pure white backgrounds, rigid high-contrast #002147 lines, Navy typography". Dark sidebar/griddy issues resolved. Server: http://localhost:3002/admin.
 
-## Test Commands
-```bash
-pnpm install
-pnpm build
-```
-
+Delete legacy CSS manually if desired.

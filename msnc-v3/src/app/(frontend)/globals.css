@@ -1,467 +1,172 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    MSNC DESIGN SYSTEM — globals.css
-   ═══════════════════════════════════════════════════════════════════════════
-
-   RULE: This file is the bridge between raw CSS vars and Tailwind tokens.
-         Components import NOTHING directly — they use Tailwind classes only.
-
-   COLOR ARCHITECTURE:
-     Logo → tailwind.config.ts (hex values) → CSS vars here → Tailwind classes
-     No component ever writes a hex value. Ever.
-
-   THREE LAYERS:
-     @layer base     — CSS custom properties + element defaults
-     @layer components — reusable class utilities (.btn-*, .section-*, etc.)
-     @layer utilities  — one-off helpers (.container-editorial, etc.)
-
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/* ─── Google Fonts ─────────────────────────────────────────────────────────
-   Load once here. Never in a component. Never inline.
-   ───────────────────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 @config "../../../tailwind.config.ts";
 
-
 @layer base {
-
-  /* ──────────────────────────────────────────────────────────────────────
-     CSS CUSTOM PROPERTIES
-     All values sourced from logo. See tailwind.config.ts for full palette.
-     ────────────────────────────────────────────────────────────────────── */
   :root {
-    /* ── Brand palette (HSL — for shadcn/radix compatibility) ────────── */
-    /* Navy  #002147 → hsl(212, 100%, 14%) */
-    --primary:             212 100% 14%;
-    --primary-foreground:  210 40% 98%;
-
-    /* Sky   #0369a1 → hsl(201, 96%, 32%) */
-    --secondary:           201 96% 32%;
-    --secondary-foreground:210 40% 98%;
-
-    /* Maple #c8181c → hsl(358, 76%, 44%) */
-    --accent:              358 76% 44%;
-    --accent-foreground:   210 40% 98%;
+    /* Brand palette HSL */
+    --primary: 212 100% 14%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 201 96% 32%;
+    --secondary-foreground: 210 40% 98%;
+    --accent: 358 76% 44%;
+    --accent-foreground: 210 40% 98%;
 
     /* Page surfaces */
-    --background:          0 0% 100%;
-    --foreground:          215 28% 17%;     /* ink-like, not pure black */
-    --muted:               210 40% 96.1%;
-    --muted-foreground:    215.4 16.3% 46.9%;
-    --border:              214.3 31.8% 91.4%;
-    --input:               214.3 31.8% 91.4%;
-    --ring:                201 96% 32%;     /* sky — focus rings */
+    --background: 0 0% 100%;
+    --foreground: 215 28% 17%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 201 96% 32%;
 
-    /* ── Raw hex vars (use only in complex CSS rules below, not components) */
-    --color-navy:          #002147;
-    --color-ocean:         #005490;
-    --color-sky:           #0369a1;
-    --color-steel:         #3c84b4;
-    --color-mist:          #78b4d8;
-    --color-cloud:         #84c0e4;
-    --color-ink:           #10161c;
-    --color-maple:         #c8181c;
-    --color-gold:          #e4d131;
-    --color-white:         #ffffff;
-    --color-cream:         #F9F6F1;   /* neutral-50 — hover wash bg */
+    /* Hex vars */
+    --color-navy: #002147;
+    --color-sky: #0369a1;
+    --color-ink: #10161c;
+    --color-maple: #c8181c;
 
-    /* ── Font vars ──────────────────────────────────────────────────── */
-    --font-sans:           'Inter', system-ui, sans-serif;
-    --font-display:        'Playfair Display', Georgia, serif;
-    --font-mono:           'JetBrains Mono', ui-monospace, monospace;
-
-    /* ── Radius ─────────────────────────────────────────────────────── */
-    --radius:              1rem;    /* 16px — lg cards, modals */
-
-    /* ── Motion ─────────────────────────────────────────────────────── */
-    --ease-spring:         cubic-bezier(0.34, 1.56, 0.64, 1);
-    --ease-out-expo:       cubic-bezier(0.16, 1, 0.3, 1);
-    --ease-in-expo:        cubic-bezier(0.7, 0, 0.84, 0);
-
-    /* ── Z-index scale ──────────────────────────────────────────────── */
-    --z-base:      1;
-    --z-dropdown:  100;
-    --z-sticky:    200;
-    --z-overlay:   300;
-    --z-modal:     400;
-    --z-toast:     500;
+    /* Font vars */
+    --font-sans: "Segoe UI", Arial, system-ui, sans-serif;
+    --font-display: Georgia, serif;
+    --font-mono: monospace;
   }
 
-  /* ──────────────────────────────────────────────────────────────────────
-     GLOBAL RESETS & ELEMENT DEFAULTS
-     ────────────────────────────────────────────────────────────────────── */
-  *,
-  *::before,
-  *::after {
+  * {
     border-color: hsl(var(--border));
-  }
-
-  html {
-    scroll-behavior: smooth;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
   }
 
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     font-family: var(--font-sans);
-    font-size: 1rem;
-    line-height: 1.6;
+    line-height: 1.5;
+    margin: 0;
   }
 
   /* ──────────────────────────────────────────────────────────────────────
-     TYPOGRAPHIC HIERARCHY
-     These are the ONLY definitions of heading sizes in the entire project.
-     Components must not redefine h1/h2/h3/h4 sizes — they extend these.
-
-     Scale:
-       h1  → text-4xl  → clamp(2.5rem, 5vw, 4rem)   — page heroes
-       h2  → text-3xl  → clamp(2rem,   4vw, 3rem)    — section headings
-       h3  → text-2xl  → clamp(1.5rem, 3vw, 2.25rem) — card/feature headings
-       h4  → text-xl   → 1.5rem                       — sub-headings
-       p   → text-md   → 1.125rem                     — body copy
+     TYPOGRAPHIC RESET
+     Scoped to frontend only — the :not([class*="payload"]) guard prevents
+     these resets from bleeding into Payload's admin UI, which relies on
+     its own heading/paragraph defaults.
      ────────────────────────────────────────────────────────────────────── */
-  h1,
-  h2,
-  h3,
-  h4 {
+  h1:not([class*="payload"]):not(.payload-admin *),
+  h2:not([class*="payload"]):not(.payload-admin *),
+  h3:not([class*="payload"]):not(.payload-admin *),
+  h4:not([class*="payload"]):not(.payload-admin *),
+  p:not([class*="payload"]):not(.payload-admin *) {
+    margin: 0;
+    padding: 0;
+    max-width: none;
+    text-transform: none;
+  }
+
+  h1:not([class*="payload"]):not(.payload-admin *),
+  h2:not([class*="payload"]):not(.payload-admin *),
+  h3:not([class*="payload"]):not(.payload-admin *),
+  h4:not([class*="payload"]):not(.payload-admin *) {
     font-family: var(--font-display);
-    font-weight: 900;
     color: var(--color-navy);
     text-wrap: balance;
     letter-spacing: -0.02em;
   }
 
-  h1 {
-    /* text-4xl equivalent — fluid */
+  h1:not([class*="payload"]):not(.payload-admin *) {
+    font-weight: 700;
     font-size: clamp(2.5rem, 5vw, 4rem);
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-    margin-bottom: 1.5rem;
-  }
-
-  h2 {
-    /* text-3xl equivalent — fluid */
-    font-size: clamp(2rem, 4vw, 3rem);
     line-height: 1.1;
-    letter-spacing: -0.025em;
-    margin-bottom: 1.25rem;
   }
 
-  h3 {
-    /* text-2xl equivalent — fluid */
-    font-size: clamp(1.5rem, 3vw, 2.25rem);
+  h2:not([class*="payload"]):not(.payload-admin *) {
+    font-weight: 700;
+    font-size: clamp(2rem, 4vw, 3rem);
     line-height: 1.2;
-    letter-spacing: -0.02em;
-    margin-bottom: 1rem;
   }
 
-  h4 {
-    font-size: 1.5rem;
-    line-height: 1.3;
-    letter-spacing: -0.015em;
-    margin-bottom: 0.75rem;
+  h3:not([class*="payload"]):not(.payload-admin *) {
+    font-weight: 600;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
   }
 
-  p {
-    font-family: var(--font-sans);
-    font-size: 1.125rem;     /* 18px — comfortable reading */
-    line-height: 1.65;
-    color: #334155;           /* slate-700 — readable, not harsh black */
-    max-width: 68ch;
-    text-wrap: pretty;
-    margin-bottom: 1.5rem;
-  }
-
-  /* Lead paragraph (first p after h1/h2) */
-  p.lead,
-  .prose-lead p:first-of-type {
-    font-size: 1.25rem;
+  p:not([class*="payload"]):not(.payload-admin *) {
+    font-family: var(--font-sans), sans-serif;
+    font-size: 1.125rem;
     line-height: 1.6;
-    color: #475569;
+    color: #334155;
+    text-wrap: pretty;
   }
 
-  /* Small text / captions */
-  small,
-  .text-caption {
-    font-size: 0.8125rem;
-    line-height: 1.4;
-    color: #64748b;
-  }
-
-  /* Links */
   a {
-    color: var(--color-sky);
+    color: inherit;
     text-decoration: none;
-    transition: color 200ms ease;
-  }
-  a:hover {
-    color: var(--color-ocean);
   }
 
-  /* Focus visible — keyboard nav */
-  :focus-visible {
-    outline: 2px solid var(--color-sky);
-    outline-offset: 3px;
-    border-radius: 4px;
-  }
-
-  /* ── Lists ──────────────────────────────────────────────────────────── */
-  ul, ol {
+  ul,
+  ol {
+    margin: 0;
     padding-left: 1.5rem;
   }
-  li {
-    margin-bottom: 0.375rem;
-    line-height: 1.6;
-  }
-
-  /* ── Images ─────────────────────────────────────────────────────────── */
-  img, video {
-    max-width: 100%;
-    height: auto;
-  }
 }
-
 
 /* ═══════════════════════════════════════════════════════════════════════════
    COMPONENT UTILITIES
-   Reusable class-level patterns that go beyond single Tailwind classes.
    ═══════════════════════════════════════════════════════════════════════════ */
 @layer components {
-
-  /* ── Layout ──────────────────────────────────────────────────────────── */
-
-  /* Primary editorial container — used by all sections */
   .container-editorial {
-    @apply mx-auto w-full max-w-7xl px-6 sm:px-8 md:px-12 lg:px-20;
+    @apply w-full px-6 sm:px-10 md:px-16 lg:px-20;
   }
 
-  /* Narrow container — long-form reading (articles, about) */
-  .container-narrow {
-    @apply mx-auto w-full max-w-3xl px-6 sm:px-8;
-  }
-
-  /* Full bleed — no horizontal padding */
   .container-full {
-    @apply mx-auto w-full max-w-7xl;
-  }
-
-  /* ── Section wrapper — consistent vertical rhythm across all pages ──── */
-  /* RULE: Every page section uses one of these. No ad-hoc py-X values. */
-  .section {
-    @apply py-16 sm:py-20 md:py-24 lg:py-32;
-  }
-
-  .section-sm {
-    @apply py-10 sm:py-12 md:py-16;
-  }
-
-  .section-lg {
-    @apply py-20 sm:py-28 md:py-36 lg:py-44;
-  }
-
-  /* ── Section label (small uppercase above headings) ─────────────────── */
-  /* e.g. "Our Programs" label above "What We Offer" h2 */
-  .section-label {
-    @apply mb-3 block text-label font-extrabold uppercase tracking-[0.35em] text-sky-500;
-  }
-
-  /* ── Cards ───────────────────────────────────────────────────────────── */
-  .card {
-    @apply rounded-lg bg-white p-6 shadow-md transition-all duration-moderate hover:-translate-y-1 hover:shadow-xl;
-  }
-
-  .card-bordered {
-    @apply rounded-lg border border-border bg-white p-6 transition-all duration-moderate hover:-translate-y-1 hover:shadow-lg;
-  }
-
-  /* ── Glass surface (for overlays on photos) ─────────────────────────── */
-  .glass {
-    @apply rounded-lg border border-white/20 bg-white/10 backdrop-blur-md;
-  }
-
-  .glass-dark {
-    @apply rounded-lg border border-white/10 bg-ink-500/40 backdrop-blur-md;
-  }
-
-  /* ── Buttons ─────────────────────────────────────────────────────────── */
-  /* Base — shared by all button variants */
-  .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full font-bold
-           transition-all duration-moderate active:scale-[0.97] disabled:pointer-events-none
-           disabled:opacity-50 focus-visible:shadow-focus focus-visible:outline-none;
-  }
-
-  /* Size variants */
-  .btn-sm  { @apply h-9  px-5  text-sm;  }
-  .btn-md  { @apply h-11 px-7  text-nav; }  /* default */
-  .btn-lg  { @apply h-13 px-9  text-base font-extrabold; }
-
-  /* ── PRIMARY — Navy background (main page actions) */
-  .btn-primary,
-  .btn-secondary,
-  .btn-maple,
-  .btn-ghost,
-  .btn-gold,
-  .btn-success,
-  .btn-warning,
-  .btn-danger {
-    @apply inline-flex h-11 items-center justify-center gap-2 rounded-full px-7 text-nav font-bold
-           uppercase tracking-[0.14em] transition-all duration-moderate active:scale-[0.97]
-           disabled:pointer-events-none disabled:opacity-50 focus-visible:shadow-focus
-           focus-visible:outline-none;
-  }
-
-  .btn-primary {
-    @apply bg-primary-500 text-white shadow-cta-primary hover:-translate-y-px
-           hover:bg-primary-600 hover:shadow-cta-primary-hover;
-  }
-
-  /* ── SECONDARY — Sky/ocean outlined (secondary page actions) */
-  .btn-secondary {
-    @apply border-2 border-sky-500 text-sky-500 hover:bg-sky-500 hover:text-white;
-  }
-
-  /* ── MAPLE — Canadian red (donate, support, high-urgency CTA) */
-  /* This is THE donate/support button. Visually bold, high contrast. */
-  .btn-maple {
-    @apply bg-maple-500 text-white shadow-cta-maple hover:-translate-y-px
-           hover:bg-maple-600 hover:shadow-cta-maple-hover;
-  }
-
-  /* ── GHOST — Transparent, for dark backgrounds */
-  .btn-ghost {
-    @apply border border-white/30 text-white hover:border-white/60 hover:bg-white/10;
-  }
-
-  /* ── GOLD — Achievement / featured actions */
-  .btn-gold {
-    @apply bg-gold-500 text-ink-500 hover:-translate-y-px hover:bg-gold-600;
-  }
-
-  /* ── STATUS — Semantic (NOT to be confused with brand colors) */
-  .btn-success  { @apply bg-success-500 text-white hover:bg-success-600; }
-  .btn-warning  { @apply bg-warning-500 text-white hover:bg-warning-600; }
-  .btn-danger   { @apply bg-danger-500 text-white hover:bg-danger-600; }
-
-  /* ── Badges / Tags ───────────────────────────────────────────────────── */
-  .badge {
-    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
-  }
-
-  .badge-navy,
-  .badge-sky,
-  .badge-maple,
-  .badge-gold,
-  .badge-ocean,
-  .badge-success,
-  .badge-warning,
-  .badge-danger {
-    @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
-  }
-
-  .badge-navy   { @apply bg-primary-50  text-primary-600; }
-  .badge-sky    { @apply bg-sky-50      text-sky-600; }
-  .badge-maple  { @apply bg-maple-50    text-maple-600; }
-  .badge-gold   { @apply bg-gold-50     text-gold-700; }
-  .badge-ocean  { @apply bg-ocean-50    text-ocean-600; }
-  .badge-success{ @apply bg-success-50  text-success-600; }
-  .badge-warning{ @apply bg-warning-50  text-warning-600; }
-  .badge-danger { @apply bg-danger-50   text-danger-600; }
-
-  /* ── Dividers ────────────────────────────────────────────────────────── */
-  .divider       { @apply border-t border-border my-12; }
-  .divider-brand { @apply border-t-2 border-primary-500 my-12; }
-
-  /* ── Forms ───────────────────────────────────────────────────────────── */
-  .input {
-    @apply w-full rounded border border-input bg-background px-4 py-3 text-base
-           text-foreground placeholder:text-muted-foreground
-           transition-all duration-base
-           focus:border-sky-500 focus:outline-none focus:ring-0 focus:shadow-focus;
-  }
-
-  .input-error {
-    @apply border-danger-500 focus:border-danger-500 focus:shadow-focus-red;
-  }
-
-  /* ── Prose overrides (for CMS/blog content) ──────────────────────────── */
-  .prose-msnc {
-    @apply prose prose-lg max-w-none;
-    /* Headings */
-    --tw-prose-headings: var(--color-navy);
-    --tw-prose-links: var(--color-sky);
-    --tw-prose-bold: var(--color-navy);
-    /* Body */
-    --tw-prose-body: #334155;
-    --tw-prose-captions: #64748b;
-  }
-}
-
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   UTILITY OVERRIDES
-   Small helpers that supplement Tailwind defaults.
-   ═══════════════════════════════════════════════════════════════════════════ */
-@layer utilities {
-
-  /* Text balance helpers */
-  .text-balance { text-wrap: balance; }
-  .text-pretty  { text-wrap: pretty; }
-
-  /* Gradient text — brand */
-  .text-gradient-navy {
-    @apply bg-gradient-to-r from-primary-500 to-sky-500 bg-clip-text text-transparent;
-  }
-
-  .text-gradient-sky {
-    @apply bg-gradient-to-r from-sky-500 to-mist-500 bg-clip-text text-transparent;
-  }
-
-  /* Smooth underline reveal (used on nav links) */
-  .underline-reveal {
-    @apply relative;
-  }
-  .underline-reveal::after {
-    content: '';
-    @apply absolute bottom-0 left-0 h-0.5 w-0 rounded-full bg-current
-           transition-[width] duration-moderate ease-spring;
-  }
-  .underline-reveal:hover::after,
-  .underline-reveal.active::after {
     @apply w-full;
   }
 
-  /* ── Scrollbar ──────────────────────────────────────────────────────── */
-  .scrollbar-thin {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-primary-200) transparent;
-  }
-  .scrollbar-thin::-webkit-scrollbar { width: 4px; height: 4px; }
-  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: var(--color-primary-200);
-    border-radius: 99px;
+  .section {
+    @apply py-16 sm:py-24 md:py-32;
   }
 
-  /* ── Screen reader only (accessibility) ───────────────────────────── */
-  .sr-only {
-    position: absolute;
-    width: 1px; height: 1px;
-    padding: 0; margin: -1px;
-    overflow: hidden;
-    clip: rect(0,0,0,0);
-    white-space: nowrap;
-    border-width: 0;
+  .section-sm {
+    @apply py-10 md:py-16;
   }
 
-  /* ── Print ─────────────────────────────────────────────────────────── */
-  @media print {
-    .no-print { display: none !important; }
-    body { font-size: 12pt; color: #000; }
-    a { color: #000; text-decoration: underline; }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl font-bold
+           transition-all active:scale-[0.98] disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply bg-primary-500 text-white px-8 h-12 hover:bg-primary-600;
+  }
+
+  .btn-maple {
+    @apply bg-maple-500 text-white px-8 h-12 hover:bg-maple-600;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-input bg-background px-4 py-3
+           transition-all focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   UTILITY OVERRIDES
+   ═══════════════════════════════════════════════════════════════════════════ */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }

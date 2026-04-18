@@ -1,14 +1,15 @@
 /**
  * FALLBACK DATA - COMPLETE SET
  * Centralized fallbacks for graceful degradation when Payload/DB unavailable.
+ * Updated: Light placeholders (slate-50 bg) for dark BG fix - BLACKBOXAI
  */
 
 export const fallbackPartners = [
-  { id: "1", name: "University of Toronto", logoUrl: "https://placehold.co/200x60/002147/ffffff?text=UofT" },
-  { id: "2", name: "RBC Future Launch", logoUrl: "https://placehold.co/200x60/EF4444/ffffff?text=RBC" },
-  { id: "3", name: "Scotiabank", logoUrl: "https://placehold.co/200x60/3B82F6/ffffff?text=Scotiabank" },
-  { id: "4", name: "McGill University", logoUrl: "https://placehold.co/200x60/10B981/ffffff?text=McGill" },
-  { id: "5", name: "Google.org", logoUrl: "https://placehold.co/200x60/4285F4/ffffff?text=Google" },
+  { id: "1", name: "University of Toronto", logoUrl: "https://placehold.co/200x60/f8fafc/1e293b?text=UofT" },
+  { id: "2", name: "RBC Future Launch", logoUrl: "https://placehold.co/200x60/f8fafc/1e293b?text=RBC" },
+  { id: "3", name: "Scotiabank", logoUrl: "https://placehold.co/200x60/f8fafc/1e293b?text=Scotiabank" },
+  { id: "4", name: "McGill University", logoUrl: "https://placehold.co/200x60/f8fafc/1e293b?text=McGill" },
+  { id: "5", name: "Google.org", logoUrl: "https://placehold.co/200x60/f8fafc/1e293b?text=Google" },
   { id: "6", name: "ILO", logoUrl: "/media/ILO LOGO-400x300.png" }
 ];
 
@@ -42,7 +43,7 @@ export const fallbackPrograms = [
     title: "Leadership Academy",
     slug: "leadership-academy",
     description: "Intensive leadership training for emerging Mulenge leaders.",
-    image: { url: "https://placehold.co/600x400/002147/ffffff?text=Leadership" },
+    image: { url: "https://placehold.co/600x400/f8fafc/1e293b?text=Leadership" },
     order: 0
   },
   {
@@ -50,7 +51,7 @@ export const fallbackPrograms = [
     title: "Academic Excellence",
     slug: "academic-excellence",
     description: "University preparation and scholarship guidance.",
-    image: { url: "https://placehold.co/600x400/3B82F6/ffffff?text=Academic" },
+    image: { url: "https://placehold.co/600x400/f8fafc/1e293b?text=Academic" },
     order: 1
   },
   {
@@ -58,7 +59,7 @@ export const fallbackPrograms = [
     title: "Tech Mentorship",
     slug: "tech-mentorship",
     description: "Software engineering and tech career acceleration.",
-    image: { url: "https://placehold.co/600x400/10B981/ffffff?text=Tech" },
+    image: { url: "https://placehold.co/600x400/f8fafc/1e293b?text=Tech" },
     order: 2
   }
 ];
@@ -88,11 +89,48 @@ export const fallbackBlogs = [
 ];
 
 export const fallbackEvents = [
-  // ... existing ...
+  {
+    id: "e1",
+    title: "Annual MSNC Gala",
+    date: "2024-11-15",
+    location: "Toronto, Canada",
+    description: "Celebration of Mulenge scholars and community impact."
+  },
+  {
+    id: "e2",
+    title: "Tech Career Workshop",
+    date: "2024-10-20",
+    location: "Virtual",
+    description: "Resume writing and interview preparation for tech roles."
+  },
+  {
+    id: "e3",
+    title: "Mentorship Networking Night",
+    date: "2024-12-01",
+    location: "Toronto, Canada",
+    description: "Connect with industry professionals and MSNC mentors."
+  }
 ];
 
 export const fallbackTestimonials = [
-  // ... existing ...
+  {
+    id: "t1",
+    name: "Jean-Pierre Mugisho",
+    role: "Software Engineer at Google",
+    quote: "MSNC gave me the confidence and tools to pursue my dreams in tech."
+  },
+  {
+    id: "t2",
+    name: "Grace Kamali",
+    role: "University of Toronto Graduate",
+    quote: "The scholarship and mentorship from MSNC changed my life trajectory."
+  },
+  {
+    id: "t3",
+    name: "David Nkomo",
+    role: "Business Development Manager",
+    quote: "MSNC's leadership program prepared me for real-world challenges."
+  }
 ];
 
 export const fallbackSiteSettings = {

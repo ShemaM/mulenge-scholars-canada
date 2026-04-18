@@ -1,193 +1,223 @@
 /**
- * MSNC High School Support Deep-Dive
- * ─────────────────────────────────────────────────────────────────────────
- * STRATEGIC NARRATIVE:
- * • The Gateway: Framing Grade 11-12 as the pivot point for future success.
- * • The Roadmap: A step-by-step breakdown of the intervention (Tutoring -> Apps).
- * • Professional Trust: Using clean grids and bold checks to signal reliability.
- * • Production: Full SEO Metadata, responsive editorial scales.
+ * MSNC High School Support (Grades 11-12) - Long-Form Editorial
+ * Architecture: Swiss Editorial, Narrative Flow, Deep Reading
+ * Content: Exact Dictionary items expanded via rich, empathetic storytelling.
  */
 
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
-  GraduationCap, CheckCircle2, ArrowLeft, 
-  ArrowRight, Target, ShieldCheck, 
-  MapPin, BookOpen, Sparkles, 
-  UserCheck, Milestone, Trophy
+  GraduationCap, ArrowLeft, ArrowRight, 
+  UserCheck, MapPin, Compass, BookOpen, Trophy, 
+  Quote
 } from 'lucide-react';
-import Container from '@/components/ui/Container';
 
-// ─── Metadata & SEO ───────────────────────────────────────────────────────
+const FOCUS_BASE = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:ring-blue-600';
 
 export const metadata: Metadata = {
-  title: 'High School Support (Grades 11–12) | MSNC',
-  description: 'Specialized mentorship and academic planning to help Banyamulenge students successfully transition into Canadian post-secondary education.',
-  keywords: ['Grade 11 support', 'University application help Canada', 'Scholarship guidance', 'Banyamulenge students', 'High school mentorship'],
+  title: 'High School Support (Grades 11-12) | MSNC',
+  description: 'Targeted support to help Banyamulenge students transition successfully into post-secondary education through mentorship, tutoring, and application guidance.',
 };
-
-const SUPPORT_PILLARS = [
-  {
-    title: "Tutoring & Mentorship",
-    desc: "Academic support paired with university mentors who share similar backgrounds and have successfully navigated the same path.",
-    icon: UserCheck
-  },
-  {
-    title: "Course Selection Guidance",
-    desc: "Ensuring prerequisite courses align with long-term career goals to avoid delays in university eligibility.",
-    icon: MapPin
-  },
-  {
-    title: "Post-Secondary Planning",
-    desc: "Detailed roadmaps mapping out the transition from high school to specialized college or university programs.",
-    icon: Milestone
-  },
-  {
-    title: "Application Support",
-    desc: "Hands-on help with OUAC/College applications, personal statements, and high-value scholarship submissions.",
-    icon: Target
-  },
-  {
-    title: "Leadership Pathways",
-    desc: "Access to volunteer opportunities that build the extracurricular profile required for competitive admissions.",
-    icon: Trophy
-  }
-];
-
-const FOCUS_BASE = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#002147]';
 
 export default function HighSchoolSupportPage() {
   return (
-    <div className="min-h-screen bg-white selection:bg-[#002147]/10">
+    <main className="min-h-screen bg-white text-slate-900 selection:bg-slate-900 selection:text-white pb-32">
       
-      {/* ════════════════════════════════════════════════════════════
-          EDITORIAL HERO: THE GATEWAY
-      ════════════════════════════════════════════════════════════ */}
-      <section className="relative pt-40 pb-32 overflow-hidden bg-[#F8FAFC] border-b border-slate-100">
-        {/* Subtle geometric grid background */}
-        <div className="absolute inset-0 bg-[radial-gradient(#002147_1px,transparent_1px)] [background-size:32px_32px] opacity-[0.03]" />
-        <div className="absolute right-10 top-1/2 -translate-y-1/2 text-[15vw] font-black text-slate-900/[0.02] font-display select-none pointer-events-none">
-          GATEWAY
+      {/* ─── PROLOGUE: EDITORIAL HERO ─── */}
+      <section className="relative pt-32 md:pt-40 pb-20 md:pb-32 bg-[#FAFAFA] border-b border-slate-200 overflow-hidden">
+        
+        {/* Typographic Watermark */}
+        <div className="absolute top-1/2 right-0 -translate-y-1/2 text-[30vw] font-black text-slate-900/[0.03] leading-none pointer-events-none select-none tracking-tighter">
+          02
         </div>
-
-        <Container className="relative z-10">
+        
+        <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 max-w-[1800px] mx-auto relative z-10">
+          
           <Link 
             href="/programs" 
-            className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-[#002147] transition-all mb-16"
+            className={`group inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 hover:text-blue-600 transition-colors duration-300 mb-16 ${FOCUS_BASE}`}
           >
-            <ArrowLeft className="w-3 h-3" /> Back to Pillars
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" /> 
+            Back to Directory
           </Link>
-
-          <div className="max-w-4xl space-y-10">
-            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white border border-slate-200 shadow-sm">
-              <GraduationCap className="w-4 h-4 text-[#002147]" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#002147]">
-                Pillar 02: Grades 11 — 12
+          
+          <div className="max-w-5xl space-y-10">
+            <div className="flex items-center gap-6">
+              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-blue-600 flex items-center gap-2">
+                <GraduationCap className="w-3 h-3" /> Post-Secondary Prep
+              </span>
+              <span className="w-12 h-px bg-slate-300" aria-hidden />
+              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-400">
+                Grades 11–12
               </span>
             </div>
-
-            <h1 className="text-5xl md:text-8xl font-black text-[#002147] font-display leading-[0.95] tracking-tighter">
-              The Bridge to <br />
-              <em className="not-italic text-slate-400">Higher Ed.</em>
+            
+            <h1 className="text-[clamp(3rem,6vw,7rem)] font-black text-slate-900 leading-[0.9] tracking-tighter">
+              The Gateway to <br />
+              <span className="font-serif italic font-light text-slate-500 tracking-normal">Higher Education.</span>
             </h1>
 
-            <div className="max-w-2xl border-l-4 border-[#002147] pl-8">
-              <p className="text-xl md:text-2xl text-slate-600 font-medium leading-relaxed">
-                "Grade 11 is the year that quietly determines futures. We provide the targeted support required to ensure every scholar reaches the gate with confidence."
+            <div className="border-l-4 border-blue-600 pl-6 md:pl-10 max-w-4xl mt-12">
+              <p className="text-2xl md:text-3xl text-slate-700 font-medium leading-[1.4] tracking-tight">
+                We provide targeted support to help students transition successfully into post-secondary education, ensuring no scholar is left behind by administrative blind spots.
               </p>
             </div>
           </div>
-        </Container>
+        </div>
       </section>
 
-      {/* ════════════════════════════════════════════════════════════
-          THE INTERVENTION: BENTO ROADMAP
-      ════════════════════════════════════════════════════════════ */}
-      <section className="py-32 md:py-48 bg-white">
-        <Container>
+      {/* ─── CHAPTER I: THE CONTEXT ─── */}
+      <section className="pt-24 md:pt-32">
+        <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 max-w-[1800px] mx-auto">
           <div className="grid lg:grid-cols-12 gap-16 items-start">
             
-            {/* Sticky Context Sidebar */}
-            <div className="lg:col-span-4 lg:sticky lg:top-32 space-y-8">
-              <div className="w-16 h-16 rounded-[1.25rem] bg-[#002147] flex items-center justify-center shadow-lg">
-                <ShieldCheck className="w-8 h-8 text-white" strokeWidth={1.5} />
-              </div>
-              <h2 className="text-4xl lg:text-5xl font-black font-display text-[#002147] leading-tight">
-                Academic <br /> Precision.
+            <div className="lg:col-span-4">
+              <h2 className="text-[11px] font-bold uppercase tracking-[0.25em] text-slate-900 border-b border-slate-200 pb-4 mb-8">
+                The Hidden Curriculum
               </h2>
-              <p className="text-lg text-slate-500 font-medium leading-relaxed">
-                The Canadian university system is a complex landscape of prerequisites and deadlines. Our intervention is designed to remove the guesswork.
+            </div>
+
+            <div className="lg:col-span-8 max-w-prose text-xl text-slate-600 font-medium leading-[1.8] space-y-8">
+              <p>
+                <span className="float-left text-7xl font-serif text-slate-900 leading-[0.8] pr-3 pt-1">
+                  G
+                </span>
+                rade 11 is the year that quietly dictates a student's future. For many Banyamulenge families navigating the Canadian system for the first time, the high school credit system can feel like a labyrinth. A single misstep in course selection can inadvertently close the door to a desired university program a year later.
+              </p>
+              <p>
+                Our High School Support program acts as a navigational beacon. We don't just offer homework help; we provide a comprehensive, multi-year roadmap. By pairing students with mentors who have successfully walked this exact path, we demystify the admission process, alleviate financial anxiety through scholarship guidance, and build competitive academic profiles.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ─── CHAPTER II: THE METHODOLOGY (Expanded Curriculum) ─── */}
+      <section className="pt-24 md:pt-32 mt-24 md:mt-32 bg-slate-50 border-y border-slate-200 pb-24 md:pb-32">
+        <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 max-w-[1800px] mx-auto">
+          
+          <div className="mb-20">
+            <h2 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight">
+              The Five Stages <br/> of Transition.
+            </h2>
+          </div>
+
+          {/* Bento-style staggered grid for the 5 points */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            {/* Module 1 */}
+            <article className="bg-white p-10 lg:p-12 rounded-[2.5rem] border border-slate-200 shadow-sm flex flex-col md:col-span-2 lg:col-span-2">
+              <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mb-8">
+                <UserCheck className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="text-2xl font-black text-slate-900 mb-4">Tutoring and mentorship</h3>
+              <p className="text-slate-600 leading-relaxed font-medium max-w-2xl">
+                Academic support paired with dedicated university mentors. We match high school students with seniors who share similar backgrounds, providing both subject-specific tutoring and vital psychological proof that success in higher education is attainable.
+              </p>
+            </article>
+
+            {/* Module 2 */}
+            <article className="bg-white p-10 lg:p-12 rounded-[2.5rem] border border-slate-200 shadow-sm flex flex-col">
+              <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center mb-8">
+                <MapPin className="w-6 h-6 text-slate-700" />
+              </div>
+              <h3 className="text-2xl font-black text-slate-900 mb-4">Course selection guidance</h3>
+              <p className="text-slate-600 leading-relaxed font-medium">
+                Strategic alignment of high school prerequisites with long-term career goals, ensuring students maintain university eligibility without wasting time or credits.
+              </p>
+            </article>
+
+            {/* Module 3 */}
+            <article className="bg-white p-10 lg:p-12 rounded-[2.5rem] border border-slate-200 shadow-sm flex flex-col">
+              <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center mb-8">
+                <Compass className="w-6 h-6 text-slate-700" />
+              </div>
+              <h3 className="text-2xl font-black text-slate-900 mb-4">Post-secondary planning</h3>
+              <p className="text-slate-600 leading-relaxed font-medium">
+                Beyond just picking a major, we help scholars build detailed roadmaps that factor in academic strengths, financial realities, and realistic career trajectories.
+              </p>
+            </article>
+
+            {/* Module 4 */}
+            <article className="bg-white p-10 lg:p-12 rounded-[2.5rem] border border-slate-200 shadow-sm flex flex-col">
+              <div className="w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center mb-8">
+                <BookOpen className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-2xl font-black text-slate-900 mb-4">College and university application support</h3>
+              <p className="text-slate-600 leading-relaxed font-medium">
+                Hands-on, line-by-line assistance with OUAC/College portals, personal statements, and navigating the complex landscape of high-value entrance scholarships.
+              </p>
+            </article>
+
+            {/* Module 5 */}
+            <article className="bg-white p-10 lg:p-12 rounded-[2.5rem] border border-slate-200 shadow-sm flex flex-col">
+              <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center mb-8">
+                <Trophy className="w-6 h-6 text-slate-700" />
+              </div>
+              <h3 className="text-2xl font-black text-slate-900 mb-4">Access to leadership and volunteer opportunities</h3>
+              <p className="text-slate-600 leading-relaxed font-medium">
+                Modern admissions require well-rounded citizens. We connect students with community service roles that build the extracurricular profile needed for competitive programs.
+              </p>
+            </article>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ─── CHAPTER III: THE ENVIRONMENT (Pull Quote) ─── */}
+      <section className="py-24 md:py-40 bg-white">
+        <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 max-w-[1800px] mx-auto text-center">
+          <div className="max-w-4xl mx-auto">
+            <Quote className="w-12 h-12 text-blue-200 mx-auto mb-10 rotate-180" strokeWidth={2} />
+            <h2 className="text-3xl md:text-5xl font-serif italic text-slate-900 leading-[1.3] mb-12">
+              "We equip youth with the knowledge, confidence, and resources they need to succeed academically and professionally."
+            </h2>
+            <div className="w-24 h-px bg-blue-600 mx-auto mb-6" />
+            <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400">
+              The Objective
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── EPILOGUE: THE CALL TO ACTION ─── */}
+      <section className="pt-16 pb-32">
+        <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 max-w-[1800px] mx-auto">
+          <div className="bg-slate-900 rounded-[3rem] p-12 md:p-24 text-center overflow-hidden relative">
+            
+            {/* Abstract Background Element */}
+            <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-[120px] translate-y-1/3 -translate-x-1/4 pointer-events-none" />
+
+            <div className="relative z-10 max-w-3xl mx-auto space-y-10">
+              <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter leading-tight">
+                Secure your <br/> academic future.
+              </h2>
+              <p className="text-xl text-slate-300 font-medium">
+                Enrollment for Grade 11 and 12 cohorts is strictly managed to ensure we can provide deeply personalized, high-quality mentorship to every scholar.
               </p>
               
-              <div className="p-6 rounded-3xl bg-[#F8FAFC] border border-slate-100">
-                <div className="flex items-center gap-3 mb-4">
-                  <Sparkles className="w-5 h-5 text-[#002147]" />
-                  <span className="text-xs font-bold uppercase tracking-widest text-[#002147]">Success Metric</span>
-                </div>
-                <div className="text-4xl font-black font-display text-[#002147]">92%</div>
-                <p className="text-sm text-slate-500 font-medium mt-1">Post-secondary placement rate for mentored scholars.</p>
+              <div className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-6">
+                <Link 
+                  href="/join?role=student"
+                  className={`inline-flex h-16 w-full sm:w-auto items-center justify-center gap-4 px-10 bg-blue-600 text-white font-bold uppercase tracking-widest text-xs rounded-full hover:bg-blue-500 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-900/50 transition-all duration-500 group ${FOCUS_BASE}`}
+                >
+                  Apply for Support
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-500" />
+                </Link>
+                <Link 
+                  href="/contact"
+                  className={`inline-flex h-16 w-full sm:w-auto items-center justify-center px-10 bg-transparent border border-slate-700 text-white font-bold uppercase tracking-widest text-xs rounded-full hover:bg-slate-800 transition-all duration-500 ${FOCUS_BASE}`}
+                >
+                  Request a Consultation
+                </Link>
               </div>
             </div>
 
-            {/* List of services (PDF Content) */}
-            <div className="lg:col-span-8 space-y-4">
-              {SUPPORT_PILLARS.map((pillar, i) => (
-                <div key={i} className="group p-8 md:p-10 rounded-[2.5rem] bg-white border border-slate-100 hover:border-[#002147]/20 transition-all duration-300">
-                  <div className="flex items-start gap-8">
-                    <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center shrink-0 group-hover:bg-[#002147] transition-colors duration-500">
-                      <pillar.icon className="w-6 h-6 text-slate-400 group-hover:text-white transition-colors duration-500" />
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-black text-[#002147] font-display mb-3">
-                        {pillar.title}
-                      </h3>
-                      <p className="text-slate-500 font-medium leading-relaxed">
-                        {pillar.desc}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
           </div>
-        </Container>
+        </div>
       </section>
-
-      {/* ════════════════════════════════════════════════════════════
-          ACTION BAR: THE COMMITMENT
-      ════════════════════════════════════════════════════════════ */}
-      <section className="py-24 bg-[#002147] text-white relative overflow-hidden">
-        <Container className="relative z-10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-            <div className="max-w-xl space-y-6">
-              <h2 className="text-4xl md:text-6xl font-black font-display leading-tight">
-                Secure your <br /> <span className="italic text-[#4A90D9]">academic future.</span>
-              </h2>
-              <p className="text-lg text-slate-300 font-medium">
-                Enrollment for Grade 11 and 12 cohorts is now open. Space is limited to ensure personalized quality of mentorship.
-              </p>
-            </div>
-            
-            <div className="shrink-0 flex flex-col gap-4 w-full md:w-auto">
-              <Link 
-                href="/join?role=student" 
-                className={`inline-flex items-center justify-center gap-3 px-10 py-5 rounded-full bg-[#4A90D9] text-white font-bold hover:bg-white hover:text-[#002147] transition-all shadow-xl shadow-[#4A90D9]/10 group ${FOCUS_BASE} focus-visible:ring-white`}
-              >
-                Apply for Support
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-              </Link>
-              <Link 
-                href="/contact" 
-                className="inline-flex items-center justify-center gap-3 px-10 py-5 rounded-full border border-white/20 text-white font-bold hover:bg-white/10 transition-all"
-              >
-                Request a Consultation
-              </Link>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-    </div>
+      
+    </main>
   );
 }

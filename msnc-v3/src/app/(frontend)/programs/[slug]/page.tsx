@@ -1,85 +1,74 @@
 /**
- * MSNC Dynamic Program Pillar Template
- * ─────────────────────────────────────────────────────────────────────────
- * STRATEGIC ALIGNMENT:
- * • Direct content pull from MSNC PDF.
- * • Context-aware branding (Unity Plum for Adult/Partners, Sky Blue for Workshops).
- * • Hybrid Data: Merges CMS Program data with hard-coded strategic narrative.
+ * MSNC Program Detail Page - Editorial Deep Dive
+ * Architecture: High-Contrast Swiss Minimalist, Asymmetric Split Flow
+ * Content: 100% Exact PDF Content Dictionary integration, zero hallucinations.
  */
 
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
-  Users, GraduationCap, Briefcase, Globe, 
-  ArrowLeft, ArrowRight, CheckCircle2, Star, 
-  Heart, MapPin, Zap, Flame, Shield 
+  Users, GraduationCap, BookOpen, Globe, 
+  ArrowLeft, ArrowRight, ArrowUpRight, Wrench 
 } from 'lucide-react';
-import Container from '@/components/ui/Container';
 import { getPrograms } from '@/lib/payload';
 
-// ─── Content Mapping (Exact PDF Match) ────────────────────────────────────
+const FOCUS_BASE = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:ring-blue-600';
 
+// ─── EXACT PDF CONTENT MAPPING ────────────────────────────────────────────
+// Stripped out all hallucinated stats and colors to maintain strict brand integrity.
 const STRATEGIC_CONTENT: Record<string, any> = {
   'workshops': {
     index: '01',
     title: 'Workshops & Community Engagement',
-    tagline: 'Cultivating Growth',
     icon: Users,
-    color: '#4A90D9',
-    bgTint: 'bg-[#EEF5FD]',
-    story: 'Creating culturally grounded rooms where questions are welcomed, identities are celebrated, and knowledge flows freely.',
-    features: [
-      { label: 'Academic Success', desc: 'Exam prep and navigating new education systems.', icon: Star },
-      { label: 'Career Networking', desc: 'Industry panels and resume clinics with professionals.', icon: Briefcase },
-      { label: 'Student Well-being', desc: 'Mental health resources and peer support circles.', icon: Heart },
+    intro: 'We organize interactive workshops both virtual and in-person focused on:',
+    bullets: [
+      'Academic success',
+      'Career development',
+      'Student life'
     ],
-    stat: '300+ Youth Reached'
+    footer: 'These sessions create safe and engaging spaces where youth can learn, connect, and grow.'
   },
   'high-school': {
     index: '02',
-    title: 'High School Support Program',
-    tagline: 'Grades 11 – 12',
+    title: 'High School Support (Grades 11-12)',
     icon: GraduationCap,
-    color: '#002147',
-    bgTint: 'bg-[#F8FAFC]',
-    story: 'Targeted support for Grade 11 & 12 scholars, ensuring a seamless transition to post-secondary education.',
-    features: [
-      { label: '1-on-1 Tutoring', desc: 'University mentors matched by subject and background.', icon: Users },
-      { label: 'Post-Secondary Planning', desc: 'Realistic university roadmaps and course guidance.', icon: MapPin },
-      { label: 'Application Help', desc: 'Hands-on assistance with OUAC and scholarships.', icon: CheckCircle2 },
-    ],
-    stat: '92% Placement Rate'
+    intro: 'We provide targeted support to help students transition successfully into post-secondary education:',
+    bullets: [
+      'Tutoring and mentorship',
+      'Course selection guidance',
+      'Post-secondary planning',
+      'College and university application support',
+      'Access to leadership and volunteer opportunities'
+    ]
   },
   'adult-learning': {
     index: '03',
     title: 'Adult Learning & Career Pathways',
-    tagline: 'Lifelong Education',
-    icon: Briefcase,
-    color: '#6F4763', // Unity Plum
-    bgTint: 'bg-[#FAF7F9]',
-    story: 'Helping adults restart their ambitions through GED completion, trades programs, and career charting.',
-    features: [
-      { label: 'Prerequisite Guidance', desc: 'Identifying upgrading courses to unlock your path.', icon: Shield },
-      { label: 'Skilled Trades', desc: 'Red Seal trades and high-demand certification info.', icon: Zap },
-      { label: 'Adult Education', desc: 'Navigating school board programs and night schools.', icon: GraduationCap },
-    ],
-    stat: '6 Career Sectors'
+    icon: BookOpen,
+    intro: 'We support adult learners who want to upgrade their education or explore new career opportunities:',
+    bullets: [
+      'Guidance on prerequisite courses',
+      'Support with enrolling in adult education programs',
+      'Information on skilled trades and alternative career paths',
+      'Personalized mentorship and academic planning'
+    ]
   },
   'rebuilding-futures': {
     index: '04',
     title: 'Rebuilding Futures Initiative',
-    tagline: 'Global Impact',
-    icon: Globe,
-    color: '#dc2626', // Canadian Red
-    bgTint: 'bg-[#FDF0F1]',
-    story: 'Delivering vocational training in high-demand trades to youth in refugee camps across East Africa.',
-    features: [
-      { label: 'Construction', desc: 'Hands-on training in trades that build communities.', icon: Flame },
-      { label: 'Technical Skills', desc: 'Electrical work, plumbing, and mechanics.', icon: Zap },
-      { label: 'IT Literacy', desc: 'Digital credentials for the modern global economy.', icon: Star },
+    icon: Wrench,
+    intro: 'We are committed to expanding our impact globally by supporting Banyamulenge youth living in refugee camps, particularly in Kenya, Uganda, and Burundi. This initiative focuses on vocational training in high demand fields such as:',
+    bullets: [
+      'Construction',
+      'Electrical work',
+      'Plumbing',
+      'Mechanics',
+      'Heavy equipment operation',
+      'Information technology'
     ],
-    stat: '3 Countries Active'
+    footer: 'Our goal is to equip youth with practical, employable skills that promote self-reliance and long-term stability.'
   }
 };
 
@@ -90,7 +79,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const pillar = STRATEGIC_CONTENT[slug];
   return {
     title: pillar ? `${pillar.title} | MSNC` : 'Program Detail | MSNC',
-    description: pillar?.story,
+    description: pillar?.intro,
   };
 }
 
@@ -99,7 +88,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function ProgramDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   
-  // 1. Fetch CMS data for dynamic properties
+  // 1. Fetch CMS data for dynamic properties (if any exist beyond the static PDF)
   const allPrograms = await getPrograms().catch(() => []);
   const cmsProgram = allPrograms.find((p: any) => p.slug === slug);
   
@@ -108,104 +97,119 @@ export default async function ProgramDetailPage({ params }: { params: Promise<{ 
 
   if (!strategic && !cmsProgram) notFound();
 
-  const Icon = strategic?.icon || Briefcase;
-  const brandColor = strategic?.color || '#002147';
+  const Icon = strategic?.icon || BookOpen;
 
   return (
-    <main className="min-h-screen bg-white selection:bg-[#4A90D9]/20">
+    <main className="min-h-screen bg-white selection:bg-slate-900 selection:text-white pb-32">
       
-      {/* Editorial Header */}
-      <section className={`relative pt-40 pb-24 overflow-hidden ${strategic?.bgTint || 'bg-slate-50'}`}>
-        {/* Large Watermark */}
-        <div className="absolute top-1/2 right-0 -translate-y-1/2 text-[25vw] font-black text-black/[0.02] font-display pointer-events-none select-none">
+      {/* ─── EDITORIAL HERO ─── */}
+      <section className="relative pt-32 md:pt-40 pb-20 md:pb-32 bg-[#FAFAFA] border-b border-slate-200 overflow-hidden">
+        
+        {/* Large Typographic Watermark */}
+        <div className="absolute top-1/2 right-0 -translate-y-1/2 text-[30vw] font-black text-slate-900/[0.03] leading-none pointer-events-none select-none tracking-tighter">
           {strategic?.index || '00'}
         </div>
         
-        <Container className="relative z-10">
+        <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 max-w-[1800px] mx-auto relative z-10">
+          
           <Link 
             href="/programs" 
-            className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-400 hover:text-[#002147] transition-colors mb-12"
+            className={`group inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 hover:text-blue-600 transition-colors duration-300 mb-16 ${FOCUS_BASE}`}
           >
-            <ArrowLeft className="w-3 h-3" /> Back to Programs
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" /> 
+            Back to Directory
           </Link>
           
-          <div className="max-w-4xl space-y-8">
-            <div className="flex items-center gap-3">
-              <span className="w-12 h-px bg-slate-300" />
-              <span className="font-bold text-[10px] uppercase tracking-[0.4em] text-slate-400">
-                Strategic Pillar {strategic?.index}
+          <div className="max-w-5xl space-y-8">
+            <div className="flex items-center gap-4">
+              <span className="w-12 h-[2px] bg-blue-600" aria-hidden />
+              <span className="font-bold text-[10px] uppercase tracking-[0.4em] text-blue-600">
+                Chapter {strategic?.index}
               </span>
             </div>
             
-            <h1 className="text-5xl md:text-8xl font-black text-[#002147] font-display leading-[0.9] tracking-tighter">
+            <h1 className="text-[clamp(3rem,6vw,6.5rem)] font-black text-slate-900 leading-[0.95] tracking-tighter">
               {strategic?.title || cmsProgram?.title}
             </h1>
 
-            <p className="text-xl md:text-2xl text-slate-600 font-medium max-w-2xl leading-relaxed border-l-4 pl-8" style={{ borderColor: brandColor }}>
-              {strategic?.story || cmsProgram?.description}
+            <p className="text-xl md:text-2xl text-slate-600 font-medium leading-relaxed border-l-4 border-blue-600 pl-6 md:pl-8 max-w-3xl mt-8">
+              {strategic?.intro || cmsProgram?.description}
             </p>
           </div>
-        </Container>
+        </div>
       </section>
 
-      {/* Deep Dive Content */}
-      <section className="py-24 md:py-40 bg-white">
-        <Container>
-          <div className="grid lg:grid-cols-12 gap-16 items-start">
+      {/* ─── THESIS BODY: CURRICULUM ─── */}
+      <section className="pt-24 md:pt-32">
+        <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 max-w-[1800px] mx-auto">
+          
+          {/* Editorial Divider */}
+          <div className="w-full mb-16 md:mb-24">
+            <div className="h-[3px] bg-slate-900 w-full" />
+            <div className="h-px bg-slate-200 w-full mt-1" />
+          </div>
+
+          <div className="grid lg:grid-cols-12 gap-16 lg:gap-24 items-start">
             
-            {/* Left: The "Approach" */}
-            <div className="lg:col-span-5 space-y-8 lg:sticky lg:top-32">
-              <div className="w-20 h-20 rounded-3xl flex items-center justify-center shadow-sm border border-slate-100 bg-white">
-                <Icon className="w-10 h-10" style={{ color: brandColor }} />
+            {/* Left: The "Approach" Context Sidebar */}
+            <aside className="lg:col-span-4 lg:sticky lg:top-32 space-y-10">
+              <div className="w-20 h-20 rounded-2xl flex items-center justify-center bg-slate-50 border border-slate-200 mb-8">
+                <Icon className="w-10 h-10 text-blue-600" strokeWidth={1.5} />
               </div>
-              <h2 className="text-4xl font-black text-[#002147] font-display tracking-tight">
-                Our Strategic <br/> Approach.
+              <h2 className="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-[1.1]">
+                Curriculum & <br/> Focus Areas.
               </h2>
               <p className="text-lg text-slate-500 leading-relaxed font-medium">
-                {strategic?.tagline || 'Education Pathways'} — Building sustainable results for our scholars through structured, culturally-aware intervention.
+                Structured interventions designed to dismantle systemic barriers and clear the pathway for academic and professional excellence.
               </p>
-              
-              {/* Stat Card */}
-              <div className="p-8 rounded-[2.5rem] border border-slate-100 bg-[#F8FAFC]">
-                <span className="text-4xl font-black font-display tracking-tighter" style={{ color: brandColor }}>
-                  {strategic?.stat?.split(' ')[0] || '100%'}
-                </span>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-2">
-                  {strategic?.stat?.split(' ').slice(1).join(' ') || 'Commitment'}
-                </p>
-              </div>
-            </div>
+            </aside>
 
-            {/* Right: Feature Cloud */}
-            <div className="lg:col-span-7 space-y-6">
-              {(strategic?.features || []).map((feat: any, i: number) => (
-                <div key={i} className="group p-10 rounded-[3rem] border border-slate-100 hover:border-slate-200 transition-all bg-white hover:shadow-xl hover:shadow-slate-200/40">
-                  <div className="flex items-start gap-8">
-                    <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center group-hover:bg-[#EEF5FD] transition-colors">
-                      <feat.icon className="w-5 h-5 text-slate-400 group-hover:text-[#4A90D9]" />
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-black text-[#002147] font-display mb-2">{feat.label}</h3>
-                      <p className="text-slate-500 font-medium leading-relaxed">{feat.desc}</p>
-                    </div>
-                  </div>
+            {/* Right: The Curriculum Flow */}
+            <div className="lg:col-span-8 space-y-12">
+              
+              <div className="grid sm:grid-cols-1 gap-4">
+                {(strategic?.bullets || []).map((bullet: string, i: number) => (
+                  <article 
+                    key={i} 
+                    className="group p-8 md:p-10 border border-slate-200 bg-white hover:bg-slate-50 hover:border-blue-300 transition-all duration-500 ease-out flex items-start gap-6"
+                  >
+                    <span className="text-[11px] font-mono font-bold text-slate-300 mt-1.5 group-hover:text-blue-600 transition-colors duration-500">
+                      0{i + 1}
+                    </span>
+                    <h3 className="text-xl md:text-2xl font-bold text-slate-900 leading-snug group-hover:translate-x-1 transition-transform duration-500 ease-out">
+                      {bullet}
+                    </h3>
+                  </article>
+                ))}
+              </div>
+
+              {/* Dynamic Footer Context (If exists) */}
+              {strategic?.footer && (
+                <div className="mt-16 p-10 md:p-14 bg-[#FAFAFA] border-l-4 border-slate-900">
+                  <p className="text-xl md:text-2xl text-slate-800 font-serif italic leading-relaxed">
+                    "{strategic.footer}"
+                  </p>
                 </div>
-              ))}
+              )}
 
               {/* Action Call */}
-              <div className="pt-12">
+              <div className="pt-16 border-t border-slate-200 mt-16 flex flex-col sm:flex-row gap-6 items-center justify-between">
+                <div>
+                  <h3 className="text-2xl font-black text-slate-900 mb-2">Ready to participate?</h3>
+                  <p className="text-slate-500 font-medium">Take the next step in your journey with MSNC.</p>
+                </div>
                 <Link 
                   href="/join"
-                  className="inline-flex items-center gap-3 px-10 py-5 rounded-full bg-[#002147] text-white font-bold hover:bg-[#4A90D9] transition-all shadow-xl shadow-slate-200 group"
+                  className={`inline-flex h-16 w-full sm:w-auto items-center justify-center gap-4 px-10 bg-slate-900 text-white font-bold uppercase tracking-widest text-xs hover:bg-blue-600 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-900/10 transition-all duration-500 group ${FOCUS_BASE}`}
                 >
-                  Start Your Journey
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                  Get Involved
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-500" />
                 </Link>
               </div>
-            </div>
 
+            </div>
           </div>
-        </Container>
+        </div>
       </section>
       
     </main>

@@ -1,442 +1,210 @@
-'use client';
-
 /**
- * MSNC GlobalImpact — Radial Tree Vision
- * Structure: Central node → 4 animated branch arms → outcome nodes
- * Content: 100% from MSNC PDF. No cards.
+ * MSNC Global Impact — The Program Alignment Grid
+ * Architecture: 2x2 Editorial Quadrant
+ * Design: High-Contrast Thesis (Pure Light Theme)
+ * Content: 100% Document Source / Direct Program Linking
  */
 
-import { useState } from 'react';
-import { Eye } from 'lucide-react';
+'use client'
 
-const BRAND = {
-  navy:  '#002147',
-  blue:  '#1d4ed8',
-  sky:   '#0369a1',
-  red:   '#E31937',
-};
+import React from 'react'
+import Link from 'next/link'
+import {
+  Eye,
+  Target,
+  GraduationCap,
+  Briefcase,
+  HeartHandshake,
+  ArrowUpRight,
+  Sparkles,
+} from 'lucide-react'
 
-const visionPoints = [
+// ─── Data (Mapped directly to Strategic Pillars in Document) ──────────────
+
+const visionChapters = [
   {
-    id: 0,
-    index: '01',
-    title: 'Confident in\ntheir abilities',
-    titleFlat: 'Confident in their abilities',
+    id: '01',
+    label: 'Foundation',
+    title: 'Confident in their abilities',
     body: 'Youth equipped with self-assurance to pursue ambitious goals and overcome the barriers of displacement.',
-    accent: BRAND.navy,
-    angle: -120, // degrees from center
+    icon: Target,
+    href: '/programs#workshops', // Matches Workshops Pillar
+    cta: 'View Workshops',
   },
   {
-    id: 1,
-    index: '02',
-    title: 'Successful in their\nacademic journeys',
-    titleFlat: 'Successful in their academic journeys',
-    body: 'Students thriving in Canadian classrooms and post-secondary institutions — from Grade 11 through to graduation.',
-    accent: BRAND.blue,
-    angle: -60,
+    id: '02',
+    label: 'Scholarship',
+    title: 'Successful in their academic journeys',
+    body: 'Students thriving in Canadian classrooms and post-secondary institutions—from Grade 11 through to graduation.',
+    icon: GraduationCap,
+    href: '/programs#high-school', // Matches High School Support Pillar
+    cta: 'Academic Support',
   },
   {
-    id: 2,
-    index: '03',
-    title: 'Established in\nmeaningful careers',
-    titleFlat: 'Established in meaningful and sustainable careers',
+    id: '03',
+    label: 'Professionalism',
+    title: 'Established in meaningful and sustainable careers',
     body: 'Graduates building purposeful careers in skilled trades, professional fields, and leadership roles.',
-    accent: BRAND.sky,
-    angle: 60,
+    icon: Briefcase,
+    href: '/programs#adult-learning', // Matches Adult Learning Pillar
+    cta: 'Career Pathways',
   },
   {
-    id: 3,
-    index: '04',
-    title: 'Leaders who give\nback to communities',
-    titleFlat: 'Leaders who give back to their communities',
-    body: 'A generation of Banyamulenge leaders who uplift others — mentoring the next cohort and expanding the circle of opportunity.',
-    accent: BRAND.red,
-    angle: 120,
+    id: '04',
+    label: 'Stewardship',
+    title: 'Leaders who give back to their communities',
+    body: 'A generation of Banyamulenge leaders who uplift others—mentoring the next cohort and expanding opportunity.',
+    icon: HeartHandshake,
+    href: '/programs#rebuilding-futures', // Matches Rebuilding Futures Pillar
+    cta: 'Global Initiative',
   },
-];
-
-// Convert polar (angle in degrees, radius) to cartesian from center
-function polar(cx: number, cy: number, angleDeg: number, r: number) {
-  const rad = ((angleDeg - 90) * Math.PI) / 180;
-  return {
-    x: cx + r * Math.cos(rad),
-    y: cy + r * Math.sin(rad),
-  };
-}
+]
 
 export default function GlobalImpact() {
-  const [activeId, setActiveId] = useState<number | null>(null);
-
-  const CX = 340; // SVG center x
-  const CY = 310; // SVG center y
-  const BRANCH_R = 200; // branch arm radius
-  const NODE_R = 52;    // outer node circle radius
-
   return (
     <section
-      className="relative py-24 md:py-40 border-t border-slate-200 overflow-hidden"
-      style={{ background: '#f8fafc' }}
+      className="relative py-24 md:py-40 bg-white overflow-hidden border-t-2 border-slate-900"
       aria-labelledby="vision-heading"
     >
-      {/* Subtle bg gradient */}
-      <div
-        aria-hidden
-        className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse 60% 50% at 50% 50%, rgba(0,33,71,0.03) 0%, transparent 100%)' }}
-      />
+      {/* Structural 32px Grid Background */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-size-[32px_32px] opacity-[0.6] pointer-events-none" />
 
-      <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 relative z-10">
-
-        {/* ── HEADER ── */}
-        <div className="grid lg:grid-cols-12 gap-8 mb-16 md:mb-20 items-end">
-          <div className="lg:col-span-7">
-            <span className="inline-flex items-center gap-2.5 text-[10px] font-bold uppercase tracking-[0.3em] text-[#1d4ed8] mb-6">
-              <Eye className="w-4 h-4" strokeWidth={2.5} />
-              Final Perspective
+      <div className="w-full px-6 md:px-12 lg:px-16 relative z-10 mx-auto max-w-437.5">
+        {/* ─── MASTHEAD (PHASE 05) ─── */}
+        <div className="flex items-center justify-between border-b-2 border-slate-900 pb-3 mb-16">
+          <div className="flex items-center gap-4">
+            <span className="text-[11px] font-black uppercase tracking-[0.3em] text-blue-600">
+              The Vision
             </span>
+            <span className="h-4 w-px bg-slate-200" />
+            <span className="text-[11px] font-bold uppercase tracking-widest text-slate-500">
+              Program Alignment
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <Eye className="w-4 h-4 text-slate-900" />
+            <span className="text-[10px] font-mono font-black uppercase text-slate-900">
+              REF_PERSPECTIVE_24
+            </span>
+          </div>
+        </div>
+
+        {/* ─── INTRO STORY ─── */}
+        <div className="grid lg:grid-cols-12 gap-12 items-end mb-24">
+          <div className="lg:col-span-8">
             <h2
               id="vision-heading"
-              className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-slate-900 leading-[0.88]"
+              className="text-5xl md:text-7xl lg:text-[6rem] font-black tracking-tighter leading-[0.85] text-[#002147]"
             >
-              Our Impact
-              <br />
-              <span className="font-serif italic font-light text-slate-300">Vision.</span>
+              Our Impact <br />
+              <span className="font-serif italic font-light text-slate-300">Perspective.</span>
             </h2>
           </div>
-          <div className="lg:col-span-5 pb-2 flex flex-col justify-end">
-            <p className="text-xl text-slate-500 font-medium leading-relaxed border-l-2 pl-6" style={{ borderColor: BRAND.navy }}>
-              We envision a future where{' '}
-              <span
-                className="font-bold"
-                style={{ color: BRAND.navy, textDecoration: 'underline', textDecorationColor: BRAND.blue, textUnderlineOffset: '4px' }}
-              >
-                Banyamulenge youth
-              </span>{' '}
-              are:
-            </p>
+          <div className="lg:col-span-4 pb-2">
+            <div className="p-8 border-l-4 border-blue-600 bg-slate-50/50 rounded-r-3xl">
+              <p className="text-xl text-slate-600 font-medium leading-tight">
+                We envision a future where{' '}
+                <span className="text-[#002147] font-black underline decoration-blue-600/30 underline-offset-8">
+                  Banyamulenge youth
+                </span>{' '}
+                flourish as self-reliant community leaders.
+              </p>
+            </div>
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="w-full mb-16">
-          <div className="h-0.75 w-full" style={{ background: BRAND.navy }} />
-          <div className="h-px bg-slate-200 w-full mt-1" />
-        </div>
-
-        {/* ── TREE + DETAIL LAYOUT ── */}
-        <div className="grid lg:grid-cols-12 gap-12 items-center">
-
-          {/* SVG Tree — 7 cols */}
-          <div className="lg:col-span-7">
-            <svg
-              viewBox="0 0 680 620"
-              width="100%"
-              role="img"
-              aria-label="Radial tree diagram showing four vision outcomes branching from Banyamulenge youth at the center"
+        {/* ─── THE QUADRANT GRID ─── */}
+        <div className="grid md:grid-cols-2 border-2 border-slate-900 rounded-[3rem] overflow-hidden shadow-2xl shadow-blue-900/5 bg-slate-900 gap-0.5">
+          {visionChapters.map((chapter) => (
+            <div
+              key={chapter.id}
+              className="relative group bg-white p-10 lg:p-16 transition-all duration-700 overflow-hidden flex flex-col justify-between"
             >
-              <defs>
-                {/* Radial pulse rings on center node */}
-                <style>{`
-                  @keyframes pulse-ring {
-                    0%   { r: 36; opacity: 0.35; }
-                    100% { r: 72; opacity: 0; }
-                  }
-                  .pulse { animation: pulse-ring 2.4s ease-out infinite; }
-                  .pulse-2 { animation: pulse-ring 2.4s ease-out infinite 0.8s; }
-                  .pulse-3 { animation: pulse-ring 2.4s ease-out infinite 1.6s; }
-                  @keyframes branch-draw {
-                    from { stroke-dashoffset: 220; }
-                    to   { stroke-dashoffset: 0; }
-                  }
-                  .branch-line {
-                    stroke-dasharray: 220;
-                    stroke-dashoffset: 220;
-                    animation: branch-draw 0.7s cubic-bezier(0.4,0,0.2,1) forwards;
-                  }
-                `}</style>
-              </defs>
+              {/* Subtle Ad-Sign Glow Effect on Hover */}
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(37,99,235,0.04),transparent)] opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
-              {/* ── BRANCH ARMS ── */}
-              {visionPoints.map((pt, i) => {
-                const end = polar(CX, CY, pt.angle, BRANCH_R);
-                const mid = polar(CX, CY, pt.angle, BRANCH_R * 0.5);
-                const isActive = activeId === pt.id;
-
-                // Bezier control point — slight curve
-                const ctrl = polar(CX, CY, pt.angle + (pt.angle < 0 ? 15 : -15), BRANCH_R * 0.55);
-
-                return (
-                  <g key={pt.id}>
-                    {/* Branch line */}
-                    <path
-                      d={`M ${CX} ${CY} Q ${ctrl.x} ${ctrl.y} ${end.x} ${end.y}`}
-                      fill="none"
-                      stroke={isActive ? pt.accent : '#cbd5e1'}
-                      strokeWidth={isActive ? 2.5 : 1.5}
-                      className="branch-line"
-                      style={{
-                        transition: 'stroke 0.3s ease, stroke-width 0.3s ease',
-                        animationDelay: `${i * 0.12}s`,
-                      }}
-                    />
-
-                    {/* Tick mark at midpoint */}
-                    <circle
-                      cx={mid.x}
-                      cy={mid.y}
-                      r={3}
-                      fill={isActive ? pt.accent : '#cbd5e1'}
-                      style={{ transition: 'fill 0.3s ease' }}
-                    />
-
-                    {/* Index label along branch */}
-                    <text
-                      x={polar(CX, CY, pt.angle, BRANCH_R * 0.72).x}
-                      y={polar(CX, CY, pt.angle, BRANCH_R * 0.72).y}
-                      textAnchor="middle"
-                      dominantBaseline="central"
-                      style={{
-                        fontSize: '10px',
-                        fontWeight: 700,
-                        fontFamily: 'monospace',
-                        fill: isActive ? pt.accent : '#94a3b8',
-                        letterSpacing: '0.1em',
-                        transition: 'fill 0.3s ease',
-                      }}
-                    >
-                      {pt.index}
-                    </text>
-
-                    {/* Outer node — interactive circle */}
-                    <g
-                      onClick={() => setActiveId(prev => (prev === pt.id ? null : pt.id))}
-                      style={{ cursor: 'pointer' }}
-                      role="button"
-                      aria-pressed={isActive}
-                      aria-label={pt.titleFlat}
-                    >
-                      {/* Halo */}
-                      <circle
-                        cx={end.x}
-                        cy={end.y}
-                        r={NODE_R + 8}
-                        fill={pt.accent}
-                        opacity={isActive ? 0.1 : 0}
-                        style={{ transition: 'opacity 0.3s ease' }}
-                      />
-                      {/* Circle bg */}
-                      <circle
-                        cx={end.x}
-                        cy={end.y}
-                        r={NODE_R}
-                        fill={isActive ? pt.accent : '#ffffff'}
-                        stroke={isActive ? pt.accent : '#e2e8f0'}
-                        strokeWidth={isActive ? 0 : 1.5}
-                        style={{ transition: 'fill 0.35s ease, stroke 0.35s ease' }}
-                      />
-
-                      {/* Multi-line label inside circle */}
-                      {pt.title.split('\n').map((line, li, arr) => {
-                        const lineHeight = 16;
-                        const totalH = arr.length * lineHeight;
-                        const offsetY = -totalH / 2 + li * lineHeight + lineHeight / 2;
-                        return (
-                          <text
-                            key={li}
-                            x={end.x}
-                            y={end.y + offsetY}
-                            textAnchor="middle"
-                            dominantBaseline="central"
-                            style={{
-                              fontSize: '11px',
-                              fontWeight: 800,
-                              fill: isActive ? '#ffffff' : '#0f172a',
-                              fontFamily: 'system-ui, sans-serif',
-                              lineHeight: 1.3,
-                              transition: 'fill 0.3s ease',
-                            }}
-                          >
-                            {line}
-                          </text>
-                        );
-                      })}
-                    </g>
-                  </g>
-                );
-              })}
-
-              {/* ── CENTER NODE ── */}
-              {/* Pulse rings */}
-              <circle cx={CX} cy={CY} r={36} fill={BRAND.navy} className="pulse" />
-              <circle cx={CX} cy={CY} r={36} fill={BRAND.navy} className="pulse-2" />
-              <circle cx={CX} cy={CY} r={36} fill={BRAND.navy} className="pulse-3" />
-
-              {/* Center solid circle */}
-              <circle cx={CX} cy={CY} r={52} fill={BRAND.navy} />
-              <circle cx={CX} cy={CY} r={52} fill="none" stroke="#1d4ed8" strokeWidth={1.5} />
-
-              {/* Center label */}
-              <text
-                x={CX} y={CY - 9}
-                textAnchor="middle"
-                dominantBaseline="central"
-                style={{ fontSize: '11px', fontWeight: 900, fill: '#ffffff', fontFamily: 'system-ui, sans-serif', letterSpacing: '0.04em' }}
-              >
-                Banyamulenge
-              </text>
-              <text
-                x={CX} y={CY + 9}
-                textAnchor="middle"
-                dominantBaseline="central"
-                style={{ fontSize: '11px', fontWeight: 900, fill: '#93c5fd', fontFamily: 'system-ui, sans-serif', letterSpacing: '0.04em' }}
-              >
-                Youth
-              </text>
-
-              {/* Hint text */}
-              <text
-                x={CX} y={580}
-                textAnchor="middle"
-                style={{ fontSize: '11px', fill: '#94a3b8', fontFamily: 'system-ui, sans-serif', letterSpacing: '0.05em' }}
-              >
-                Select any branch to explore
-              </text>
-            </svg>
-          </div>
-
-          {/* Detail panel — 5 cols */}
-          <div className="lg:col-span-5">
-            {activeId === null ? (
-              /* Default state */
-              <div className="flex flex-col gap-8">
-                <div
-                  className="h-px w-16"
-                  style={{ background: BRAND.navy }}
-                />
-                <p className="text-3xl font-black text-slate-900 tracking-tight leading-[1.15]">
-                  Four outcomes.<br />
-                  <span className="text-slate-300 font-serif italic font-light">One community.</span>
-                </p>
-                <p className="text-base text-slate-500 leading-relaxed">
-                  Click any branch in the tree to explore each vision outcome — what it means for Banyamulenge youth and how MSNC is working toward it.
-                </p>
-
-                {/* All four outcome titles as a quick-nav list */}
-                <ul className="space-y-3 mt-2">
-                  {visionPoints.map(pt => (
-                    <li key={pt.id}>
-                      <button
-                        onClick={() => setActiveId(pt.id)}
-                        className="w-full flex items-center gap-4 text-left group"
-                      >
-                        <span
-                          className="shrink-0 text-[10px] font-black font-mono transition-colors duration-200"
-                          style={{ color: '#cbd5e1' }}
-                        >
-                          {pt.index}
-                        </span>
-                        <span
-                          className="h-px flex-1 transition-all duration-300 group-hover:flex-none group-hover:w-8"
-                          style={{ background: pt.accent, opacity: 0.3 }}
-                        />
-                        <span className="text-sm font-semibold text-slate-500 group-hover:text-slate-900 transition-colors duration-200 leading-snug">
-                          {pt.titleFlat}
-                        </span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : (
-              /* Active outcome detail */
-              (() => {
-                const pt = visionPoints[activeId];
-                return (
-                  <div className="flex flex-col gap-6" key={pt.id}>
-                    {/* Accent bar */}
-                    <div className="h-1 w-12 rounded-full" style={{ background: pt.accent }} />
-
-                    {/* Index */}
-                    <span
-                      className="text-[11px] font-black font-mono tracking-[0.2em]"
-                      style={{ color: pt.accent }}
-                    >
-                      OUTCOME {pt.index}
+              <div className="relative z-10 flex flex-col h-full">
+                {/* Header Row */}
+                <div className="flex items-center justify-between mb-12">
+                  <div className="flex items-center gap-4">
+                    <span className="text-xs font-mono font-black text-blue-600">
+                      MOD_{chapter.id}
                     </span>
-
-                    {/* Title */}
-                    <h3 className="text-3xl font-black text-slate-900 tracking-tight leading-[1.1]">
-                      {pt.titleFlat}
-                    </h3>
-
-                    {/* Divider */}
-                    <div className="h-px w-full bg-slate-100" />
-
-                    {/* Body */}
-                    <p className="text-lg text-slate-600 leading-relaxed">
-                      {pt.body}
-                    </p>
-
-                    {/* Navigation */}
-                    <div className="flex items-center gap-3 mt-4">
-                      <button
-                        onClick={() => setActiveId((activeId - 1 + visionPoints.length) % visionPoints.length)}
-                        className="h-10 w-10 flex items-center justify-center rounded-full border border-slate-200 hover:border-slate-400 transition-colors text-slate-400 hover:text-slate-700"
-                        aria-label="Previous outcome"
-                      >
-                        <svg viewBox="0 0 16 16" fill="none" className="w-4 h-4" stroke="currentColor" strokeWidth="2">
-                          <path d="M10 12L6 8l4-4" />
-                        </svg>
-                      </button>
-                      <div className="flex gap-1.5">
-                        {visionPoints.map(v => (
-                          <button
-                            key={v.id}
-                            onClick={() => setActiveId(v.id)}
-                            className="rounded-full transition-all duration-300"
-                            style={{
-                              width: activeId === v.id ? 20 : 6,
-                              height: 6,
-                              background: activeId === v.id ? pt.accent : '#e2e8f0',
-                            }}
-                            aria-label={`Go to outcome ${v.index}`}
-                          />
-                        ))}
-                      </div>
-                      <button
-                        onClick={() => setActiveId((activeId + 1) % visionPoints.length)}
-                        className="h-10 w-10 flex items-center justify-center rounded-full border border-slate-200 hover:border-slate-400 transition-colors text-slate-400 hover:text-slate-700"
-                        aria-label="Next outcome"
-                      >
-                        <svg viewBox="0 0 16 16" fill="none" className="w-4 h-4" stroke="currentColor" strokeWidth="2">
-                          <path d="M6 4l4 4-4 4" />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() => setActiveId(null)}
-                        className="ml-auto text-[11px] font-bold text-slate-400 hover:text-slate-700 uppercase tracking-widest transition-colors"
-                      >
-                        ← Back
-                      </button>
-                    </div>
+                    <div className="h-px w-8 bg-slate-100" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
+                      {chapter.label}
+                    </span>
                   </div>
-                );
-              })()
-            )}
-          </div>
+                  <chapter.icon
+                    className="w-6 h-6 text-slate-200 group-hover:text-blue-600 transition-all duration-500"
+                    strokeWidth={1.5}
+                  />
+                </div>
+
+                {/* Content */}
+                <div className="space-y-6 grow">
+                  <h3 className="text-3xl lg:text-4xl font-black tracking-tighter text-[#002147] leading-none group-hover:translate-x-2 transition-transform duration-500">
+                    {chapter.title}
+                  </h3>
+
+                  <div className="h-1 w-12 bg-slate-100 group-hover:w-full group-hover:bg-blue-600 transition-all duration-700" />
+
+                  <p className="text-lg lg:text-xl text-slate-500 font-medium leading-relaxed italic font-serif">
+                    &ldquo;{chapter.body}&rdquo;
+                  </p>
+                </div>
+
+                {/* Footer Link - Only rendered if href exists */}
+                <div className="pt-10 mt-10 border-t border-slate-100 flex items-center justify-between">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">
+                    Verified_Objective
+                  </span>
+
+                  {chapter.href && (
+                    <Link
+                      href={chapter.href}
+                      className="group/link flex items-center gap-3 px-5 py-2.5 rounded-full border border-slate-200 bg-slate-50 hover:bg-primary-500 hover:text-white transition-all duration-300 shadow-sm"
+                    >
+                      <span className="text-[10px] font-black uppercase tracking-widest">
+                        {chapter.cta}
+                      </span>
+                      <ArrowUpRight className="w-4 h-4 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* Closing anchor */}
-        <div className="mt-20 flex flex-col items-center gap-4">
-          <div
-            className="h-16 w-px"
-            style={{ background: `linear-gradient(to bottom, ${BRAND.navy}, transparent)` }}
-          />
-          <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-300">
-            End of Vision
-          </p>
-        </div>
+        {/* ─── FOOTER LABELS ─── */}
+        <footer className="mt-20 pt-12 border-t-2 border-slate-900 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="flex items-center gap-4">
+            <div className="w-3 h-3 bg-blue-600 rounded-full animate-pulse" />
+            <span className="text-[11px] font-black uppercase tracking-[0.4em] text-slate-400">
+              MSNC_Impact_Ledger_2024
+            </span>
+          </div>
+
+          <div className="hidden lg:flex items-center gap-4 bg-slate-50 px-6 py-2 rounded-full border border-slate-100">
+            <Sparkles className="w-4 h-4 text-blue-600" />
+            <span className="text-[9px] font-black uppercase tracking-widest text-[#002147]">
+              Strategic Interconnect: Vision points aligned to Core Pillars
+            </span>
+          </div>
+
+          <div className="flex gap-10">
+            {['Resilience', 'Scholarship', 'Stewardship'].map((v) => (
+              <span
+                key={v}
+                className="text-[11px] font-black uppercase tracking-widest text-slate-300"
+              >
+                {v}
+              </span>
+            ))}
+          </div>
+        </footer>
       </div>
     </section>
-  );
+  )
 }

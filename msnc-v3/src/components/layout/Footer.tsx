@@ -1,169 +1,273 @@
+'use client'
+
 import Link from 'next/link'
-import { Mail, MapPin } from 'lucide-react'
+import { useActionState } from 'react'
+import { Mail, MapPin, Phone, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
+import Container from '@/components/ui/Container'
+import { LinkedInIcon, XIcon, InstagramIcon } from '@/components/ui/SocialIcons'
+import { submitContactForm } from '@/actions/contact'
+import Script from 'next/script'
+
+const navLinks = [
+  { name: 'About', href: '/about' },
+  { name: 'Programs', href: '/programs' },
+  { name: 'Events', href: '/events' },
+  { name: 'Leadership', href: '/leadership' },
+]
+
+const actionLinks = [
+  { name: 'Join', href: '/join' },
+  { name: 'Donate', href: '/donate' },
+  { name: 'Blog', href: '/blog' },
+  { name: 'Contact', href: '/contact' },
+]
+
+const contactInfo = [
+  {
+    icon: Mail,
+    label: 'Email',
+    value: 'info@mulengescholars.org',
+    href: 'mailto:info@mulengescholars.org',
+  },
+  {
+    icon: MapPin,
+    label: 'Locations',
+    value: 'Canada',
+  },
+]
+
+const socialLinks = [
+  {
+    icon: InstagramIcon,
+    href: 'https://instagram.com/msnccanada',
+    aria: 'Instagram',
+  },
+  {
+    icon: XIcon,
+    href: 'https://twitter.com/msnccanada',
+    aria: 'X (Twitter)',
+  },
+  {
+    icon: LinkedInIcon,
+    href: 'https://linkedin.com/company/msnc',
+    aria: 'LinkedIn',
+  },
+]
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
+  const [state, formAction] = useActionState(submitContactForm, null)
 
   return (
-    <footer className="bg-slate-50 text-slate-600 pt-24 pb-12 overflow-hidden relative border-t border-slate-200">
-      {/* Background Brand Decoration - Softened for light theme */}
-      <div className="absolute -bottom-10 -right-10 text-[20vw] font-black text-[#002147]/[0.03] select-none pointer-events-none leading-none">
-        MSNC
-      </div>
+    <>
+      <footer
+        role="contentinfo"
+        className="bg-slate-50/50 backdrop-blur-sm text-slate-700 pt-24 pb-12 border-t border-slate-200/50 relative overflow-hidden"
+      >
+        {/* Subtle watermark */}
+        <div className="absolute -bottom-12 -right-12 text-[18vw] font-black text-slate-200/30 select-none pointer-events-none leading-none rotate-12">
+          MSNC
+        </div>
 
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
-          {/* Brand Column */}
-          <div className="space-y-8">
-            <div className="flex items-center gap-3">
-              <img
-                src="/media/logo-original.png"
-                alt="MSNC Logo"
-                className="w-16 h-16 object-contain rounded-full border border-slate-200 p-1 bg-white shadow-sm"
-              />
+        <Container>
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-16 mb-16">
+            {/* Brand */}
+            <div className="space-y-6 lg:col-span-1">
+              <Link href="/" className="flex items-center gap-3 group">
+                <img
+                  src="/media/logo-original.png"
+                  alt="Mulenge Scholars Network Canada Logo"
+                  className="w-14 h-14 object-contain rounded-xl border-2 border-slate-200 p-1.5 bg-white shadow-md group-hover:shadow-lg transition-shadow"
+                  width={56}
+                  height={56}
+                  loading="lazy"
+                />
+              </Link>
+              <p className="text-sm leading-relaxed max-w-xs">
+                Empowering Mulenge diaspora youth through education, mentorship, and leadership for
+                sustainable futures.
+              </p>
+              <div className="flex gap-2" role="list">
+                {socialLinks.map(({ icon: Icon, href, aria }, i) => (
+                  <a
+                    key={i}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2.5 border border-slate-200 rounded-2xl bg-white hover:bg-slate-50 hover:border-slate-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    aria-label={aria}
+                  >
+                    <Icon />
+                  </a>
+                ))}
+              </div>
             </div>
-            <p className="text-sm leading-relaxed text-slate-600 font-medium">
-              Empowering the Mulenge diaspora through strategic education, mentorship, and
-              leadership excellence.
-            </p>
 
-            {/* SOCIAL SVGS */}
-            <div className="flex gap-3">
-              {/* X (Formerly Twitter) SVG */}
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full border-slate-200 bg-white text-slate-400 hover:text-blue-600 hover:border-blue-600 hover:bg-blue-50 transition-all p-2.5 shadow-sm"
-                asChild
-              >
-                <a
-                  href="https://x.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Follow us on X"
-                >
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                  </svg>
-                </a>
-              </Button>
+            {/* Navigation */}
+            <div className="space-y-6 lg:col-span-1">
+              <h4 className="text-xs font-black uppercase tracking-[0.3em] text-slate-900">MSNC</h4>
+              <nav className="space-y-3" role="list">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="block text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors group"
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+              </nav>
+            </div>
 
-              {/* LinkedIn SVG */}
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-full border-slate-200 bg-white text-slate-400 hover:text-blue-600 hover:border-blue-600 hover:bg-blue-50 transition-all p-2.5 shadow-sm"
-                asChild
-              >
-                <a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Connect on LinkedIn"
-                >
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                  </svg>
-                </a>
-              </Button>
+            <div className="space-y-6 lg:col-span-1">
+              <h4 className="text-xs font-black uppercase tracking-[0.3em] text-slate-900">
+                Actions
+              </h4>
+              <nav className="space-y-3" role="list">
+                {actionLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="block text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors group"
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+
+            {/* Contact & Newsletter */}
+            <div className="lg:col-span-1 space-y-8">
+              <div>
+                <h4 className="text-xs font-black uppercase tracking-[0.3em] text-slate-900 mb-6">
+                  Get in touch
+                </h4>
+                <div className="space-y-4">
+                  {contactInfo.map(({ icon: Icon, label, value, href }, i) => (
+                    <div key={i} className="flex items-start gap-3 group">
+                      <Icon className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0 opacity-75 group-hover:opacity-100 transition-opacity" />
+                      <div>
+                        <div className="text-xs uppercase tracking-wide text-slate-500 font-bold mb-1">
+                          {label}
+                        </div>
+                        {href ? (
+                          <a
+                            href={href}
+                            className="text-sm font-medium text-slate-900 hover:text-blue-600 transition-colors block"
+                          >
+                            {value}
+                          </a>
+                        ) : (
+                          <span className="text-sm font-medium text-slate-900">{value}</span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Newsletter */}
+              <div>
+                <h4 className="text-xs font-black uppercase tracking-[0.3em] text-slate-900 mb-4">
+                  Newsletter
+                </h4>
+                <p className="text-sm text-slate-600 mb-4 leading-relaxed">
+                  Stay updated with program launches and impact stories.
+                </p>
+                <form action={formAction} className="space-y-3">
+                  <input type="hidden" name="subject" value="Newsletter Signup" />
+                  <Input
+                    type="email"
+                    name="email"
+                    placeholder="your@email.com"
+                    required
+                    className="h-12 bg-white border-slate-200 rounded-xl px-4 placeholder:text-slate-400 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+                    aria-label="Email for newsletter"
+                  />
+                  <Button
+                    type="submit"
+                    className="w-full bg-slate-900 hover:bg-black text-white h-12 rounded-xl font-semibold transition-colors"
+                  >
+                    Subscribe{' '}
+                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                  {state?.message && (
+                    <p
+                      className={`text-xs p-2 rounded-lg font-medium text-center ${
+                        state.success
+                          ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                          : 'bg-red-50 text-red-800 border border-red-200'
+                      }`}
+                    >
+                      {state.message}
+                    </p>
+                  )}
+                </form>
+              </div>
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div className="space-y-8">
-            <h4 className="text-xs font-black uppercase tracking-[0.3em] text-[#002147]">
-              The Network
-            </h4>
-            <nav className="flex flex-col gap-4">
-              {['About Us', 'Scholars Wall', 'Programs', 'Impact Report', 'Contact'].map((item) => (
-                <Link
-                  key={item}
-                  href={`/${item.toLowerCase().replace(' ', '-')}`}
-                  className="text-sm font-medium text-slate-600 hover:text-blue-600 transition-colors"
-                >
-                  {item}
-                </Link>
-              ))}
+          {/* Bottom bar */}
+          <div className="border-t border-slate-200 pt-8 flex flex-col lg:flex-row justify-between items-center gap-4 text-xs">
+            <p className="font-bold text-slate-500 uppercase tracking-wide">
+              © {currentYear} Mulenge Scholars&apos; Network Canada. All rights reserved.
+            </p>
+            <nav className="flex gap-6" role="list">
+              <Link
+                href="/privacy"
+                className="font-black text-slate-500 hover:text-slate-900 transition-colors"
+              >
+                Privacy
+              </Link>
+              <Link
+                href="/terms"
+                className="font-black text-slate-500 hover:text-slate-900 transition-colors"
+              >
+                Terms
+              </Link>
+              <Link
+                href="/sitemap.xml"
+                className="font-black text-slate-500 hover:text-slate-900 transition-colors"
+              >
+                Sitemap
+              </Link>
             </nav>
           </div>
+        </Container>
+      </footer>
 
-          {/* Contact Info */}
-          <div className="space-y-8">
-            <h4 className="text-xs font-black uppercase tracking-[0.3em] text-[#002147]">
-              Direct Access
-            </h4>
-            <div className="space-y-6">
-              <div className="flex items-start gap-4">
-                <Mail className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
-                <div>
-                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">
-                    Email
-                  </div>
-                  <a
-                    href="mailto:info@msnc.ca"
-                    className="text-sm font-medium text-slate-700 hover:text-blue-600 transition-colors"
-                  >
-                    info@msnc.ca
-                  </a>
-                </div>
-              </div>
-              <div className="flex items-start gap-4">
-                <MapPin className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" />
-                <div>
-                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">
-                    Office
-                  </div>
-                  <span className="text-sm font-medium text-slate-700">
-                    Nairobi, Kenya • Winnipeg, MB
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Newsletter */}
-          <div className="space-y-8">
-            <h4 className="text-xs font-black uppercase tracking-[0.3em] text-[#002147]">
-              Join the briefing
-            </h4>
-            <p className="text-sm text-slate-600 leading-relaxed">
-              Stay updated with the latest breakthroughs and narratives.
-            </p>
-            <div className="flex flex-col gap-3">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="h-12 bg-white border border-slate-200 rounded-xl px-4 text-slate-900 placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none shadow-sm"
-              />
-              <Button className="w-full bg-[#002147] hover:bg-blue-900 text-white">
-                Subscribe
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
-            © {currentYear} Mulenge Scholars' Network Canada.
-          </p>
-          <div className="flex gap-8">
-            <Link
-              href="/privacy"
-              className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 transition-colors"
-            >
-              Privacy
-            </Link>
-            <Link
-              href="/terms"
-              className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 transition-colors"
-            >
-              Terms
-            </Link>
-          </div>
-        </div>
-      </div>
-    </footer>
+      {/* Schema.org */}
+      <Script id="msnc-schema" type="application/ld+json">
+        {JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'NGO',
+          name: "Mulenge Scholars' Network Canada",
+          url: 'https://mulengescholars.org',
+          logo: 'https://mulengescholars.org/media/logo-original.png',
+          contactPoint: [
+            {
+              '@type': 'ContactPoint',
+              email: 'info@mulengescholars.org',
+              contactType: 'general',
+            },
+          ],
+          sameAs: [
+            'https://twitter.com/msnccanada',
+            'https://linkedin.com/company/msnc',
+            'https://instagram.com/msnccanada',
+          ],
+          address: {
+            '@type': 'PostalAddress',
+            addressCountry: 'CA',
+          },
+          founder: {
+            '@type': 'Organization',
+            name: 'Mulenge Scholars Network Canada',
+          },
+        })}
+      </Script>
+    </>
   )
 }

@@ -7,6 +7,8 @@ import sharp from 'sharp'
 
 // MSNC Collection Imports
 import { Users } from './collections/Users'
+import { Sessions } from './collections/Sessions'
+import { AuditLogs } from './collections/Auditlogs'
 import { Media } from './collections/Media'
 import { Blogs } from './collections/Blogs'
 import { Events } from './collections/Events'
@@ -26,9 +28,6 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 const isProduction = process.env.NODE_ENV === 'production'
 
-/**
- * DATABASE URL SANITIZER
- */
 function getDatabaseConnectionString(): string {
   const rawConnectionString = process.env.DATABASE_URL || ''
   if (!rawConnectionString || !isProduction) return rawConnectionString
@@ -50,26 +49,22 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
-    components: {
-      graphics: {
-        Logo: { path: '/components/admin/Logo' },
-        Icon: { path: '/components/admin/Icon' },
-      },
-    },
     meta: {
-      titleSuffix: '- MSNC Executive Board',
+      titleSuffix: '- MSNC Admin',
     },
   },
   collections: [
     Users,
+    Sessions,
+    AuditLogs,
     Media,
+    Programs,
+    Blogs,
+    Events,
     Leadership,
     Scholars,
     Testimonials,
     Partners,
-    Programs,
-    Blogs,
-    Events,
     Messages,
     JoinSubmissions,
     Donations,

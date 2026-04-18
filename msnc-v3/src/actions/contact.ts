@@ -1,87 +1,109 @@
 "use server";
 
 import { getCachedPayload } from "@/lib/payload";
-import { z } from "zod"; // Recommended for robust validation
+import { z } from "zod";
+import { headers } from "next/headers";
 
-// 1. Define a Schema for Validation
+// 1. Define a Strict Schema for Validation
 const ContactSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters.").optional(),
-  firstName: z.string().min(2, "First name must be at least 2 characters.").optional(),
-  lastName: z.string().min(2, "Last name must be at least 2 characters.").optional(),
-  email: z.string().email("Please enter a valid academic or personal email."),
-  subject: z.string().min(3, "Please provide a brief subject.").optional(),
-  message: z.string().min(10, "Your narrative must be at least 10 characters."),
-  phone: z.string().optional(),
-}).superRefine((data, ctx) => {
-  if (!data.name && !(data.firstName && data.lastName)) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      path: ["name"],
-      message: "Please provide your full name.",
-    });
-  }
+  firstName: z.string()
+    .trim()
+    .min(2, "First name is too short")
+    .max(50, "First name is too long"),
+  lastName: z.string()
+    .trim()
+    .min(2, "Last name is too short")
+    .max(50, "Last name is too long"),
+  email: z.string()
+    .trim()
+    .email("Please enter a valid email address")
+    .toLowerCase(),
+  phone: z.string()
+    .trim()
+    .regex(/^[+]*[()\d{1,4}?.\/-\s]*$/, "Invalid phone format")
+    .optional()
+    .or(z.literal('')), // Allows empty string
+  subject: z.string().default("General Inquiry"),
+  message: z.string()
+    .trim()
+    .min(10, "Message must be at least 10 characters")
+    .max(2000, "Message is too long"),
+  // Honeypot field must be empty
+  _honeypot: z.string().max(0, { message: "Spam detected" }).optional(),
 });
 
 export async function submitContactForm(prevState: any, formData: FormData) {
-  // Extract data from the form
-  const rawData = {
-    name: formData.get("name"),
-    firstName: formData.get("firstName"),
-    lastName: formData.get("lastName"),
-    email: formData.get("email"),
-    subject: formData.get("subject"),
-    message: formData.get("message"),
-    phone: formData.get("phone"),
-  };
+  // 2. Extract and sanitize data
+  const rawData = Object.fromEntries(formData.entries());
 
-  // 2. Validate with Zod
+  // 3. Honeypot check (Immediate exit for bots)
+  if (rawData._honeypot && rawData._honeypot !== "") {
+    console.warn("Honeypot triggered by bot.");
+    // We return success to fool the bot into thinking it worked
+    return {
+      success: true,
+      message: "Your message has been dispatched.",
+    };
+  }
+
+  // 4. Validate with Zod
   const validatedFields = ContactSchema.safeParse(rawData);
 
   if (!validatedFields.success) {
     return {
       success: false,
+      // Return the first error message or a generic one
+      message: validatedFields.error.errors[0].message || "Invalid form data.",
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Please refine your narrative. Some fields require attention.",
     };
   }
 
-  const { name, firstName, lastName, email, subject, message, phone } = validatedFields.data;
-  const resolvedName = name?.trim() || `${firstName || ""} ${lastName || ""}`.trim();
-  const resolvedSubject = subject?.trim() || "General Inquiry";
-  const resolvedMessage = phone ? `Phone: ${phone}\n\n${message}` : message;
+  const { firstName, lastName, email, subject, message, phone } = validatedFields.data;
+  const fullName = `${firstName} ${lastName}`;
 
   try {
-    // 3. Connect to Payload
     const payload = await getCachedPayload();
-
-    /**
-     * NOTE: Ensure you have a 'messages' collection in Payload.
-     * If not, this block will throw an error. For now, we simulate success.
-     */
     
+    // Get IP address for basic rate-limiting logs (optional)
+    const headerList = await headers();
+    const ip = headerList.get("x-forwarded-for") || "unknown";
+
+    // 5. Create the record in Payload CMS
+    // Ensure the 'messages' collection exists in your Payload config
     await payload.create({
       collection: 'messages',
       data: {
-        name: resolvedName,
+        name: fullName, // Mapping UI firstName+lastName to Payload 'name'
         email,
-        subject: resolvedSubject,
-        message: resolvedMessage,
+        subject,
+        message: phone ? `[Phone: ${phone}]\n\n${message}` : message,
         status: 'unread',
       },
     });
 
-    // Simulate network latency for a premium feel
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    // Logging (without sensitive data if required by privacy laws)
+    console.info(`[Contact] Form submitted by ${email} from IP ${ip}`);
 
-    console.log(`[Contact Action] New Dispatch from ${resolvedName} (${email})`);
+    // Simulate natural processing time
+    await new Promise((resolve) => setTimeout(resolve, 600));
 
     return {
       success: true,
       message: "Your message has been dispatched to the MSNC Leadership Board. Expect a response within 24-48 hours.",
     };
 
-  } catch (error) {
-    console.error("Critical Action Error:", error);
+  } catch (error: any) {
+    // 6. Detailed Error Logging
+    console.error("Payload CMS Error:", error);
+
+    // Check if the error is specifically because the collection doesn't exist
+    if (error.message?.includes('not found')) {
+       return {
+         success: false,
+         message: "Server Configuration Error: The messages collection is missing.",
+       };
+    }
+
     return {
       success: false,
       message: "Our digital dispatch system is currently at capacity. Please email info@msnc.ca directly.",

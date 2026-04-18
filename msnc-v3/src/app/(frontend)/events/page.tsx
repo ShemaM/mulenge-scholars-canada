@@ -1,348 +1,235 @@
-import { Metadata } from 'next';
-import { Calendar, ArrowRight, Sparkles, MapPin, Clock, ChevronRight } from "lucide-react";
-import Container from '@/components/ui/Container';
-import Link from "next/link";
-import Image from "next/image";
-import { getCachedPayload } from '@/lib/payload';
-import { fallbackEvents } from '@/lib/fallbacks';
+/**
+ * MSNC Events Repository - Scholarly Editorial Version
+ * Design: 40px Structural Grid, Rigid Mastheads, Mission Indexing
+ */
 
-// ─── Route Segment Config ─────────────────────────────────────────────────
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+import { Metadata } from 'next'
+import { Calendar, ArrowRight, MapPin, Clock, History } from 'lucide-react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { getCachedPayload } from '@/lib/payload'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
-  title: 'Impact Chronicles & Events | MSNC',
-  description: 'Documenting the global movement and strategic initiatives of the Mulenge Scholars Network Canada.',
-};
-
-// ─── Types & Constants ────────────────────────────────────────────────────
-interface MSNCEvent {
-  id: string;
-  title: string;
-  slug: string;
-  date: string;
-  description: string;
-  mainImage?: { url: string } | any;
-  location?: string;
+  title: 'Impact Chronicles | MSNC Repository',
+  description: 'The official ledger of strategic initiatives and historical legacy.',
 }
 
-const FOCUS_BASE = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2';
-
-// ─── Data Fetching ────────────────────────────────────────────────────────
-async function getEventsData(): Promise<MSNCEvent[]> {
+async function getEventsData() {
   try {
-    const payload = await getCachedPayload();
-    if (!payload) return fallbackEvents as MSNCEvent[];
-
+    const payload = await getCachedPayload()
     const { docs } = await payload.find({
       collection: 'events',
+      sort: '-eventDate',
+      pagination: false,
       depth: 2,
-      overrideAccess: true,
-      sort: '-date',
-    });
-
-    return docs as unknown as MSNCEvent[];
+    })
+    return docs
   } catch (error) {
-    console.error("❌ FETCH ERROR:", error);
-    return fallbackEvents as MSNCEvent[];
+    return []
   }
 }
 
-// ─── Helper Functions ─────────────────────────────────────────────────────
-function formatEventDate(raw: string): string {
-  try {
-    return new Date(raw).toLocaleDateString('en-CA', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  } catch {
-    return 'Date unavailable';
-  }
-}
-
-function getSafeImageUrl(imageObj: any): string {
-  const rawUrl = typeof imageObj === 'object' ? imageObj?.url : null;
-  return rawUrl
-    ? encodeURI(rawUrl)
-    : "https://onwq4czaexzxtq41.public.blob.vercel-storage.com/ILO%20LOGO.png";
-}
-
-// ─── Main Page Component ──────────────────────────────────────────────────
 export default async function EventsPage() {
-  const allEvents = await getEventsData();
-  const now = new Date();
+  const events = await getEventsData()
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
 
-  const upcoming = allEvents
-    .filter((e) => new Date(e.date) >= now)
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-  const past = allEvents
-    .filter((e) => new Date(e.date) < now)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  const upcoming = events.filter(
+    (e: { eventDate: string | number | Date }) => new Date(e.eventDate) >= today,
+  )
+  const past = events.filter(
+    (e: { eventDate: string | number | Date }) => new Date(e.eventDate) < today,
+  )
 
   return (
-    <div className="relative flex flex-col min-h-screen bg-white selection:bg-[#4A90D9]/20">
+    <main className="min-h-screen bg-white text-[#002147] pb-32 relative overflow-x-hidden selection:bg-blue-100">
+      {/* Structural UI Grid Background */}
+      <div className="fixed inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:40px_40px] opacity-[0.4] pointer-events-none" />
 
-      {/* Skip to Content */}
-      <a
-        href="#events-content"
-        className={`sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[#002147] focus:text-white focus:text-sm focus:font-bold ${FOCUS_BASE} focus-visible:ring-[#4A90D9]`}
-      >
-        Skip to events
-      </a>
-
-      <main id="events-content" className="flex-grow overflow-x-hidden">
-
-        {/* ════════════════════════════════════════════════════════════
-            LIGHT HERO SECTION
-        ════════════════════════════════════════════════════════════ */}
-        <section
-          className="relative pt-12 md:pt-16 pb-12 md:pb-16 overflow-hidden bg-[#F8FAFC] flex flex-col items-center justify-center text-center"
-          aria-label="Events overview"
-        >
-          <div
-            className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:32px_32px] opacity-60"
-            aria-hidden
-          />
-          <div
-            className="absolute right-0 top-1/2 -translate-y-1/2 text-[30vw] font-black text-slate-900/[0.02] leading-none select-none pointer-events-none font-display tracking-tighter"
-            aria-hidden
-          >
-            EVENTS
-          </div>
-
-          <Container className="relative z-10 space-y-10 mt-32">
-            <div className="flex items-center gap-3" role="presentation">
-              <span className="block w-8 h-px bg-[#4A90D9]" aria-hidden />
-              <span className="text-[#4A90D9] font-bold text-[10px] uppercase tracking-[0.35em]">
-                Strategic Initiatives
+      <div className="w-full px-6 md:px-10 lg:px-16 relative z-10 mx-auto max-w-[1500px]">
+        {/* ─── MASTHEAD: PHASE 01 ─── */}
+        <header className="pt-32 pb-12 border-b-2 border-slate-900">
+          <div className="flex items-center justify-between mb-12">
+            <div className="flex items-center gap-4">
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-600">
+                Event Repository
+              </span>
+              <span className="h-4 w-px bg-slate-200" />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                Official Chronicles Vol. 24
               </span>
             </div>
-
-            <h1 className="text-[clamp(3.5rem,8vw,8.5rem)] font-black text-[#002147] leading-[0.9] tracking-tighter font-display max-w-5xl">
-              Impact <br />
-              <em className="not-italic text-[#4A90D9]">Chronicles.</em>
-            </h1>
-
-            <p className="text-xl text-slate-600 max-w-3xl font-medium leading-relaxed border-l-4 border-[#4A90D9]/30 pl-6">
-              Documenting the global movement of Mulenge scholars across borders,
-              disciplines, and leadership summits.
-            </p>
-
-            <nav aria-label="Jump to section" className="pt-4">
-              <ul className="flex flex-wrap gap-3" role="list">
-                <li>
-                  <a
-                    href="#upcoming"
-                    className={`group flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-slate-200 hover:border-[#4A90D9]/50 hover:bg-[#EEF5FD] text-slate-600 hover:text-[#002147] shadow-sm transition-all duration-200 ${FOCUS_BASE} focus-visible:ring-[#4A90D9]`}
-                  >
-                    <span className="font-bold text-[10px] text-[#4A90D9] tracking-widest">01</span>
-                    <span className="text-xs font-bold">Active Missions</span>
-                    <ChevronRight className="w-3 h-3 text-slate-300 group-hover:text-[#4A90D9] transition-colors" aria-hidden />
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#archive"
-                    className={`group flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-slate-200 hover:border-[#4A90D9]/50 hover:bg-[#EEF5FD] text-slate-600 hover:text-[#002147] shadow-sm transition-all duration-200 ${FOCUS_BASE} focus-visible:ring-[#4A90D9]`}
-                  >
-                    <span className="font-bold text-[10px] text-[#4A90D9] tracking-widest">02</span>
-                    <span className="text-xs font-bold">Historical Legacy</span>
-                    <ChevronRight className="w-3 h-3 text-slate-300 group-hover:text-[#4A90D9] transition-colors" aria-hidden />
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </Container>
-        </section>
-
-        {/* ════════════════════════════════════════════════════════════
-            ACTIVE MISSIONS (UPCOMING)
-        ════════════════════════════════════════════════════════════ */}
-        <section id="upcoming" className="relative py-32 bg-white">
-          <Container>
-            <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-start">
-
-              <div className="lg:col-span-4 space-y-8 lg:sticky lg:top-32">
-                <div
-                  className="w-16 h-16 rounded-[1.25rem] flex items-center justify-center border bg-[#EEF5FD] border-[#4A90D9]/20 shadow-sm"
-                  aria-hidden
-                >
-                  <Sparkles className="w-8 h-8 text-[#4A90D9]" strokeWidth={1.5} aria-hidden />
-                </div>
-                <div>
-                  <h2 className="text-4xl lg:text-5xl font-black font-display text-[#002147] leading-tight mb-4">
-                    Active <br /> Missions.
-                  </h2>
-                  <p className="text-slate-600 font-medium leading-relaxed">
-                    The summits, dialogues, and workshops currently being planned
-                    and executed by the Executive Board.
-                  </p>
-                </div>
-              </div>
-
-              <div className="lg:col-span-8">
-                {upcoming.length > 0 ? (
-                  <div className="grid gap-8">
-                    {upcoming.map((event, idx) => (
-                      <FeaturedEventCard key={event.id} event={event} index={idx} />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="py-20 text-center rounded-[2.5rem] bg-[#F8FAFC] border border-slate-200 shadow-sm">
-                    <div className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center mx-auto mb-4">
-                      <Calendar className="w-5 h-5 text-slate-400" aria-hidden />
-                    </div>
-                    <h3 className="text-xl font-black text-[#002147] mb-2 font-display">
-                      Summit Pending
-                    </h3>
-                    <p className="text-slate-500 font-medium max-w-sm mx-auto">
-                      The next major initiative is currently being finalized. Check back soon.
-                    </p>
-                  </div>
-                )}
-              </div>
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" />
+              <span className="text-[10px] font-mono font-black uppercase text-slate-900">
+                Live_Ledger
+              </span>
             </div>
-          </Container>
-        </section>
+          </div>
 
-        {/* ════════════════════════════════════════════════════════════
-            HISTORICAL LEGACY (ARCHIVE)
-        ════════════════════════════════════════════════════════════ */}
-        <section id="archive" className="relative py-32 bg-[#F8FAFC] border-t border-slate-200">
-          <Container>
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3" role="presentation">
-                  <span className="block w-6 h-px bg-slate-400" aria-hidden />
-                  <span className="text-slate-500 font-bold text-[10px] uppercase tracking-[0.35em]">
-                    The Archive
-                  </span>
-                </div>
-                <h2 className="text-4xl lg:text-5xl font-black font-display text-[#002147] leading-tight">
-                  Historical Legacy.
-                </h2>
-              </div>
-              <p className="text-slate-500 font-medium max-w-md">
-                A repository of past summits, community engagements, and global
-                dialogues that have shaped our foundation.
+          <div className="grid lg:grid-cols-12 gap-12 items-end">
+            <div className="lg:col-span-8">
+              <h1 className="text-6xl md:text-8xl lg:text-[7.5rem] font-black tracking-tighter leading-[0.85] uppercase">
+                Impact <br />
+                <span className="text-slate-200 font-serif italic lowercase tracking-normal">
+                  Chronicles.
+                </span>
+              </h1>
+            </div>
+            <div className="lg:col-span-4 pb-4">
+              <p className="text-lg text-slate-500 font-medium leading-tight border-l-4 border-blue-600 pl-6">
+                Documenting the movement of scholars across disciplines, borders, and leadership
+                summits.
               </p>
             </div>
+          </div>
+        </header>
 
-            {past.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                {past.map((event) => (
-                  <PastEventCard key={event.id} event={event} />
-                ))}
-              </div>
-            ) : (
-              <p className="text-slate-400 font-medium italic">
-                No historical events found in the database.
+        {/* ─── SECTION 01: ACTIVE MISSIONS (UPCOMING) ─── */}
+        <section className="py-24">
+          <div className="flex items-center justify-between border-b-2 border-slate-900 pb-3 mb-16">
+            <div className="flex items-center gap-4">
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600">
+                Active Phases
+              </span>
+              <span className="h-3 w-px bg-slate-200" />
+              <h2 className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                Upcoming Strategic Initiatives
+              </h2>
+            </div>
+            <span className="text-[10px] font-mono font-bold text-slate-400">INDEX_UPCOMING</span>
+          </div>
+
+          {upcoming.length > 0 ? (
+            <div className="space-y-20">
+              {upcoming.map((event: unknown, idx: number) => {
+                const typedEvent = event as any
+                return <MissionEntry key={typedEvent.id} event={typedEvent} index={idx} />
+              })}
+            </div>
+          ) : (
+            <div className="py-20 border-2 border-dashed border-slate-100 rounded-[3rem] text-center bg-slate-50/30">
+              <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">
+                No Active Missions Registered for this Window
               </p>
-            )}
-          </Container>
-        </section>
-
-      </main>
-    </div>
-  );
-}
-
-// ─── Sub-Components ───────────────────────────────────────────────────────
-
-function FeaturedEventCard({ event, index }: { event: MSNCEvent; index: number }) {
-  const safeUrl = getSafeImageUrl(event.mainImage);
-
-  return (
-    <div className="group relative bg-white rounded-[2.5rem] border border-slate-200 hover:border-[#4A90D9]/40 overflow-hidden shadow-sm hover:shadow-[0_8px_30px_rgba(0,33,71,0.06)] transition-all duration-300">
-      <div className="grid sm:grid-cols-12 items-stretch">
-
-        <div className="sm:col-span-5 relative aspect-[4/3] sm:aspect-auto overflow-hidden border-b sm:border-b-0 sm:border-r border-slate-100">
-          <Image
-            src={safeUrl}
-            alt={event.title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-700"
-            unoptimized
-          />
-          {event.location && (
-            <div className="absolute bottom-4 left-4 right-4 lg:right-auto">
-              <div className="px-4 py-2 bg-white/95 backdrop-blur shadow-sm rounded-xl text-[10px] font-bold text-[#002147] uppercase tracking-wider flex items-center gap-2">
-                <MapPin className="w-3 h-3 text-[#4A90D9]" aria-hidden />
-                <span className="truncate">{event.location}</span>
-              </div>
             </div>
           )}
-        </div>
+        </section>
 
-        <div className="sm:col-span-7 p-8 md:p-10 flex flex-col justify-center">
-          <div className="flex items-center gap-2 text-[#4A90D9] font-bold text-[10px] uppercase tracking-widest mb-4">
-            <Clock className="w-3 h-3" aria-hidden />
-            {formatEventDate(event.date)}
+        {/* ─── SECTION 02: THE ARCHIVE (PAST) ─── */}
+        <section className="py-24 border-t-2 border-slate-900">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3 mb-16">
+            <div className="flex items-center gap-4">
+              <History className="w-4 h-4 text-blue-600" />
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
+                Historical Legacy
+              </span>
+            </div>
+            <span className="text-[10px] font-mono font-bold text-slate-400">INDEX_ARCHIVE</span>
           </div>
 
-          <h3 className="text-3xl lg:text-4xl font-black text-[#002147] font-display leading-[1.1] mb-4">
-            {event.title}
-          </h3>
-
-          <p className="text-slate-600 font-medium leading-relaxed line-clamp-3 mb-8">
-            {event.description}
-          </p>
-
-          <div className="mt-auto flex items-center justify-between pt-4 border-t border-slate-100">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-              Initiative 0{index + 1}
-            </span>
-            <Link
-              href={`/events/${event.slug}`}
-              className={`inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#EEF5FD] text-[#002147] text-xs font-bold hover:bg-[#002147] hover:text-white transition-all duration-300 ${FOCUS_BASE} focus-visible:ring-[#4A90D9]`}
-              aria-label={`View full details for ${event.title}`}
-            >
-              Full Details
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1" aria-hidden />
-            </Link>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+            {past.map((event: unknown) => {
+              const typedEvent = event as any
+              return <ArchiveRecord key={typedEvent.id} event={typedEvent} />
+            })}
           </div>
-        </div>
-
+        </section>
       </div>
-    </div>
-  );
+    </main>
+  )
 }
 
-function PastEventCard({ event }: { event: MSNCEvent }) {
-  const safeUrl = getSafeImageUrl(event.mainImage);
+// ─── Component: Active Mission (Upcoming) ───
+
+function MissionEntry({ event, index }: { event: any; index: number }) {
+  const imageUrl = typeof event.image === 'object' ? event.image?.url : null
 
   return (
-    <Link
-      href={`/events/${event.slug}`}
-      className={`group flex flex-col bg-white rounded-[2rem] border border-slate-200 hover:border-[#4A90D9]/30 overflow-hidden shadow-sm hover:shadow-[0_8px_30px_rgba(0,33,71,0.06)] transition-all duration-300 ${FOCUS_BASE} focus-visible:ring-[#4A90D9]`}
-      aria-label={`View historical event: ${event.title}`}
-    >
-      <div className="relative aspect-[16/10] overflow-hidden bg-slate-100 border-b border-slate-100">
+    <div className="group relative grid lg:grid-cols-12 gap-12 items-center">
+      <div className="lg:col-span-5 relative aspect-square lg:aspect-4/3 rounded-[2.5rem] overflow-hidden border-2 border-slate-900 shadow-2xl shadow-blue-900/5 bg-slate-100 group-hover:border-blue-600 transition-colors duration-500">
         <Image
-          src={safeUrl}
+          src={
+            imageUrl ||
+            'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80'
+          }
           alt={event.title}
           fill
-          className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-          unoptimized
+          className="object-cover transition-transform duration-[2s] group-hover:scale-110 grayscale group-hover:grayscale-0"
         />
-        <div className="absolute top-4 right-4">
-          <div className="px-3 py-1.5 bg-white/95 backdrop-blur rounded-lg shadow-sm text-[10px] font-bold text-[#002147] uppercase tracking-wider flex items-center gap-1.5">
-            <Calendar className="w-3 h-3 text-slate-400" aria-hidden />
-            {new Date(event.date).getFullYear()}
-          </div>
+        <div className="absolute top-8 left-8">
+          <span className="px-4 py-1.5 bg-white border border-slate-900 text-[#002147] text-[10px] font-black uppercase tracking-widest rounded-full shadow-xl">
+            REF_MISSION_0{index + 1}
+          </span>
         </div>
       </div>
 
-      <div className="p-6 md:p-8 flex flex-col flex-grow">
-        <h4 className="text-xl font-black text-[#002147] font-display leading-tight mb-2 group-hover:text-[#4A90D9] transition-colors">
+      <div className="lg:col-span-7 space-y-8">
+        <div className="flex items-center gap-6 text-blue-600 text-[11px] font-black uppercase tracking-[0.2em]">
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4" />{' '}
+            {new Date(event.eventDate).toLocaleDateString('en-CA', {
+              month: 'long',
+              day: 'numeric',
+            })}
+          </div>
+          <div className="flex items-center gap-2">
+            <MapPin className="w-4 h-4" /> {event.location}
+          </div>
+        </div>
+
+        <h3 className="text-4xl md:text-6xl font-black text-[#002147] tracking-tighter leading-[0.9] uppercase">
+          {event.title}
+        </h3>
+
+        <p className="text-xl text-slate-500 font-medium leading-relaxed italic font-serif border-l-4 border-slate-100 pl-8">
+          &ldquo;{event.description}&rdquo;
+        </p>
+
+        <Link
+          href={`/events/${event.slug}`}
+          className="h-16 px-10 bg-[#002147] text-white rounded-full inline-flex items-center justify-center gap-4 font-black uppercase text-[11px] tracking-widest hover:bg-blue-700 transition-all group-hover:shadow-xl group-hover:shadow-blue-900/10"
+        >
+          Access Mission Brief{' '}
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
+        </Link>
+      </div>
+    </div>
+  )
+}
+
+// ─── Component: Archive Record (Past) ───
+
+function ArchiveRecord({ event }: { event: any }) {
+  const imageUrl = typeof event.image === 'object' ? event.image?.url : null
+
+  return (
+    <Link href={`/events/${event.slug}`} className="group block space-y-6">
+      <div className="relative aspect-[16/10] rounded-4xl overflow-hidden border border-slate-100 bg-slate-50 grayscale group-hover:grayscale-0 transition-all duration-700 shadow-sm hover:shadow-xl">
+        <Image
+          src={
+            imageUrl ||
+            'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80'
+          }
+          alt={event.title}
+          fill
+          className="object-cover group-hover:scale-105 transition-transform duration-700"
+        />
+        <div className="absolute inset-0 bg-white/10 group-hover:bg-transparent transition-colors" />
+      </div>
+      <div className="px-2">
+        <div className="flex items-center gap-3 text-[10px] font-black text-slate-300 uppercase tracking-widest mb-3">
+          <Calendar className="w-3 h-3" />
+          {new Date(event.eventDate).getFullYear()}
+          <span className="h-1 w-1 bg-slate-200 rounded-full" />
+          {event.location}
+        </div>
+        <h4 className="text-xl font-black text-[#002147] uppercase tracking-tighter group-hover:text-blue-600 transition-colors">
           {event.title}
         </h4>
-        <p className="text-sm text-slate-500 font-medium line-clamp-2 mt-auto pt-4">
-          {event.location || "Global Archive"}
-        </p>
       </div>
     </Link>
-  );
+  )
 }

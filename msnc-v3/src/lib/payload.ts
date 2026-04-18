@@ -114,6 +114,29 @@ export async function getBlogs(limit = 6) {
   }
 }
 
+// --- SINGLE BLOG ---
+export async function getBlogBySlug(slug: string) {
+  const payload = await getCachedPayload()
+  if (!payload) return null
+
+  try {
+    const result = await payload.find({
+      collection: 'blogs',
+      where: {
+        slug: {
+          equals: slug,
+        },
+      },
+      limit: 1,
+      depth: 1, // To populate featuredImage
+    })
+    return result.docs[0] || null
+  } catch (error) {
+    console.error(`Fetch Error [getBlogBySlug: ${slug}]:`, error)
+    return null
+  }
+}
+
 // --- EVENTS ---
 export async function getEvents({ upcoming = true, limit = 10 } = {}) {
   const payload = await getCachedPayload()

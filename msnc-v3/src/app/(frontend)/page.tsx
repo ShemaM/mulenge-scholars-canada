@@ -16,16 +16,33 @@ import GetInvolved from '@/components/sections/GetInvolved'
 import PartnerMarquee from '@/components/sections/PartnerMarquee'
 import Contact from '@/components/sections/Contact'
 
+import { Suspense } from 'react'
+import { HomeSkeleton } from '@/components/ui/PageSkeleton'
+
 export const metadata: Metadata = {
   title: "Home | Mulenge Scholars' Network Canada",
-  description: 'Empowering Banyamulenge youth across Canada through mentorship, academic guidance, and leadership development.',
+  description:
+    'Empowering Banyamulenge youth across Canada through mentorship, academic guidance, and leadership development.',
 }
 
 // Revalidate every 10 seconds for fresh CMS content
 export const dynamic = 'force-dynamic'
 export const revalidate = 10
 
-export default async function HomePage() {
+export default function HomePage() {
+  return (
+    <main className="overflow-x-hidden bg-white selection:bg-slate-900 selection:text-white">
+      {/* Static Above Fold */}
+      <Hero />
+
+      <Suspense fallback={<HomeSkeleton />}>
+        <DataSections />
+      </Suspense>
+    </main>
+  )
+}
+
+async function DataSections() {
   let partners = fallbackPartners
   let upcomingEvents = fallbackEvents
   let recentBlogs = fallbackBlogs
@@ -45,25 +62,35 @@ export default async function HomePage() {
   }
 
   return (
-    <main className="overflow-x-hidden bg-white selection:bg-slate-900 selection:text-white">
-      
-      {/* 1. THE HOOK: Editorial Thesis Intro */}
-      <Hero />
-
-      {/* 2. THE PROBLEM & SOLUTION: Split-screen Context */}
-      <TheChallenge />
-
-      {/* 3. THE STRATEGY: Image-led Strategic Pillars */}
-      <StrategicPillars />
+    <>
+      {/* 2-3. STRATEGY & PROGRAMS: Collapsible Section */}
+      <details className="group [&_summary::-webkit-details-marker]:hidden">
+        <summary className="flex cursor-pointer items-center gap-3 rounded-2xl bg-slate-50 p-6 text-lg font-bold text-slate-900 transition-all hover:bg-slate-100 [&[open]]:bg-white [&[open]]:shadow-sm">
+          <span className="h-4 w-4 rounded-full bg-blue-600 transition-all group-hover:scale-110" />
+          <span>Our Strategy & Programs</span>
+          <span className="ml-auto transition-transform group-hover:translate-x-1">›</span>
+        </summary>
+        <div className="mt-4 p-6 pt-0">
+          <TheChallenge />
+          <StrategicPillars />
+        </div>
+      </details>
 
       {/* 4. THE VISION: Growth Perspective */}
       <GlobalImpact />
 
       {/* 5. TRACTION: Safe Render of Events & Blogs */}
       {upcomingEvents && upcomingEvents.length > 0 && (
-        <section className="relative bg-[#FAFAFA] z-20 py-24 border-t border-slate-200">
-          <EventPreview events={upcomingEvents} blogs={recentBlogs || []} />
-        </section>
+        <details className="group [&_summary::-webkit-details-marker]:hidden">
+          <summary className="flex cursor-pointer items-center gap-3 rounded-2xl bg-[#FAFAFA] p-6 text-lg font-bold text-slate-900 border-t border-slate-200 transition-all hover:bg-slate-50 [&[open]]:bg-white [&[open]]:shadow-sm">
+            <span className="h-4 w-4 rounded-full bg-blue-600 transition-all group-hover:scale-110" />
+            <span>Upcoming Events ({upcomingEvents.length})</span>
+            <span className="ml-auto transition-transform group-hover:translate-x-1">›</span>
+          </summary>
+          <div className="mt-4 p-6 pt-0">
+            <EventPreview events={upcomingEvents} blogs={recentBlogs || []} />
+          </div>
+        </details>
       )}
 
       {/* 6. THE ASK: Action Slats */}
@@ -78,21 +105,16 @@ export default async function HomePage() {
                 Our Network
               </span>
               <h3 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tighter">
-                Trusted By Global Institutions<span className="text-slate-300 font-serif italic">.</span>
+                Trusted By Global Institutions
+                <span className="text-slate-300 font-serif italic">.</span>
               </h3>
             </div>
             <div className="h-px bg-slate-200 grow mx-12 hidden lg:block" />
           </div>
         </div>
-        
+
         <PartnerMarquee partners={partners || []} />
       </section>
-
-      {/* 8. CONTACT: Final Anchor */}
-      <section id="contact" className="bg-white">
-        <Contact />
-      </section>
-      
-    </main>
+    </>
   )
 }

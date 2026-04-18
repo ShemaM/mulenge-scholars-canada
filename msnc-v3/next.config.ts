@@ -13,25 +13,29 @@ const nextConfig: NextConfig = {
   // Fix source map issues in dev
   productionBrowserSourceMaps: false,
 
-
-
-  sassOptions: {
-    includePaths: ['./src/app/(payload)'],
-    prependData: `@import "custom.scss";`,
-  },
-
   // 2. Image Optimization for Vercel Blob & Supabase
   images: {
     remotePatterns: [
+      // Vercel Blob
       {
         protocol: 'https',
         hostname: 'onwq4czaexzxtq41.public.blob.vercel-storage.com',
         pathname: '/**',
       },
+      // Supabase
       {
         protocol: 'https',
         hostname: 'fdchvoehlteusfsrrkmi.supabase.co',
         pathname: '/storage/v1/object/public/**',
+      },
+      // Local/public media
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+      {
+        protocol: 'https',
+        hostname: '**',
       },
     ],
   },

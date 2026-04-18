@@ -1,7 +1,6 @@
-import { Inter, Playfair_Display } from 'next/font/google'
 import type { Metadata } from 'next'
 import Navbar from '@/components/layout/Navbar'
-import Footer from '@/components/layout/Footer'
+import NewFooter from '@/components/layout/NewFooter'
 // HCI FIX: Using the correct singular name and named import
 import { Breadcrumb } from '@/components/ui/breadcrumb'
 import Providers from '@/providers'
@@ -9,16 +8,6 @@ import { cn } from '@/lib/utils'
 import './globals.css'
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
-// Configure Editorial Fonts
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-sans',
-})
-
-const playfair = Playfair_Display({
-  subsets: ['latin'],
-  variable: '--font-display',
-})
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://msnc-canada.org'), // Replace with your production domain
@@ -36,7 +25,7 @@ export default function FrontendLayout({ children }: { children: React.ReactNode
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn('scroll-smooth', inter.variable, playfair.variable)}
+      className={cn('scroll-smooth')}
     >
       <body
         suppressHydrationWarning
@@ -59,7 +48,7 @@ export default function FrontendLayout({ children }: { children: React.ReactNode
             <div className="fixed inset-0 -z-50 pointer-events-none opacity-[0.03] bg-[radial-gradient(#002147_1px,transparent_1px)] bg-size-[40px_40px] mask-[radial-gradient(ellipse_at_center,black,transparent_80%)]" />
           </main>
 
-          <Footer />
+<NewFooter />
         </Providers>
       </body>
     </html>

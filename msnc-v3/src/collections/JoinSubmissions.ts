@@ -6,34 +6,70 @@ export const JoinSubmissions: CollectionConfig = {
     useAsTitle: 'fullName',
     group: 'Submissions',
     defaultColumns: ['fullName', 'email', 'interest', 'status', 'createdAt'],
+    description: 'Applications submitted via the frontend Join/Partner forms.',
   },
   access: {
-    create: () => true,
-    read: ({ req: { user } }) => !!user,
+    create: () => true, // Public can submit
+    read: ({ req: { user } }) => !!user, // Only admins can read
+    update: ({ req: { user } }) => !!user, // Only admins can update status
+    delete: ({ req: { user } }) => !!user, // Only admins can delete
   },
   fields: [
-    { name: 'fullName', type: 'text', required: true },
-    { name: 'email', type: 'email', required: true },
-    { name: 'phone', type: 'text' },
+    {
+      type: 'row', // UX: Groups fields side-by-side in the admin panel
+      fields: [
+        { 
+          name: 'fullName', 
+          type: 'text', 
+          required: true, 
+          admin: { readOnly: true } // Prevents admins from accidentally changing user input
+        },
+        { 
+          name: 'email', 
+          type: 'email', 
+          required: true, 
+          admin: { readOnly: true } 
+        },
+      ],
+    },
+    { 
+      name: 'phone', 
+      type: 'text', 
+      admin: { readOnly: true } 
+    },
     { 
       name: 'interest', 
       type: 'select', 
       required: true,
+      admin: { readOnly: true },
       options: [
-        { label: 'Volunteer Mentor', value: 'volunteer' },
+        // CRITICAL FIX: Matches the frontend form roles exactly to prevent database rejections
         { label: 'Scholar Applicant', value: 'scholar' },
+        { label: 'Volunteer Mentor', value: 'volunteer' },
+        { label: 'Institutional Partner', value: 'partner' },
+        { label: 'General Support', value: 'support' },
+        { label: 'General Inquiry', value: 'general' },
       ],
-      defaultValue: 'volunteer',
+      defaultValue: 'general',
     },
-    { name: 'message', type: 'textarea' },
+    { 
+      name: 'message', 
+      type: 'textarea', 
+      admin: { readOnly: true } 
+    },
+    // ─── ADMIN CONTROLS ───
     {
       name: 'status',
       type: 'select',
       defaultValue: 'new',
+      admin: {
+        position: 'sidebar', // UX: Moves this to the right-hand sidebar for workflow management
+        description: 'Update this status as you process the application.',
+      },
       options: [
-        { label: 'New', value: 'new' },
-        { label: 'Reviewed', value: 'reviewed' },
-        { label: 'Archived', value: 'archived' },
+        { label: '🟢 New / Unread', value: 'new' },
+        { label: '🟡 Under Review', value: 'reviewed' },
+        { label: '⚪ Archived', value: 'archived' },
       ],
     },
   ],

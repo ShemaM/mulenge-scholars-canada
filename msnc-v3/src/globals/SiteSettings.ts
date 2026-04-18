@@ -66,7 +66,47 @@ export const SiteSettings: GlobalConfig = {
             },
           ],
         },
+        {
+          name: 'contact',
+          label: 'Contact & Social',
+          fields: [
+            {
+              name: 'email',
+              type: 'text',
+              defaultValue: 'info@msnc.ca',
+              admin: { description: 'Primary contact email' },
+            },
+            {
+              name: 'phone',
+              type: 'text',
+              defaultValue: '+1 (234) 567-890',
+              admin: { description: 'Phone number' },
+            },
+            {
+              name: 'twitterUrl',
+              type: 'text',
+              defaultValue: 'https://twitter.com/msnccanada',
+            },
+            {
+              name: 'linkedinUrl',
+              type: 'text',
+              defaultValue: 'https://linkedin.com/company/msnc',
+            },
+            {
+              name: 'instagramUrl',
+              type: 'text',
+              defaultValue: 'https://instagram.com/msnccanada',
+            },
+            {
+              name: 'address',
+              type: 'textarea',
+              defaultValue: 'Nairobi, Kenya • Winnipeg, MB, Canada',
+              admin: { description: 'Office locations' },
+            },
+          ],
+        },
       ],
     },
   ],
 }
+

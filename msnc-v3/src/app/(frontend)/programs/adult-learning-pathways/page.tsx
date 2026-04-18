@@ -1,146 +1,212 @@
 /**
- * MSNC Global Impact: Rebuilding Futures
- * ─────────────────────────────────────────────────────────────────────────
- * ACCESSIBILITY & CONTRAST FIXES:
- * • Background: Deep Navy (#002147).
- * • Primary Text: Pure White (#FFFFFF) for H1 and Body.
- * • Accents: Switched to Luminous Blue (#93C5FD) for visibility on dark BG.
- * • Iconography: High-contrast icons with white/blue split.
+ * MSNC Adult Learning & Career Pathways - Long-Form Editorial
+ * Architecture: Swiss Editorial, Narrative Flow, Deep Reading
+ * Content: Exact Dictionary items expanded via rich, empathetic storytelling.
  */
 
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { 
-  Globe, ArrowLeft, ArrowRight, 
-  Zap, Flame, Star, ShieldCheck, 
-  Construction, Drill, Hammer, Cpu 
+  BookOpen, ArrowLeft, ArrowRight, 
+  Map, GraduationCap, Briefcase, Compass, 
+  Quote
 } from 'lucide-react';
-import Container from '@/components/ui/Container';
+
+const FOCUS_BASE = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:ring-blue-600';
 
 export const metadata: Metadata = {
-  title: 'Rebuilding Futures Initiative | MSNC',
-  description: 'Delivering vocational training in high-demand trades to Banyamulenge youth in refugee camps across East Africa.',
+  title: 'Adult Learning & Career Pathways | MSNC',
+  description: 'Empowering adult learners to upgrade their education, explore skilled trades, and redefine their career trajectories in Canada.',
 };
 
-const TRADES = [
-  { title: "Construction", icon: Construction, desc: "Building the foundations of physical community." },
-  { title: "Electrical Work", icon: Zap, desc: "Powering the next generation of infrastructure." },
-  { title: "Plumbing", icon: Drill, desc: "Essential sanitation and water systems management." },
-  { title: "Mechanics", icon: Hammer, desc: "Maintenance and repair of transportation/machinery." },
-  { title: "IT Literacy", icon: Cpu, desc: "Digital entry into the modern global economy." },
-  { title: "Heavy Equipment", icon: Star, desc: "High-earning operation certifications." }
-];
-
-export default function RebuildingFuturesPage() {
+export default function AdultLearningPage() {
   return (
-    <div className="min-h-screen bg-[#002147] text-white selection:bg-[#93C5FD]/30">
+    <main className="min-h-screen bg-white text-slate-900 selection:bg-slate-900 selection:text-white pb-32">
       
-      {/* ════════════════════════════════════════════════════════════
-          HIGH-CONTRAST HERO: THE GLOBAL REACH
-      ════════════════════════════════════════────────────────────── */}
-      <section className="relative pt-40 pb-32 overflow-hidden border-b border-white/10">
-        {/* Abstract "Global Network" background */}
-        <div className="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:40px_40px] opacity-[0.05]" />
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 text-[20vw] font-black text-white/[0.03] font-display select-none pointer-events-none uppercase">
-          Impact
+      {/* ─── PROLOGUE: EDITORIAL HERO ─── */}
+      <section className="relative pt-32 md:pt-40 pb-20 md:pb-32 bg-[#FAFAFA] border-b border-slate-200 overflow-hidden">
+        
+        {/* Typographic Watermark */}
+        <div className="absolute top-1/2 right-0 -translate-y-1/2 text-[30vw] font-black text-slate-900/[0.03] leading-none pointer-events-none select-none tracking-tighter">
+          03
         </div>
-
-        <Container className="relative z-10">
+        
+        <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 max-w-[1800px] mx-auto relative z-10">
+          
           <Link 
             href="/programs" 
-            className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-white/50 hover:text-[#93C5FD] transition-all mb-16"
+            className={`group inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 hover:text-blue-600 transition-colors duration-300 mb-16 ${FOCUS_BASE}`}
           >
-            <ArrowLeft className="w-3 h-3" /> Back to Framework
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" /> 
+            Back to Directory
           </Link>
-
-          <div className="max-w-6xl space-y-10">
-            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/20 shadow-lg">
-              <Globe className="w-4 h-4 text-[#93C5FD]" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#93C5FD]">
-                Pillar 04: Kenya · Uganda · Burundi
+          
+          <div className="max-w-5xl space-y-10">
+            <div className="flex items-center gap-6">
+              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-blue-600 flex items-center gap-2">
+                <BookOpen className="w-3 h-3" /> Career Pathways
+              </span>
+              <span className="w-12 h-px bg-slate-300" aria-hidden />
+              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-400">
+                Lifelong Education
               </span>
             </div>
-            {/* Contrast Fix: Pure white H1 with Luminous Blue accent */}
-            <h1 className="text-5xl md:text-8xl font-black text-white font-display leading-[0.95] tracking-tighter">
-              Rebuilding <br />
-              <em className="not-italic text-[#93C5FD]">Futures.</em>
+            
+            <h1 className="text-[clamp(3rem,6vw,7rem)] font-black text-slate-900 leading-[0.9] tracking-tighter">
+              Redefining the <br />
+              <span className="font-serif italic font-light text-slate-500 tracking-normal">Trajectory.</span>
             </h1>
 
-            <div className="max-w-4xl border-l-4 border-[#93C5FD] pl-8">
-              <p className="text-xl md:text-2xl text-white/80 font-medium leading-relaxed">
-                "The crisis did not end at the border. We deliver vocational training in high-demand trades so that wherever youth land next, they land with a future."
+            <div className="border-l-4 border-blue-600 pl-6 md:pl-10 max-w-4xl mt-12">
+              <p className="text-2xl md:text-3xl text-slate-700 font-medium leading-[1.4] tracking-tight">
+                We support adult learners who want to upgrade their education or explore new career opportunities, honoring their lived experience while building practical bridges to the future.
               </p>
             </div>
           </div>
-        </Container>
+        </div>
       </section>
 
-      {/* ════════════════════════════════════════════════════════════
-          VOCATIONAL CLOUD: HIGH LEGIBILITY GRID
-      ════════════════════════════════════════────────────────────── */}
-      <section className="py-24 md:py-40 bg-white text-[#002147]">
-        <Container>
-          <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
-             <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight">Skills that Travel.</h2>
-             <p className="text-lg text-slate-500 font-medium">
-               We focus on vocational trades with universal demand, ensuring scholars in refugee camps gain skills recognized across the continent.
-             </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {TRADES.map((trade, i) => (
-              <div key={i} className="p-10 rounded-[2.5rem] bg-[#F8FAFC] border border-slate-100 hover:border-[#93C5FD] transition-all duration-300 group">
-                <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center mb-8 shadow-sm group-hover:bg-[#002147] transition-colors duration-500">
-                  <trade.icon className="w-6 h-6 text-[#002147] group-hover:text-white transition-colors duration-500" />
-                </div>
-                <h3 className="text-2xl font-black font-display mb-4">{trade.title}</h3>
-                <p className="text-slate-500 font-medium text-sm leading-relaxed">{trade.desc}</p>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* ════════════════════════════════════════════════════════════
-          GLOBAL REACH FOOTER: DARK MODE CONTRAST
-      ════════════════════════════════════════────────────────────── */}
-      <section className="py-24 md:py-32 bg-[#001530] border-t border-white/10">
-        <Container>
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
-            <div className="space-y-8">
-              <h2 className="text-4xl md:text-5xl font-black font-display text-white">Direct Intervention.</h2>
-              <div className="space-y-6">
-                {[
-                  "On-site vocational trainers in regional camps",
-                  "Certification recognized by local labor ministries",
-                  "Tools and safety equipment provided for all scholars",
-                  "Direct pathway to local infrastructure projects"
-                ].map((text, i) => (
-                  <div key={i} className="flex items-center gap-4 text-white/70 font-medium">
-                    <ShieldCheck className="w-5 h-5 text-[#93C5FD] shrink-0" />
-                    <span>{text}</span>
-                  </div>
-                ))}
-              </div>
+      {/* ─── CHAPTER I: THE CONTEXT ─── */}
+      <section className="pt-24 md:pt-32">
+        <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 max-w-[1800px] mx-auto">
+          <div className="grid lg:grid-cols-12 gap-16 items-start">
+            
+            <div className="lg:col-span-4">
+              <h2 className="text-[11px] font-bold uppercase tracking-[0.25em] text-slate-900 border-b border-slate-200 pb-4 mb-8">
+                The Adult Advantage
+              </h2>
             </div>
 
-            <div className="bg-[#93C5FD] p-12 md:p-16 rounded-[4rem] text-[#002147]">
-              <h3 className="text-3xl font-black font-display mb-6">Support This Initiative</h3>
-              <p className="text-lg font-bold mb-10 text-[#002147]/80">
-                Your partnership helps us procure training equipment and expand our vocational reach to more youth in need.
+            <div className="lg:col-span-8 max-w-prose text-xl text-slate-600 font-medium leading-[1.8] space-y-8">
+              <p>
+                <span className="float-left text-7xl font-serif text-slate-900 leading-[0.8] pr-3 pt-1">
+                  R
+                </span>
+                eturning to education as an adult requires a profound kind of courage. Adult learners often carry the dual burdens of providing for their families while attempting to navigate a system designed primarily for 18-year-olds. They do not have the luxury of time to make administrative mistakes.
               </p>
-              <Link 
-                href="/donate" 
-                className="inline-flex items-center gap-3 px-10 py-5 rounded-full bg-[#002147] text-white font-bold hover:bg-white hover:text-[#002147] transition-all group"
-              >
-                Donate to Rebuilding Futures
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-              </Link>
+              <p>
+                Our approach to adult education is rooted in deep respect. We do not treat our adult scholars like students; we treat them like peers. Whether the goal is acquiring missing high school prerequisites, shifting into a highly-paid skilled trade, or pursuing a university degree, we provide the streamlined, highly strategic guidance necessary to turn ambition into stability.
+              </p>
             </div>
+
           </div>
-        </Container>
+        </div>
       </section>
 
-    </div>
+      {/* ─── CHAPTER II: THE METHODOLOGY (Expanded Curriculum) ─── */}
+      <section className="pt-24 md:pt-32 mt-24 md:mt-32 bg-slate-50 border-y border-slate-200 pb-24 md:pb-32">
+        <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 max-w-[1800px] mx-auto">
+          
+          <div className="mb-20">
+            <h2 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight">
+              The Four Pillars <br/> of Advancement.
+            </h2>
+          </div>
+
+          {/* Bento-style grid for the 4 modules */}
+          <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+            
+            {/* Module 1 */}
+            <article className="bg-white p-10 lg:p-14 rounded-[2.5rem] border border-slate-200 shadow-sm flex flex-col">
+              <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mb-8">
+                <Map className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-2xl lg:text-3xl font-black text-slate-900 mb-6">Guidance on prerequisite courses</h3>
+              <p className="text-slate-600 text-lg leading-relaxed font-medium">
+                The biggest hurdle for adult learners is often missing a single, specific credential from their youth. We meticulously audit your academic history to identify the exact prerequisite courses needed to unlock your desired program, ensuring no time or money is wasted on unnecessary classes.
+              </p>
+            </article>
+
+            {/* Module 2 */}
+            <article className="bg-white p-10 lg:p-14 rounded-[2.5rem] border border-slate-200 shadow-sm flex flex-col">
+              <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mb-8">
+                <GraduationCap className="w-8 h-8 text-slate-700" />
+              </div>
+              <h3 className="text-2xl lg:text-3xl font-black text-slate-900 mb-6">Support with adult education programs</h3>
+              <p className="text-slate-600 text-lg leading-relaxed font-medium">
+                Navigating the bureaucracy of continuing education centers, night schools, and online bridging programs can be overwhelming. We provide hands-on assistance with enrollment processes, financial aid applications, and transcript evaluations.
+              </p>
+            </article>
+
+            {/* Module 3 */}
+            <article className="bg-white p-10 lg:p-14 rounded-[2.5rem] border border-slate-200 shadow-sm flex flex-col">
+              <div className="w-16 h-16 rounded-2xl bg-slate-100 flex items-center justify-center mb-8">
+                <Briefcase className="w-8 h-8 text-slate-700" />
+              </div>
+              <h3 className="text-2xl lg:text-3xl font-black text-slate-900 mb-6">Skilled trades & alternative paths</h3>
+              <p className="text-slate-600 text-lg leading-relaxed font-medium">
+                A four-year degree is not the only path to economic stability. We connect scholars with high-demand, lucrative opportunities in the skilled trades, providing clear information on apprenticeships, Red Seal certification, and college diploma pathways.
+              </p>
+            </article>
+
+            {/* Module 4 */}
+            <article className="bg-white p-10 lg:p-14 rounded-[2.5rem] border border-slate-200 shadow-sm flex flex-col">
+              <div className="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center mb-8">
+                <Compass className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl lg:text-3xl font-black text-slate-900 mb-6">Personalized mentorship & planning</h3>
+              <p className="text-slate-600 text-lg leading-relaxed font-medium">
+                Adults require strategy. We offer 1-on-1 strategic planning sessions that take into account your entire life picture—balancing work schedules, family commitments, and financial realities to create a sustainable roadmap to graduation.
+              </p>
+            </article>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ─── CHAPTER III: THE ENVIRONMENT (Pull Quote) ─── */}
+      <section className="py-24 md:py-40 bg-white">
+        <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 max-w-[1800px] mx-auto text-center">
+          <div className="max-w-4xl mx-auto">
+            <Quote className="w-12 h-12 text-slate-200 mx-auto mb-10 rotate-180" strokeWidth={2} />
+            <h2 className="text-3xl md:text-5xl font-serif italic text-slate-900 leading-[1.3] mb-12">
+              "We equip youth and adults alike with the knowledge, confidence, and resources they need to succeed academically and professionally."
+            </h2>
+            <div className="w-24 h-px bg-blue-600 mx-auto mb-6" />
+            <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400">
+              The MSNC Standard
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── EPILOGUE: THE CALL TO ACTION ─── */}
+      <section className="pt-16 pb-32">
+        <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 max-w-[1800px] mx-auto">
+          <div className="bg-slate-900 rounded-[3rem] p-12 md:p-24 text-center overflow-hidden relative">
+            
+            {/* Abstract Background Element */}
+            <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-blue-600/20 rounded-full blur-[120px] -translate-y-1/2 -translate-x-1/4 pointer-events-none" />
+
+            <div className="relative z-10 max-w-3xl mx-auto space-y-10">
+              <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter leading-tight">
+                Your second act <br/> starts here.
+              </h2>
+              <p className="text-xl text-slate-300 font-medium">
+                Whether you are looking to finish high school credits or transition into a new career, our network is ready to support your ambition.
+              </p>
+              
+              <div className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-6">
+                <Link 
+                  href="/join?role=student"
+                  className={`inline-flex h-16 w-full sm:w-auto items-center justify-center gap-4 px-10 bg-blue-600 text-white font-bold uppercase tracking-widest text-xs rounded-full hover:bg-blue-500 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-900/50 transition-all duration-500 group ${FOCUS_BASE}`}
+                >
+                  Start Your Journey
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-500" />
+                </Link>
+                <Link 
+                  href="/contact"
+                  className={`inline-flex h-16 w-full sm:w-auto items-center justify-center px-10 bg-transparent border border-slate-700 text-white font-bold uppercase tracking-widest text-xs rounded-full hover:bg-slate-800 transition-all duration-500 ${FOCUS_BASE}`}
+                >
+                  Speak to an Advisor
+                </Link>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+      
+    </main>
   );
 }

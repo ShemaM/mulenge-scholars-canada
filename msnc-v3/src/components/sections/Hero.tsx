@@ -1,142 +1,146 @@
 /**
- * MSNC Hero - The "Editorial Thesis" Architecture
- * Design: High-contrast print editorial, strict baseline grids, sophisticated typography.
- * Content: 100% Exact Text from Dictionary.
+ * MSNC Hero - Refined Scholarly Editorial
+ * Focus: Full-width typography & enhanced legibility
  */
 
-import Link from 'next/link';
-import { ArrowRight, BookOpen } from 'lucide-react';
+'use client'
 
-const FOCUS_BASE = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-4 focus-visible:ring-slate-900';
+import Link from 'next/link'
+import { motion } from 'framer-motion'
+import { Globe, Compass, Star, MoveRight, BookOpen } from 'lucide-react'
 
 export default function Hero() {
   return (
-    <section className="relative bg-[#FAFAFA] pt-24 md:pt-32 pb-24 overflow-hidden selection:bg-slate-900 selection:text-white border-b border-slate-200">
-      
-      {/* Subtle Print-Grid Background */}
+    <section className="relative bg-white pt-20 pb-16 md:pt-28 md:pb-24 overflow-hidden border-b border-slate-200">
+      {/* Structural 32px Grid Background */}
       <div
-        className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:2rem_2rem] opacity-[0.3]"
+        className="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-size-[2rem_2rem] opacity-60"
         aria-hidden="true"
       />
 
-      <div className="w-full px-6 md:px-8 lg:px-12 xl:px-16 relative z-10 max-w-[1800px] mx-auto">
-
-        {/* ─── 1. THE MASTHEAD (Meta Information) ─── */}
-        <header className="flex flex-col md:flex-row md:items-end justify-between border-b-[3px] border-slate-900 pb-6 mb-12 lg:mb-16 gap-6">
-          <div className="flex flex-col">
-            <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 mb-2">
-              Vol. 1 — Organization Overview
+      <div className="w-full px-6 md:px-10 lg:px-16 relative z-10 mx-auto max-w-425">
+        {/* ─── MASTHEAD ─── */}
+        <header className="flex items-center justify-between border-b-2 border-slate-900 pb-4 mb-10">
+          <div className="flex items-center gap-4">
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600">
+              MSNC
             </span>
-            <span className="text-sm font-serif italic text-slate-900">
-              Published in Canada
+            <span className="h-3 w-px bg-slate-300" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+              Canada
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <div className="w-2 h-2 bg-slate-900 rounded-full animate-pulse" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-900">
-              Active Initiative
+            <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-900">
+              2026
             </span>
           </div>
         </header>
 
-        {/* ─── 2. THE THESIS TITLE (Massive Typographic Hook) ─── */}
-        <div className="mb-16 lg:mb-24">
-          <h1 className="text-[clamp(3.5rem,8vw,8.5rem)] leading-[0.85] tracking-tighter text-slate-900 font-black uppercase">
-            Mulenge Scholars&apos; <br />
-            <span className="font-serif italic font-light normal-case tracking-normal text-slate-600">
-              Network Canada
-            </span>
-            <span className="text-[clamp(2rem,4vw,4rem)] text-slate-400 font-sans tracking-tight ml-4">
-              (MSNC)
-            </span>
-          </h1>
+        {/* ─── PRIMARY HEADING (Full Width & Balanced Contrast) ─── */}
+        <div className="mb-16 w-full">
+          <motion.h1
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-[clamp(2.5rem,7vw,7.5rem)] leading-[0.85] tracking-tighter text-[#002147] font-black w-full"
+          >
+            Empowering <br />
+            <span className="text-slate-400 font-serif italic font-light tracking-tight mr-4">
+              Banyamulenge Youth
+            </span>{' '}
+            <br />
+            Through Academic Excellence.
+          </motion.h1>
         </div>
 
-        {/* Editorial Thick/Thin Divider */}
-        <div className="w-full mb-12">
-          <div className="h-[2px] bg-slate-900 w-full" />
-          <div className="h-px bg-slate-300 w-full mt-1" />
-        </div>
-
-        {/* ─── 3. THE BODY (Split Column Editorial Layout) ─── */}
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-start">
-
-          {/* LEFT COLUMN: The "Abstract" & The "Ask" (Span 5) */}
-          <div className="lg:col-span-5 flex flex-col h-full">
-            
-            <div className="mb-12">
-              <h2 className="text-[11px] font-bold uppercase tracking-[0.25em] text-slate-900 border-b border-slate-200 pb-3 mb-6">
-                I. The Organization
+        {/* ─── THE TRIPLE COLUMN SPREAD ─── */}
+        <div className="grid lg:grid-cols-12 gap-0 border-t border-slate-900 divide-y lg:divide-y-0 lg:divide-x divide-slate-900">
+          {/* COLUMN 1: THE COMMITMENT */}
+          <div className="lg:col-span-5 py-10 lg:pr-10">
+            <div className="flex items-center gap-3 mb-6">
+              <Compass className="w-5 h-5 text-blue-600" />
+              <h2 className="text-[11px] font-black uppercase tracking-widest text-slate-900">
+                I. The Commitment
               </h2>
-              {/* HCI: Increased leading and font weight for the "Hook" paragraph */}
-              <p className="text-2xl md:text-3xl text-slate-900 font-medium leading-[1.4] tracking-tight">
-                Mulenge Scholars' Network Canada (MSNC) is a youth-led organization founded by Banyamulenge students who understand firsthand the challenges of navigating new education systems.
-              </p>
             </div>
 
-            <div className="mb-12 bg-white p-8 md:p-10 border border-slate-200 shadow-sm">
-              <h2 className="text-[11px] font-bold uppercase tracking-[0.25em] text-slate-400 mb-4">
-                Our Mission
-              </h2>
-              <p className="text-xl text-slate-700 font-serif italic leading-relaxed">
-                "We are dedicated to empowering youth across Canada through mentorship, academic guidance, and leadership development, while fostering a strong sense of community and belonging."
-              </p>
-            </div>
+            <p className="text-2xl md:text-3xl font-bold leading-tight tracking-tight text-[#002147] mb-8 border-l-4 border-blue-600 pl-6">
+              We are dedicated to empowering youth across Canada through mentorship, academic
+              guidance, and leadership development.
+            </p>
 
-            {/* Fitts's Law: Large, accessible CTAs grouped together */}
-            <div className="mt-auto flex flex-col sm:flex-row gap-4">
+            <p className="text-sm font-bold text-slate-500 leading-relaxed mb-10">
+              By fostering a strong sense of community and belonging, we bridge the gap between
+              migration and scholarly success.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4">
               <Link
-                href="/join"
-                className={`group flex items-center justify-between h-16 w-full sm:w-1/2 px-6 bg-slate-900 text-white text-xs font-bold uppercase tracking-widest hover:bg-blue-600 transition-colors duration-500 ease-out ${FOCUS_BASE}`}
+                href="/about"
+                className="group flex items-center justify-between h-14 w-full sm:w-1/2 px-6 bg-primary-500 text-white text-[10px] font-black uppercase tracking-widest hover:bg-blue-700 transition-all rounded-xl"
               >
-                <span>Get Involved</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-500" />
+                <span>Learn More</span>
+                <MoveRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
               </Link>
               <Link
                 href="/programs"
-                className={`group flex items-center justify-between h-16 w-full sm:w-1/2 px-6 bg-transparent border border-slate-300 text-slate-900 text-xs font-bold uppercase tracking-widest hover:border-slate-900 hover:bg-slate-50 transition-colors duration-500 ease-out ${FOCUS_BASE}`}
+                className="group flex items-center justify-between h-14 w-full sm:w-1/2 px-6 bg-white border border-slate-200 text-[#002147] text-[10px] font-black uppercase tracking-widest hover:border-slate-900 transition-all rounded-xl"
               >
                 <span>Our Programs</span>
-                <BookOpen className="w-4 h-4 text-slate-400 group-hover:text-slate-900 transition-colors duration-500" />
+                <BookOpen className="w-4 h-4 text-slate-300 group-hover:text-blue-600 transition-colors" />
               </Link>
             </div>
           </div>
 
-          {/* RIGHT COLUMN: The "Historical Context" (Span 7) */}
-          <div className="lg:col-span-7 lg:pl-10 lg:border-l border-slate-200">
-            
-            <h2 className="text-[11px] font-bold uppercase tracking-[0.25em] text-slate-900 border-b border-slate-200 pb-3 mb-8">
-              II. Heritage Context
-            </h2>
-
-            {/* Editorial Drop-Cap Paragraph */}
-            <div className="text-lg md:text-xl text-slate-600 font-medium leading-[1.7] space-y-8 max-w-prose">
-              <p>
-                <span className="float-left text-7xl font-serif text-slate-900 leading-[0.8] pr-3 pt-1">
-                  T
-                </span>
-                he Banyamulenge, also known as the Mulenge people, are a community originally from the highlands of eastern Democratic Republic of Congo. Their ancestors migrated to this region generations ago, primarily as pastoralists from neighboring areas such as Rwanda and Burundi.
-              </p>
-              
-              <p>
-                Despite their long history in Congo, many Banyamulenge have faced cycles of displacement due to conflict and instability, leading families to seek refuge in different countries across Africa and beyond.
-              </p>
-            </div>
-
-            {/* Visual Break for Resilience Statement */}
-            <div className="mt-12 pt-8 border-t-[2px] border-slate-900 max-w-prose">
-              <h2 className="text-[11px] font-bold uppercase tracking-[0.25em] text-slate-400 mb-4">
-                Resilience
+          {/* COLUMN 2: THE HERITAGE (Adjusted Font Weight/Size) */}
+          <div className="lg:col-span-4 py-10 lg:px-10">
+            <div className="flex items-center gap-3 mb-6">
+              <Globe className="w-5 h-5 text-blue-600" />
+              <h2 className="text-[11px] font-black uppercase tracking-widest text-slate-900">
+                II. Heritage
               </h2>
-              <p className="text-2xl text-slate-900 font-black tracking-tight leading-snug">
-                These experiences of migration and adaptation have shaped a resilient and diverse global community, one that is now growing in Canada.
-              </p>
             </div>
-
+            <p className="text-lg text-slate-700 font-medium leading-relaxed mb-6">
+              Founded by Banyamulenge students, MSNC carries the legacy of the
+              highlands—transforming a history of migration and resilience into a catalyst for
+              professional growth.
+            </p>
+            <div className="grid grid-cols-2 gap-y-4">
+              {['Mentorship', 'Equity', 'Leadership', 'Excellence'].map((tag) => (
+                <div
+                  key={tag}
+                  className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-400"
+                >
+                  <div className="w-1.5 h-1.5 bg-blue-600 rounded-full" /> {tag}
+                </div>
+              ))}
+            </div>
           </div>
 
+          {/* COLUMN 3: THE VISION */}
+          <div className="lg:col-span-3 py-10 lg:pl-10">
+            <div className="flex items-center gap-3 mb-6">
+              <Star className="w-5 h-5 text-blue-600" />
+              <h2 className="text-[11px] font-black uppercase tracking-widest text-slate-900">
+                III. The Vision
+              </h2>
+            </div>
+            <p className="text-xl font-serif italic text-slate-700 leading-snug mb-8">
+              &quot;A future where our youth are successful in their academic journeys and
+              established as leaders giving back to their communities.&quot;
+            </p>
+            <div className="pt-8 border-t border-slate-100">
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-300 block mb-2">
+                Our Guiding Principles
+              </span>
+              <span className="text-sm font-black text-blue-600 uppercase tracking-widest italic">
+                Equity & Excellence
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
-  );
+  )
 }

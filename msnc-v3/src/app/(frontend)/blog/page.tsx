@@ -1,10 +1,13 @@
+/**
+ * MSNC Impact Journal - Scholarly Editorial Version
+ * Fixed: Syntax errors and compiler conflicts
+ */
+
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getBlogs } from '@/lib/payload'
-import Container from '@/components/ui/Container'
-import { ArrowRight, BookOpen, Clock, ChevronRight } from 'lucide-react'
-
+import { ArrowRight, BookOpen, Calendar, Hash, Feather } from 'lucide-react'
 import type { Blog } from '@/types/payload-types'
 
 type BlogPost = Blog & {
@@ -16,182 +19,245 @@ type BlogPost = Blog & {
 
 export const metadata: Metadata = {
   title: 'Impact Journal | MSNC',
-  description:
-    'Chronicles of academic excellence and community resilience within the Mulenge diaspora.',
+  description: 'Chronicles of academic excellence and community resilience.',
 }
 
+// Force dynamic ensures we always get the latest posts from Payload
 export const dynamic = 'force-dynamic'
 
-export default async function BlogPage() {
-  const allPosts = (await getBlogs()) as BlogPost[]
-  const featuredPost = allPosts[0]
-  const regularPosts = allPosts.slice(1)
+const formatDate = (dateString?: string) => {
+  if (!dateString) return 'Recent'
+  return new Date(dateString).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
+}
 
-  if (!featuredPost) {
+export default async function BlogPage() {
+  // Fetch data on the server
+  const allPosts = (await getBlogs()) as BlogPost[]
+
+  const coverStory = allPosts[0]
+  const theLatest = allPosts.slice(1, 5)
+  const inFocus = allPosts.slice(5)
+
+  if (!coverStory) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
           <BookOpen className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-          <p className="text-slate-400 font-display text-xl italic">
-            The journal is being drafted.
-          </p>
+          <p className="text-slate-400 font-serif italic">Journal currently in draft.</p>
         </div>
       </div>
     )
   }
 
   return (
-    <main className="bg-white selection:bg-secondary/30">
-      {/* --- HERO: Minimalist Editorial Header --- */}
-      <section className="pt-32 pb-20 border-b border-slate-100">
-        <Container>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <div className="max-w-2xl">
-              <nav className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-secondary mb-6">
-                <span>Archives</span>
-                <ChevronRight className="w-3 h-3" />
-                <span className="text-primary">Impact Journal</span>
-              </nav>
-              <h1 className="text-6xl md:text-8xl font-black text-primary tracking-tight leading-[0.9] mb-8">
-                Narratives of <br />
-                <span className="text-secondary font-serif italic">Resilience.</span>
+    <main className="min-h-screen bg-white text-[#002147] selection:bg-blue-100 pb-32 relative overflow-x-hidden">
+      {/* ─── Structural UI Grid Background ─── */}
+      <div className="fixed inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:40px_40px] opacity-[0.5] pointer-events-none" />
+
+      <div className="w-full px-4 md:px-8 lg:px-12 relative z-10 mx-auto max-w-[1500px]">
+        {/* ─── PHASE 01: MASTHEAD ─── */}
+        <header className="pt-32 pb-12 border-b-2 border-slate-900">
+          <div className="flex items-center justify-between mb-12">
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600">
+                Archive
+              </span>
+              <span className="h-3 w-px bg-slate-200" />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                Impact Journal
+              </span>
+            </div>
+            <div className="text-[10px] font-mono text-slate-400 hidden sm:block">
+              ISSN: 2026-MSNC
+            </div>
+          </div>
+
+          <div className="grid lg:grid-cols-12 gap-8 items-end">
+            <div className="lg:col-span-9">
+              <h1 className="text-5xl md:text-8xl lg:text-[7rem] font-black tracking-tighter leading-[0.85] uppercase">
+                Impact <br />
+                <span className="text-slate-200 font-serif italic lowercase tracking-normal">
+                  Journal.
+                </span>
               </h1>
             </div>
-            <p className="text-lg text-slate-500 font-medium leading-relaxed max-w-sm pb-2">
-              The definitive record of excellence and scholarly advancement within the MSNC
-              community.
-            </p>
+            <div className="lg:col-span-3 pb-4">
+              <p className="text-sm font-serif italic text-slate-500 leading-relaxed border-l-2 border-blue-600 pl-4">
+                "Documenting narratives of resilience, scholarly advancement, and community
+                leadership."
+              </p>
+            </div>
           </div>
-        </Container>
-      </section>
+        </header>
 
-      {/* --- FEATURED: The Cinematic Cover Story --- */}
-      <section className="py-20">
-        <Container>
-          <Link href={`/blog/${featuredPost.slug}`} className="group block">
-            <div className="relative aspect-video md:aspect-21/9 rounded-4xl overflow-hidden mb-12 shadow-2xl">
-              {featuredPost.featuredImage?.url ? (
-                <Image
-                  src={featuredPost.featuredImage.url}
-                  alt={featuredPost.title}
-                  fill
-                  className="object-cover transition-transform duration-1000 group-hover:scale-105"
-                />
-              ) : (
-                <div className="absolute inset-0 bg-primary flex items-center justify-center">
-                  <BookOpen className="w-20 h-20 text-white/10" />
-                </div>
-              )}
-              <div className="absolute inset-0 bg-linear-to-t from-primary/80 via-transparent to-transparent" />
-
-              <div className="absolute bottom-10 left-10 right-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div className="max-w-3xl">
-                  <span className="inline-block px-4 py-1.5 bg-secondary text-primary text-[10px] font-black uppercase tracking-widest rounded-full mb-4">
-                    Cover Story
-                  </span>
-                  <h2 className="text-3xl md:text-6xl font-extrabold text-white leading-tight tracking-tight group-hover:text-secondary transition-colors">
-                    {featuredPost.title}
-                  </h2>
-                </div>
-                <div className="hidden md:flex items-center gap-4 text-white/80 text-[10px] font-bold uppercase tracking-widest">
-                  <span>Read Article</span>
-                  <div className="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center group-hover:bg-white group-hover:text-primary transition-all">
-                    <ArrowRight className="w-5 h-5" />
+        {/* ─── PHASE 02: THE FOLD ─── */}
+        <section className="py-12 lg:py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 border-b border-slate-100 pb-16">
+            {/* LEFT: Cover Story */}
+            <div className="lg:col-span-8 group">
+              <Link
+                href={`/blog/${coverStory.slug}`}
+                className="block relative aspect-video md:aspect-[16/8] rounded-[2.5rem] overflow-hidden mb-10 shadow-2xl shadow-slate-200 transition-all group-hover:shadow-blue-900/10"
+              >
+                {coverStory.featuredImage?.url ? (
+                  <Image
+                    src={coverStory.featuredImage.url}
+                    alt={coverStory.title}
+                    fill
+                    priority
+                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-slate-50 flex items-center justify-center">
+                    <BookOpen className="w-12 h-12 text-slate-200" />
                   </div>
+                )}
+                <div className="absolute top-8 left-8">
+                  <span className="px-4 py-1.5 bg-white/95 backdrop-blur-md text-[#002147] text-[10px] font-black uppercase tracking-widest rounded-full">
+                    Feature_Story
+                  </span>
                 </div>
+              </Link>
+
+              <div className="max-w-3xl">
+                <div className="flex items-center gap-3 text-[10px] font-black text-blue-600 uppercase tracking-widest mb-4">
+                  <Calendar className="w-3 h-3" />
+                  <time>{formatDate(coverStory.createdAt)}</time>
+                  <span className="h-1 w-1 bg-slate-300 rounded-full" />
+                  <span>By MSNC Editorial</span>
+                </div>
+                <h2 className="text-4xl md:text-6xl font-black tracking-tighter leading-[0.9] mb-6 hover:text-blue-600 transition-colors">
+                  {coverStory.title}
+                </h2>
+                <p className="text-lg md:text-xl font-medium text-slate-500 leading-relaxed mb-8">
+                  {coverStory.excerpt}
+                </p>
+                <Link
+                  href={`/blog/${coverStory.slug}`}
+                  className="inline-flex items-center gap-4 text-[11px] font-black uppercase tracking-[0.2em] border-b-2 border-[#002147] pb-1 hover:text-blue-600 hover:border-blue-600 transition-all"
+                >
+                  Read Full Post <ArrowRight className="w-4 h-4" />
+                </Link>
               </div>
             </div>
-          </Link>
-        </Container>
-      </section>
 
-      {/* --- GRID: The Editorial Feed --- */}
-      <section className="py-24 bg-slate-50/50">
-        <Container>
-          <div className="flex items-center justify-between mb-16">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-primary/40">
-              Recent Briefings
-            </h3>
-            <div className="h-px flex-1 bg-slate-200 ml-8" />
+            {/* RIGHT: Sidebar */}
+            <div className="lg:col-span-4">
+              <div className="flex items-center gap-3 mb-8">
+                <Hash className="w-4 h-4 text-blue-600" />
+                <h3 className="text-sm font-black uppercase tracking-widest">Recent Entries</h3>
+              </div>
+              <div className="space-y-0 divide-y divide-slate-100 border-t border-slate-100">
+                {theLatest.map((post) => (
+                  <article key={post.id} className="py-8 group">
+                    <Link href={`/blog/${post.slug}`}>
+                      <time className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-3 block">
+                        {formatDate(post.createdAt)}
+                      </time>
+                      <h4 className="text-xl font-black tracking-tight leading-tight group-hover:text-blue-600 transition-colors">
+                        {post.title}
+                      </h4>
+                      <div className="mt-4 flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-blue-600 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">
+                        View <ArrowRight className="w-3 h-3" />
+                      </div>
+                    </Link>
+                  </article>
+                ))}
+              </div>
+            </div>
           </div>
+        </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-20">
-            {regularPosts.map((post: BlogPost) => (
-              <article key={post.id} className="group flex flex-col">
-                <Link
-                  href={`/blog/${post.slug}`}
-                  className="relative aspect-4/5 rounded-3xl overflow-hidden mb-8 shadow-sm group-hover:shadow-xl transition-all duration-500"
-                >
-                  {post.featuredImage?.url ? (
-                    <Image
-                      src={post.featuredImage.url}
-                      alt={post.title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-slate-200 flex items-center justify-center">
-                      <BookOpen className="w-12 h-12 text-slate-300" />
-                    </div>
-                  )}
-                </Link>
-
-                <div className="flex items-center gap-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">
-                  <span className="text-secondary">Insight</span>
-                  <div className="w-1 h-1 rounded-full bg-slate-300" />
-                  <span className="flex items-center gap-1.5">
-                    <Clock className="w-3 h-3" /> 5 Min
-                  </span>
-                </div>
-
-                <h4 className="text-2xl font-bold text-primary mb-4 leading-tight tracking-tight group-hover:text-secondary transition-colors">
-                  <Link href={`/blog/${post.slug}`}>{post.title}</Link>
-                </h4>
-
-                <p className="text-slate-500 leading-relaxed line-clamp-3 mb-8 text-sm">
-                  {post.excerpt}
-                </p>
-
-                <Link
-                  href={`/blog/${post.slug}`}
-                  className="mt-auto inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-primary hover:text-secondary transition-colors"
-                >
-                  Explore <ArrowRight className="w-3 h-3" />
-                </Link>
-              </article>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* --- FOOTER: Storytelling Invitation --- */}
-      <section className="py-32">
-        <Container>
-          <div className="bg-primary rounded-[3rem] p-12 md:p-24 text-center relative overflow-hidden">
-            {/* Background Texture */}
-            <div className="absolute top-0 right-0 p-12 opacity-10 pointer-events-none">
-              <BookOpen className="w-64 h-64 text-white" />
+        {/* ─── PHASE 03: ARCHIVE GRID ─── */}
+        {inFocus.length > 0 && (
+          <section className="py-20">
+            <div className="flex items-center justify-between mb-16">
+              <h3 className="text-3xl font-black tracking-tighter uppercase">Document Archive</h3>
+              <div className="h-px grow bg-slate-100 ml-12" />
             </div>
 
-            <div className="relative z-10">
-              <h2 className="text-4xl md:text-7xl font-black text-white mb-8 tracking-tight">
-                Your narrative <br />
-                <span className="italic text-secondary font-serif">matters.</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {inFocus.map((post) => (
+                <article
+                  key={post.id}
+                  className="group border border-slate-100 p-6 rounded-[2rem] bg-white transition-all hover:border-blue-600 hover:-translate-y-2"
+                >
+                  <Link href={`/blog/${post.slug}`}>
+                    <div className="relative aspect-[3/2] rounded-2xl overflow-hidden mb-8">
+                      {post.featuredImage?.url && (
+                        <Image
+                          src={post.featuredImage.url}
+                          alt={post.title}
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                      )}
+                    </div>
+                    <time className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-3 block">
+                      {formatDate(post.createdAt)}
+                    </time>
+                    <h4 className="text-2xl font-black tracking-tight mb-4 group-hover:text-blue-600 transition-colors">
+                      {post.title}
+                    </h4>
+                    <p className="text-sm font-medium text-slate-500 leading-relaxed line-clamp-2 italic font-serif">
+                      {post.excerpt}
+                    </p>
+                  </Link>
+                </article>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ─── CTA: SUBMISSION ─── */}
+        <section className="pt-20">
+          <div className="bg-slate-50 border-2 border-slate-200 rounded-[3rem] p-12 md:p-24 text-center relative overflow-hidden group">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.05),transparent)] pointer-events-none" />
+            <div className="relative z-10 flex flex-col items-center">
+              <Feather className="w-12 h-12 text-blue-600 mb-8" />
+              <h2 className="text-4xl md:text-7xl font-black tracking-tighter uppercase leading-[0.9] mb-8">
+                Contribute <br />
+                <span className="text-slate-300 font-serif italic">to the journal.</span>
               </h2>
-              <p className="text-white/60 max-w-xl mx-auto mb-12 text-lg">
-                Are you a scholar or community leader with a story of impact? We are currently
-                accepting pitches for the next volume.
+              <p className="text-lg text-slate-500 font-medium max-w-xl mx-auto mb-12">
+                Are you a scholar or leader with a story of impact? We are accepting pitches for the
+                upcoming volume.
               </p>
               <Link
                 href="/contact"
-                className="inline-flex h-16 items-center px-10 bg-secondary text-primary font-black uppercase tracking-widest text-xs rounded-full hover:bg-white transition-all active:scale-95 shadow-xl"
+                className="h-16 px-12 bg-[#002147] text-white rounded-full font-black uppercase tracking-widest text-[11px] flex items-center justify-center gap-4 hover:bg-blue-700 transition-all active:scale-95"
               >
-                Submit your pitch
+                Submit Pitch <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
           </div>
-        </Container>
-      </section>
+        </section>
+
+        {/* ─── FOOTER ─── */}
+        <footer className="mt-12 flex flex-col md:flex-row items-center justify-between border-t-2 border-slate-900 pt-10 gap-6 mb-10">
+          <div className="flex items-center gap-3">
+            <div className="w-2.5 h-2.5 bg-blue-600 rounded-full animate-pulse" />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
+              MSNC_PUBLICATION_REPOSITORY_2026
+            </span>
+          </div>
+          <div className="flex gap-8">
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+              Research
+            </span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+              Impact
+            </span>
+            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+              Resilience
+            </span>
+          </div>
+        </footer>
+      </div>
     </main>
   )
 }
