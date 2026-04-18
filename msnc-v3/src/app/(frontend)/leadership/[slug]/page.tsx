@@ -5,7 +5,6 @@
  */
 
 import { notFound } from 'next/navigation'
-import { getPayload } from 'payload'
 import { getCachedPayload } from '@/lib/payload'
 import {
   ArrowLeft,
@@ -152,10 +151,7 @@ export default async function LeaderProfilePage({ params }: { params: Promise<{ 
                 </div>
               )}
               <div className="absolute bottom-8 left-8 right-8">
-                <div className="bg-white/95 backdrop-blur-md p-6 rounded-2xl shadow-2xl border border-slate-100">
-                  
-                  
-                </div>
+                <div className="bg-white/95 backdrop-blur-md p-6 rounded-2xl shadow-2xl border border-slate-100"></div>
               </div>
             </div>
           </div>

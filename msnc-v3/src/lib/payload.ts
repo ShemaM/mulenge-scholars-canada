@@ -13,9 +13,23 @@ let cachedPayload: any = (globalThis as any).payload || null
 export async function getCachedPayload() {
   if (cachedPayload) return cachedPayload
 
-  try {
-    console.log('🏛️ MSNC System: Initializing Database Connection...')
+  // Production env validation
+  const requiredEnv = ['DATABASE_URL', 'PAYLOAD_SECRET', 'BLOB_READ_WRITE_TOKEN']
+  const missingEnv = requiredEnv.filter((key) => !process.env[key])
+  if (missingEnv.length > 0) {
+    console.error(`🚨 PRODUCTION ERROR: Missing env vars: ${missingEnv.join(', ')}`)
+    return null
+  }
 
+  if (process.env.NODE_ENV === 'production') {
+    console.log('🏛️ PROD: Initializing Payload + Postgres (Vercel Serverless)...')
+    console.log('   DB Host:', new URL(process.env.DATABASE_URL!).hostname)
+    console.log('   Server:', typeof window === 'undefined' ? 'Server' : 'Client')
+  } else {
+    console.log('🏛️ MSNC System: Initializing Database Connection...')
+  }
+
+  try {
     cachedPayload = await getPayload({
       config: configPromise,
     })
@@ -23,6 +37,8 @@ export async function getCachedPayload() {
     if (cachedPayload) {
       ;(globalThis as any).payload = cachedPayload
       console.log('✅ MSNC System: Database Connected Successfully.')
+    } else {
+      console.warn('⚠️ Payload init returned null')
     }
   } catch (error) {
     console.error('❌ MSNC System: Database Connection Failed:', error)

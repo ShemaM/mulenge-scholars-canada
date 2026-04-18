@@ -16,7 +16,12 @@ const nextConfig: NextConfig = {
   // 2. Image Optimization for Vercel Blob & Supabase
   images: {
     remotePatterns: [
-      // Vercel Blob
+      // Vercel Blob (wildcard for dynamic store ID)
+      {
+        protocol: 'https',
+        hostname: '*.public.blob.vercel-storage.com',
+        pathname: '/**',
+      },
       {
         protocol: 'https',
         hostname: 'onwq4czaexzxtq41.public.blob.vercel-storage.com',
