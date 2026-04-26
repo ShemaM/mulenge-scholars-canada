@@ -18,6 +18,7 @@ import { Partners } from './collections/Partners'
 import { Scholars } from './collections/Scholars'
 import { Testimonials } from './collections/Testimonials'
 import Messages from './collections/Messages'
+import Inquiries from './collections/Inquiries'
 import { JoinSubmissions } from './collections/JoinSubmissions'
 import { Donations } from './collections/Donations'
 
@@ -66,6 +67,7 @@ export default buildConfig({
     Testimonials,
     Partners,
     Messages,
+    Inquiries,
     JoinSubmissions,
     Donations,
   ],
