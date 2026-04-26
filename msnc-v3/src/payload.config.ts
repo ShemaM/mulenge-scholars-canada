@@ -71,6 +71,11 @@ export default buildConfig({
   ],
   globals: [SiteSettings],
   editor: lexicalEditor(),
+  localization: {
+    locales: ['en', 'fr'],
+    defaultLocale: 'en',
+    fallback: true,
+  },
   secret: process.env.PAYLOAD_SECRET || 'emergency-fallback-668852',
   typescript: {
     outputFile: path.resolve(dirname, 'types/payload-types.ts'),

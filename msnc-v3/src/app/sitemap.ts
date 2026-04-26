@@ -1,8 +1,9 @@
 import { getCachedPayload } from '@/lib/payload'
+import { SITE_URL } from '@/lib/site'
 import type { MetadataRoute } from 'next'
 
 export default async function sitemap() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.mulengescholars.org'
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || SITE_URL
 
   const staticPages = [
     '/',

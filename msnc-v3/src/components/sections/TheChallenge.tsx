@@ -1,184 +1,197 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { 
-  ArrowRight, Users, BookOpen, GraduationCap, 
-  Briefcase, Globe, Plus, X, AlertCircle 
-} from 'lucide-react';
-import { cn } from "@/lib/utils";
+import { useState } from 'react'
+import { useTranslations } from 'next-intl'
+import { ArrowRight, Users, BookOpen, GraduationCap, Briefcase, Globe, Plus, X, AlertCircle } from 'lucide-react'
+import { Link } from '@/navigation'
+import { cn } from '@/lib/utils'
 
-const BRAND = { navy: '#002147', blue: '#1d4ed8', red: '#E31937' };
+const BRAND = { navy: '#002147', blue: '#1d4ed8', red: '#E31937' }
 
-const SOLUTIONS = [
-  {
-    id: 'mentorship',
-    icon: Users,
-    title: 'Mentorship',
-    tagline: 'Guided by Experience',
-    detail: 'Direct mentorship from experienced students and professionals who understand the unique challenges of navigating the Canadian system.',
-    color: BRAND.navy,
-  },
-  {
-    id: 'academic',
-    icon: BookOpen,
-    title: 'Academic Guidance',
-    tagline: 'Pathways to Success',
-    detail: 'Course selection and tutoring for Grades 11–12, ensuring a smooth transition into high-level post-secondary education.',
-    color: BRAND.blue,
-  },
-  {
-    id: 'post-sec',
-    icon: GraduationCap,
-    title: 'Post-Secondary',
-    tagline: 'Application Support',
-    detail: 'Full support for college and university planning, applications, and accessing leadership or volunteer opportunities.',
-    color: '#0369a1',
-  },
-  {
-    id: 'career',
-    icon: Briefcase,
-    title: 'Career Pathways',
-    tagline: 'Future Direction',
-    detail: 'Guidance on skilled trades, adult education programs, and personalized career planning for adult learners.',
-    color: '#0f766e',
-  },
-  {
-    id: 'global',
-    icon: Globe,
-    title: 'Global Impact',
-    tagline: 'Vocational Focus',
-    detail: 'Supporting youth in refugee camps across Kenya, Uganda, and Burundi with training in Construction, IT, and Mechanics.',
-    color: BRAND.red,
-  },
-];
-
-function SolutionCard({ item }: { item: typeof SOLUTIONS[0] }) {
-  const [isOpen, setIsOpen] = useState(false);
+function SolutionCard({
+  item,
+}: {
+  item: {
+    id: string
+    icon: typeof Users
+    title: string
+    tagline: string
+    detail: string
+    color: string
+  }
+}) {
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div className="relative h-64 md:h-72 w-full overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all duration-500 hover:shadow-lg">
-      {/* Front: Dense Content */}
-      <div className="p-6 h-full flex flex-col justify-between">
+    <div className="relative h-64 w-full overflow-hidden rounded-2xl border border-slate-200 bg-white transition-all duration-500 hover:shadow-lg md:h-72">
+      <div className="flex h-full flex-col justify-between p-6">
         <div>
-          <div 
-            className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+          <div
+            className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl"
             style={{ backgroundColor: `${item.color}10`, color: item.color }}
           >
-            <item.icon className="w-5 h-5" strokeWidth={2} />
+            <item.icon className="h-5 w-5" strokeWidth={2} />
           </div>
-          <h3 className="text-lg font-black text-slate-900 uppercase tracking-tighter leading-tight mb-1">
+          <h3 className="mb-1 text-lg font-black uppercase tracking-tighter leading-tight text-slate-900">
             {item.title}
           </h3>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{item.tagline}</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+            {item.tagline}
+          </p>
         </div>
 
         <button
+          type="button"
           onClick={() => setIsOpen(true)}
-          className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-600 group"
+          className="group flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-600"
         >
-          <Plus className="w-3 h-3 transition-transform group-hover:rotate-90" />
+          <Plus className="h-3 w-3 transition-transform group-hover:rotate-90" />
           Learn More
         </button>
       </div>
 
-      {/* Back Overlay */}
-      <div 
+      <div
         className={cn(
-          "absolute inset-0 z-20 p-6 flex flex-col justify-between transition-transform duration-500 ease-in-out",
-          isOpen ? "translate-y-0" : "translate-y-full"
+          'absolute inset-0 z-20 flex flex-col justify-between p-6 transition-transform duration-500 ease-in-out',
+          isOpen ? 'translate-y-0' : 'translate-y-full',
         )}
         style={{ backgroundColor: item.color }}
       >
-        <button onClick={() => setIsOpen(false)} className="self-end p-1 rounded-full bg-white/10 hover:bg-white/20">
-          <X className="w-4 h-4 text-white" />
+        <button
+          type="button"
+          onClick={() => setIsOpen(false)}
+          className="self-end rounded-full bg-white/10 p-1 hover:bg-white/20"
+        >
+          <X className="h-4 w-4 text-white" />
         </button>
-        <p className="text-white text-sm font-medium leading-relaxed mb-4">{item.detail}</p>
-        <div className="h-1 w-8 bg-white/40 rounded-full" />
+        <p className="mb-4 text-sm font-medium leading-relaxed text-white">{item.detail}</p>
+        <div className="h-1 w-8 rounded-full bg-white/40" />
       </div>
     </div>
-  );
+  )
 }
 
 export default function TheChallenge() {
+  const t = useTranslations('TheChallenge')
+  const solutions = [
+    {
+      id: 'mentorship',
+      icon: Users,
+      title: t('solutions.mentorship.title'),
+      tagline: t('solutions.mentorship.tagline'),
+      detail: t('solutions.mentorship.detail'),
+      color: BRAND.navy,
+    },
+    {
+      id: 'academic',
+      icon: BookOpen,
+      title: t('solutions.academic.title'),
+      tagline: t('solutions.academic.tagline'),
+      detail: t('solutions.academic.detail'),
+      color: BRAND.blue,
+    },
+    {
+      id: 'post-sec',
+      icon: GraduationCap,
+      title: t('solutions.postSec.title'),
+      tagline: t('solutions.postSec.tagline'),
+      detail: t('solutions.postSec.detail'),
+      color: '#0369a1',
+    },
+    {
+      id: 'career',
+      icon: Briefcase,
+      title: t('solutions.career.title'),
+      tagline: t('solutions.career.tagline'),
+      detail: t('solutions.career.detail'),
+      color: '#0f766e',
+    },
+    {
+      id: 'global',
+      icon: Globe,
+      title: t('solutions.global.title'),
+      tagline: t('solutions.global.tagline'),
+      detail: t('solutions.global.detail'),
+      color: BRAND.red,
+    },
+  ]
+  const barriers = t.raw('barriers') as string[]
+
   return (
-    <section className="py-16 md:py-24 bg-[#FAFAFA] border-t border-slate-200">
-      <div className="w-full px-6 md:px-12 lg:px-16 mx-auto max-w-[1600px]">
-        
-        {/* TOP ROW: Header & Primary Narrative */}
-        <div className="grid lg:grid-cols-12 gap-12 items-end mb-16 pb-12 border-b border-slate-200">
+    <section className="border-t border-slate-200 bg-[#FAFAFA] py-16 md:py-24">
+      <div className="mx-auto w-full max-w-[1600px] px-6 md:px-12 lg:px-16">
+        <div className="mb-16 grid items-end gap-12 border-b border-slate-200 pb-12 lg:grid-cols-12">
           <div className="lg:col-span-7">
-            <div className="flex items-center gap-3 mb-6">
-              <span className="w-10 h-[2px] bg-blue-600" />
-              <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-blue-600">The Challenge</span>
+            <div className="mb-6 flex items-center gap-3">
+              <span className="h-[2px] w-10 bg-blue-600" />
+              <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-blue-600">
+                {t('sectionLabel')}
+              </span>
             </div>
-            <h2 className="text-6xl md:text-8xl font-black text-slate-900 tracking-tighter uppercase leading-[0.85] mb-8">
-              Navigating <br /> New Systems<span className="text-slate-300">.</span>
+            <h2 className="mb-8 text-6xl font-black uppercase leading-[0.85] tracking-tighter text-slate-900 md:text-8xl">
+              {t('heading').split(' ')[0]} <br /> {t('heading').split(' ').slice(1).join(' ')}
+              <span className="text-slate-300">.</span>
             </h2>
-            <p className="text-2xl md:text-3xl font-bold text-slate-900 leading-tight tracking-tight max-w-2xl">
-              For Banyamulenge families, displacement results in fragmented academic journeys. Transitioning into Canada is a multi-generational hurdle.
+            <p className="max-w-2xl text-2xl font-bold leading-tight tracking-tight text-slate-900 md:text-3xl">
+              {t('subheading')}
             </p>
           </div>
-          
-          <div className="lg:col-span-5 flex flex-col justify-end lg:pl-12">
-             <div className="flex items-start gap-4 p-6 bg-white border border-slate-200 rounded-2xl shadow-sm">
-                <AlertCircle className="w-6 h-6 text-red-500 shrink-0 mt-1" />
-                <div>
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Critical Awareness</h4>
-                  <p className="text-sm font-medium text-slate-600 leading-relaxed">
-                    Financial pressures often push our youth toward short-term labor instead of long-term professional careers. MSNC exists to rewrite this trajectory.
-                  </p>
-                </div>
-             </div>
+
+          <div className="flex flex-col justify-end lg:col-span-5 lg:pl-12">
+            <div className="flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <AlertCircle className="mt-1 h-6 w-6 shrink-0 text-red-500" />
+              <div>
+                <h4 className="mb-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                  {t('criticalAwarenessLabel')}
+                </h4>
+                <p className="text-sm font-medium leading-relaxed text-slate-600">
+                  {t('criticalAwarenessBody')}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* BOTTOM ROW: Content & Solutions Grid */}
-        <div className="grid lg:grid-cols-12 gap-12 items-start">
-          
-          {/* Left Side: Tight List */}
-          <div className="lg:col-span-4 lg:sticky lg:top-24 space-y-8">
-            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Barrier Analysis</h4>
+        <div className="grid items-start gap-12 lg:grid-cols-12">
+          <div className="space-y-8 lg:col-span-4 lg:sticky lg:top-24">
+            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+              {t('barrierAnalysisLabel')}
+            </h4>
             <div className="grid gap-4">
-              {[
-                'Lack of guidance on academic pathways',
-                'Difficulty transitioning to post-secondary',
-                'Systemic unfamiliarity within families'
-              ].map((text, i) => (
-                <div key={i} className="flex items-center gap-4 p-4 bg-white border border-slate-200 rounded-xl">
-                  <span className="text-blue-600 font-black text-xs">0{i+1}</span>
-                  <span className="text-slate-800 font-bold text-sm tracking-tight">{text}</span>
+              {barriers.map((text, i) => (
+                <div key={text} className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4">
+                  <span className="text-xs font-black text-blue-600">0{i + 1}</span>
+                  <span className="text-sm font-bold tracking-tight text-slate-800">{text}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Right Side: Dense Solutions Grid */}
           <div className="lg:col-span-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-8">
-              {SOLUTIONS.map(item => <SolutionCard key={item.id} item={item} />)}
-              
-              {/* Call to Action Module */}
-              <div className="relative h-64 md:h-72 w-full overflow-hidden rounded-2xl bg-slate-900 p-8 flex flex-col justify-between">
-                <div className="absolute top-0 right-0 p-4 opacity-10">
-                  <ArrowRight className="w-32 h-32 rotate-[-45deg] text-white" />
+            <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {solutions.map((item) => (
+                <SolutionCard key={item.id} item={item} />
+              ))}
+
+              <div className="relative flex h-64 w-full flex-col justify-between overflow-hidden rounded-2xl bg-slate-900 p-8 md:h-72">
+                <div className="absolute right-0 top-0 p-4 opacity-10">
+                  <ArrowRight className="h-32 w-32 rotate-[-45deg] text-white" />
                 </div>
-                <h3 className="text-xl font-black text-white leading-tight uppercase relative z-10">
-                  Join the <br /> Scholars <br /> Network
+                <h3 className="relative z-10 text-xl font-black uppercase leading-tight text-white">
+                  {t('joinNetworkTitle')}
                 </h3>
                 <Link
                   href="/programs"
-                  className="flex items-center justify-between w-full h-12 px-5 bg-white text-slate-900 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-50 transition-colors relative z-10"
+                  className="relative z-10 flex h-12 w-full items-center justify-between rounded-xl bg-white px-5 text-[10px] font-black uppercase tracking-widest text-slate-900 transition-colors hover:bg-blue-50"
                 >
-                  View All Programs
-                  <ArrowRight className="w-4 h-4" />
+                  {t('viewAllPrograms')}
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </section>
-  );
+  )
 }

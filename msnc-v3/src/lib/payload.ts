@@ -2,6 +2,7 @@
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { fallbackScholarships, fallbackPartners } from '@/lib/fallbacks'
+import { normalizeSiteLocale } from '@/lib/site-copy'
 
 /**
  * HCI Principle #4: Error Prevention
@@ -96,7 +97,7 @@ export async function getPartners(limit = 20) {
 }
 
 // --- PROGRAMS ---
-export async function getPrograms() {
+export async function getPrograms(locale?: string) {
   const payload = await getCachedPayload()
   if (!payload) return []
 
@@ -104,6 +105,8 @@ export async function getPrograms() {
     const result = await payload.find({
       collection: 'programs',
       sort: 'order', // Ascending for pillar display order
+      locale: normalizeSiteLocale(locale),
+      fallbackLocale: 'en',
     })
     return result.docs || []
   } catch (error) {
@@ -113,7 +116,7 @@ export async function getPrograms() {
 }
 
 // --- BLOGS ---
-export async function getBlogs(limit = 6) {
+export async function getBlogs(limit = 6, locale?: string) {
   const payload = await getCachedPayload()
   if (!payload) return []
 
@@ -122,6 +125,8 @@ export async function getBlogs(limit = 6) {
       collection: 'blogs',
       limit,
       sort: '-publishedDate',
+      locale: normalizeSiteLocale(locale),
+      fallbackLocale: 'en',
     })
     return result.docs || []
   } catch (error) {
@@ -131,7 +136,7 @@ export async function getBlogs(limit = 6) {
 }
 
 // --- SINGLE BLOG ---
-export async function getBlogBySlug(slug: string) {
+export async function getBlogBySlug(slug: string, locale?: string) {
   const payload = await getCachedPayload()
   if (!payload) return null
 
@@ -145,6 +150,8 @@ export async function getBlogBySlug(slug: string) {
       },
       limit: 1,
       depth: 1, // To populate featuredImage
+      locale: normalizeSiteLocale(locale),
+      fallbackLocale: 'en',
     })
     return result.docs[0] || null
   } catch (error) {
@@ -154,7 +161,7 @@ export async function getBlogBySlug(slug: string) {
 }
 
 // --- EVENTS ---
-export async function getEvents({ upcoming = true, limit = 10 } = {}) {
+export async function getEvents({ upcoming = true, limit = 10, locale }: { upcoming?: boolean; limit?: number; locale?: string } = {}) {
   const payload = await getCachedPayload()
   if (!payload) return []
 
@@ -167,6 +174,8 @@ export async function getEvents({ upcoming = true, limit = 10 } = {}) {
       },
       limit,
       sort: upcoming ? 'eventDate' : '-eventDate',
+      locale: normalizeSiteLocale(locale),
+      fallbackLocale: 'en',
     })
     return result.docs || []
   } catch (error) {
@@ -175,7 +184,7 @@ export async function getEvents({ upcoming = true, limit = 10 } = {}) {
 }
 
 // --- TESTIMONIALS ---
-export async function getTestimonials(limit = 5) {
+export async function getTestimonials(limit = 5, locale?: string) {
   const payload = await getCachedPayload()
   if (!payload) return []
 
@@ -185,6 +194,8 @@ export async function getTestimonials(limit = 5) {
       limit,
       sort: '-createdAt',
       depth: 1,
+      locale: normalizeSiteLocale(locale),
+      fallbackLocale: 'en',
     })
     return result.docs || []
   } catch (error) {
@@ -194,7 +205,7 @@ export async function getTestimonials(limit = 5) {
 }
 
 // --- GLOBALS ---
-export async function getSiteSettings() {
+export async function getSiteSettings(locale?: string) {
   const payload = await getCachedPayload()
   if (!payload) return null
 
@@ -202,6 +213,8 @@ export async function getSiteSettings() {
     return await payload.findGlobal({
       slug: 'site-settings',
       draft: false,
+      locale: normalizeSiteLocale(locale),
+      fallbackLocale: 'en',
     })
   } catch (error) {
     return null

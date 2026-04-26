@@ -1,9 +1,17 @@
 'use client';
-
+import { NextIntlClientProvider } from 'next-intl';
 import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';
 import { Toaster } from 'sonner';
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+export default function Providers({
+  children,
+  messages,
+  locale,
+}: {
+  children: React.ReactNode;
+  messages: any;
+  locale: string;
+}) {
   return (
     <>
       <ProgressBar
@@ -12,8 +20,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         options={{ showSpinner: false }}
         shallowRouting
       />
-      {children}
-      <Toaster position="top-right" richColors theme="light" closeButton />
+      <NextIntlClientProvider locale={locale} messages={messages}>
+        {children}
+        <Toaster position="top-right" richColors theme="light" closeButton />
+      </NextIntlClientProvider>
     </>
   );
 }

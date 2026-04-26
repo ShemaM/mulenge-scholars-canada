@@ -15,8 +15,8 @@ const Leadership: CollectionConfig = {
     {
       type: 'row', // HCI: Groups name and role horizontally in the admin
       fields: [
-        { name: 'name', type: 'text', required: true, admin: { width: '50%' } },
-        { name: 'role', type: 'text', required: true, admin: { width: '50%' } },
+        { name: 'name', type: 'text', required: true, localized: true, admin: { width: '50%' } },
+        { name: 'role', type: 'text', required: true, localized: true, admin: { width: '50%' } },
       ],
     },
     {
@@ -43,6 +43,7 @@ const Leadership: CollectionConfig = {
       name: 'bio',
       type: 'richText', // UPGRADE: Allows for formatted storytelling (paragraphs, bold, etc.)
       required: true,
+      localized: true,
     },
     {
       type: 'row',
@@ -64,6 +65,7 @@ const Leadership: CollectionConfig = {
     {
       name: 'slug',
       type: 'text',
+      localized: true,
       unique: true, // Crucial for preventing 404s and duplicates
       admin: { 
         position: 'sidebar',

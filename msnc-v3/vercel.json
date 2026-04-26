@@ -1,6 +1,6 @@
 {
   "functions": {
-    "app/(frontend)/**/*.tsx": {
+    "app/[[]locale[]]/(frontend)/**/*.tsx": {
       "maxDuration": 30
     },
     "app/(payload)/**/*.tsx": {

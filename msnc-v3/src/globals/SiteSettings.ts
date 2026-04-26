@@ -7,7 +7,7 @@ export const SiteSettings: GlobalConfig = {
     description: 'Manage global impact data, branding, and homepage editorial content.',
   },
   access: {
-    read: () => true, // Anyone can see the stats on the frontend
+    read: () => true,
   },
   fields: [
     {
@@ -51,11 +51,13 @@ export const SiteSettings: GlobalConfig = {
               name: 'heroTitle',
               type: 'text',
               required: true,
+              localized: true,
               defaultValue: 'Empowering the Next Generation of Leaders',
             },
             {
               name: 'featuredQuote',
               type: 'textarea',
+              localized: true,
               defaultValue: 'Education is not just a tool; it is the architect of a new future.',
             },
             {
@@ -73,7 +75,7 @@ export const SiteSettings: GlobalConfig = {
             {
               name: 'email',
               type: 'text',
-              defaultValue: 'info@msnc.ca',
+              defaultValue: 'info@mulengescholars.org',
               admin: { description: 'Primary contact email' },
             },
             {
@@ -100,6 +102,7 @@ export const SiteSettings: GlobalConfig = {
             {
               name: 'address',
               type: 'textarea',
+              localized: true,
               defaultValue: 'Nairobi, Kenya • Winnipeg, MB, Canada',
               admin: { description: 'Office locations' },
             },
@@ -109,4 +112,3 @@ export const SiteSettings: GlobalConfig = {
     },
   ],
 }
-

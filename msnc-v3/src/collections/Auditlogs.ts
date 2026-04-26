@@ -2,8 +2,9 @@ import type { CollectionConfig, Access } from 'payload'
 
 // ─── Access ───────────────────────────────────────────────────────────────────
 
-const isAdminOrAbove: Access = ({ req: { user } }) =>
-  user?.role === 'super-admin' || user?.role === 'admin'
+const isAdminOrAbove: Access = ({ req: { user } }) => {
+  return !(user?.role !== 'super-admin' && user?.role !== 'admin')
+}
 
 const isSuperAdmin: Access = ({ req: { user } }) =>
   user?.role === 'super-admin'

@@ -1,0 +1,263 @@
+{
+  "HomePage": {
+    "title": "Bienvenue au Réseau des Boursiers Mulenge Canada",
+    "description": "Ceci est la page d'accueil. Accédez à la {privacyLink}."
+  },
+  "PrivacyPage": {
+    "metadata": {
+      "title": "Politique de confidentialité",
+      "description": "Notre politique de confidentialité."
+    },
+    "legal": "Légal",
+    "title": "Politique de confidentialité",
+    "description": "Votre vie privée est importante pour nous. Cette déclaration de confidentialité explique les données personnelles que nous traitons, comment nous les traitons et à quelles fins.",
+    "effectiveDate": "En vigueur le 21 avril 2026",
+    "contactLink": "Contactez-nous pour toute question",
+    "sections": {
+      "information": {
+        "title": "Informations que nous collectons",
+        "body": ["Nous collectons des informations afin de fournir de meilleurs services à tous nos utilisateurs."]
+      },
+      "howWeUse": {
+        "title": "Comment nous utilisons les informations",
+        "body": ["Nous utilisons les informations recueillies à travers nos services pour les fournir, les maintenir, les protéger et les améliorer."]
+      }
+    },
+    "contactSection": {
+      "title": "Avez-vous des questions ?",
+      "body": "Si vous avez des questions concernant cette politique de confidentialité, veuillez nous contacter à {emailLink}."
+    }
+  },
+  "StatsGrid": {
+    "stats": {
+      "youthEmpowered": {
+        "label": "Jeunes accompagnés",
+        "description": "Mentorat direct et formation académique."
+      },
+      "successRate": {
+        "label": "Taux de réussite",
+        "description": "Admission dans des établissements d'enseignement supérieur prestigieux."
+      },
+      "scholarships": {
+        "label": "Bourses",
+        "description": "Soutien financier pour des boursiers à fort potentiel."
+      },
+      "globalPartners": {
+        "label": "Partenaires mondiaux",
+        "description": "Collaborations institutionnelles stratégiques."
+      }
+    }
+  },
+  "StrategicPillars": {
+    "heading": "Nos programmes",
+    "subheading": "Piliers stratégiques",
+    "exploreLabel": "Explorer l'initiative",
+    "pillars": {
+      "01": {
+        "title": "Ateliers et engagement communautaire",
+        "intro": "Nous organisons des ateliers interactifs, en ligne et en présentiel, axés sur :",
+        "bullets": ["La réussite scolaire", "Le développement de carrière", "La vie étudiante"],
+        "footer": "Ces séances créent des espaces sûrs et engageants où les jeunes peuvent apprendre, créer des liens et grandir."
+      },
+      "02": {
+        "title": "Soutien au secondaire (11e et 12e année)",
+        "intro": "Nous offrons un accompagnement ciblé pour aider les élèves à réussir leur transition vers l'enseignement postsecondaire :",
+        "bullets": [
+          "Tutorat et mentorat",
+          "Orientation dans le choix des cours",
+          "Planification postsecondaire",
+          "Soutien aux candidatures collégiales et universitaires",
+          "Accès aux occasions de leadership et de bénévolat"
+        ]
+      },
+      "03": {
+        "title": "Formation des adultes et parcours professionnels",
+        "intro": "Nous accompagnons les apprenants adultes qui souhaitent améliorer leur formation ou explorer de nouvelles possibilités de carrière :",
+        "bullets": [
+          "Orientation sur les cours préalables",
+          "Soutien à l'inscription dans des programmes d'éducation pour adultes",
+          "Information sur les métiers spécialisés et les parcours alternatifs",
+          "Mentorat personnalisé et planification académique"
+        ]
+      },
+      "04": {
+        "title": "Initiative Reconstruire l'avenir",
+        "intro": "Nous nous engageons à élargir notre impact mondial en soutenant les jeunes banyamulenge vivant dans des camps de réfugiés, notamment au Kenya, en Ouganda et au Burundi. Cette initiative se concentre sur la formation professionnelle dans des domaines en forte demande tels que :",
+        "bullets": ["Construction", "Électricité", "Plomberie", "Mécanique", "Conduite d'engins lourds", "Technologies de l'information"],
+        "footer": "Notre objectif est de doter les jeunes de compétences pratiques et recherchées qui favorisent l'autonomie et la stabilité à long terme."
+      }
+    }
+  },
+  "TheChallenge": {
+    "sectionLabel": "Le défi",
+    "heading": "Naviguer dans de nouveaux systèmes",
+    "subheading": "Pour les familles banyamulenge, le déplacement fragmente les parcours scolaires. La transition vers le Canada représente un défi intergénérationnel.",
+    "criticalAwarenessLabel": "Constat essentiel",
+    "criticalAwarenessBody": "Les pressions financières poussent souvent nos jeunes vers un travail à court terme plutôt que vers des carrières professionnelles durables. Le MSNC existe pour changer cette trajectoire.",
+    "barrierAnalysisLabel": "Analyse des obstacles",
+    "barriers": [
+      "Manque d'orientation sur les parcours académiques",
+      "Difficulté à effectuer la transition vers le postsecondaire",
+      "Méconnaissance systémique au sein des familles"
+    ],
+    "joinNetworkTitle": "Rejoindre le réseau des boursiers",
+    "viewAllPrograms": "Voir tous les programmes",
+    "learnMore": "En savoir plus",
+    "solutions": {
+      "mentorship": {
+        "title": "Mentorat",
+        "tagline": "Guidé par l'expérience",
+        "detail": "Un mentorat direct offert par des étudiants et des professionnels expérimentés qui comprennent les défis particuliers liés à l'intégration dans le système canadien."
+      },
+      "academic": {
+        "title": "Orientation académique",
+        "tagline": "Des voies vers la réussite",
+        "detail": "Sélection de cours et tutorat pour les 11e et 12e années afin d'assurer une transition harmonieuse vers l'enseignement postsecondaire."
+      },
+      "postSec": {
+        "title": "Postsecondaire",
+        "tagline": "Soutien aux candidatures",
+        "detail": "Un accompagnement complet pour la planification collégiale et universitaire, les candidatures et l'accès à des occasions de leadership ou de bénévolat."
+      },
+      "career": {
+        "title": "Parcours professionnels",
+        "tagline": "Orientation d'avenir",
+        "detail": "Des conseils sur les métiers spécialisés, les programmes de formation pour adultes et la planification de carrière personnalisée."
+      },
+      "global": {
+        "title": "Impact mondial",
+        "tagline": "Volet professionnel",
+        "detail": "Un soutien aux jeunes dans les camps de réfugiés au Kenya, en Ouganda et au Burundi grâce à des formations en construction, TI et mécanique."
+      }
+    }
+  },
+  "GlobalImpact": {
+    "sectionLabel": "La vision",
+    "programAlignment": "Alignement des programmes",
+    "heading": "Notre impact",
+    "headingItalic": "Perspective.",
+    "visionStatement": "Nous imaginons un avenir où les jeunes banyamulenge s'épanouissent comme leaders communautaires autonomes.",
+    "verifiedObjective": "Objectif vérifié",
+    "footerLabel": "Registre_Impact_MSNC_2024",
+    "strategicInterconnect": "Interconnexion stratégique : des points de vision alignés sur les piliers fondamentaux",
+    "values": ["Résilience", "Excellence", "Transmission"],
+    "chapters": {
+      "01": {
+        "label": "Fondation",
+        "title": "Ancrés dans leur identité, épanouis au Canada",
+        "body": "Des jeunes qui naviguent entre deux mondes avec confiance, enracinés dans l'héritage banyamulenge tout en participant pleinement à la société canadienne.",
+        "cta": "Ateliers"
+      },
+      "02": {
+        "label": "Éducation",
+        "title": "De la 11e année à l'obtention d'un diplôme universitaire",
+        "body": "Chaque boursier est accompagné tout au long du parcours scolaire, des transitions au secondaire jusqu'à la réussite postsecondaire et au-delà.",
+        "cta": "Soutien au secondaire"
+      },
+      "03": {
+        "label": "Professionnalisation",
+        "title": "Établis dans des carrières utiles et durables",
+        "body": "Des diplômés qui construisent des carrières porteuses de sens dans les métiers spécialisés, les domaines professionnels et les rôles de leadership.",
+        "cta": "Parcours professionnels"
+      },
+      "04": {
+        "label": "Transmission",
+        "title": "Des leaders qui redonnent à leurs communautés",
+        "body": "Une génération de leaders banyamulenge qui élèvent les autres, accompagnent la cohorte suivante et élargissent les possibilités.",
+        "cta": "Initiative mondiale"
+      }
+    }
+  },
+  "Testimonials": {
+    "badgeLabel": "Voix du réseau",
+    "heading": "Parcours réels.",
+    "headingItalic": "Transformation réelle.",
+    "journeyLabel": "Parcours",
+    "impactSnapshot": "Aperçu de l'impact",
+    "impactVerified": "Données d'impact vérifiées",
+    "defaultQuote": "L'autonomisation par l'éducation est le pont vers notre avenir.",
+    "defaultName": "Boursier"
+  },
+  "EventPreview": {
+    "sectionLabel": "Prochains chapitres",
+    "heading": "Rejoignez notre prochaine",
+    "headingItalic": "rencontre",
+    "viewAllEvents": "Voir tous les événements",
+    "featuredLabel": "En vedette",
+    "secureSpot": "Réservez votre place",
+    "viewDetails": "Voir les détails",
+    "locationTBD": "Lieu à confirmer",
+    "dateTBD": "Date à confirmer",
+    "noEvents": {
+      "heading": "Aucun événement à venir",
+      "body": "Nous préparons notre prochain chapitre. Inscrivez-vous à notre infolettre pour rester informé."
+    },
+    "moreEventsLoading": "D'autres événements arrivent..."
+  },
+  "GetInvolved": {
+    "sectionLabel": "S'impliquer",
+    "heading": "Passer à l'action",
+    "actions": {
+      "donate": {
+        "label": "Soutien",
+        "title": "Financer un boursier",
+        "body": "Votre contribution finance directement des programmes de mentorat, des ressources éducatives et des bourses pour les jeunes banyamulenge.",
+        "cta": "Faire un don"
+      },
+      "volunteer": {
+        "label": "Bénévolat",
+        "title": "Partager vos compétences",
+        "body": "Mentorez un étudiant, animez un atelier ou offrez une orientation professionnelle. Votre expérience peut changer une trajectoire.",
+        "cta": "S'impliquer"
+      },
+      "partner": {
+        "label": "Partenariat",
+        "title": "Partenariat institutionnel",
+        "body": "Alignez votre organisation sur la mission du MSNC. Ensemble, nous construisons des parcours systémiques pour la prochaine génération.",
+        "cta": "Devenir partenaire"
+      },
+      "join": {
+        "label": "Réseau",
+        "title": "Rejoindre le réseau",
+        "body": "Êtes-vous un étudiant ou diplômé banyamulenge ? Rejoignez notre communauté grandissante de boursiers partout au Canada.",
+        "cta": "Présenter une demande"
+      }
+    }
+  },
+  "Contact": {
+    "inquiryRegistry": "Registre des demandes",
+    "contactModuleLabel": "Module de contact vol. 24",
+    "liveNetwork": "Réseau_actif",
+    "heading": "Connectez-vous avec",
+    "headingItalic": "le réseau.",
+    "subheading": "Des canaux de communication directs pour les boursiers, les partenaires et les parties prenantes institutionnelles.",
+    "globalChannels": "Canaux mondiaux",
+    "submitCorrespondence": "Soumettre une correspondance",
+    "transmitMessage": "Transmettre le message",
+    "givenName": "Prénom",
+    "familyName": "Nom de famille",
+    "digitalAddress": "Adresse numérique",
+    "contactLine": "Ligne de contact",
+    "subjectOfInquiry": "Objet de la demande",
+    "enterName": "Entrer le nom",
+    "inquiryPlaceholder": "Donnez le contexte détaillé de votre demande...",
+    "authProtocol": "Protocole_auth_actif",
+    "globalRepository": "Répertoire mondial de correspondance de la diaspora",
+    "securityVerified": "Sécurité_vérifiée",
+    "archive": "Archive_2024",
+    "contactInfo": {
+      "email": {
+        "title": "Correspondance principale",
+        "label": "Courriel"
+      },
+      "phone": {
+        "title": "Télécommunications",
+        "label": "Téléphone"
+      },
+      "location": {
+        "title": "Présence institutionnelle",
+        "label": "Lieu"
+      }
+    }
+  }
+}

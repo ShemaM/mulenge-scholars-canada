@@ -1,22 +1,19 @@
 import { withPayload } from '@payloadcms/next/withPayload'
+import createNextIntlPlugin from 'next-intl/plugin'
 import type { NextConfig } from 'next'
 
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
+
 const nextConfig: NextConfig = {
-  // 1. Dev stability + build bypass
   typescript: {
     ignoreBuildErrors: true,
   },
   eslint: {
     ignoreDuringBuilds: true,
   },
-
-  // Fix source map issues in dev
   productionBrowserSourceMaps: false,
-
-  // 2. Image Optimization for Vercel Blob & Supabase
   images: {
     remotePatterns: [
-      // Vercel Blob (wildcard for dynamic store ID)
       {
         protocol: 'https',
         hostname: '*.public.blob.vercel-storage.com',
@@ -27,13 +24,11 @@ const nextConfig: NextConfig = {
         hostname: 'onwq4czaexzxtq41.public.blob.vercel-storage.com',
         pathname: '/**',
       },
-      // Supabase
       {
         protocol: 'https',
         hostname: 'fdchvoehlteusfsrrkmi.supabase.co',
         pathname: '/storage/v1/object/public/**',
       },
-      // Local/public media
       {
         protocol: 'http',
         hostname: 'localhost',
@@ -44,8 +39,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-
-  // 3. Payload 3.0 Specific Tuning
   experimental: {
     serverActions: {
       bodySizeLimit: '10mb',
@@ -53,4 +46,4 @@ const nextConfig: NextConfig = {
   },
 }
 
-export default withPayload(nextConfig)
+export default withPayload(withNextIntl(nextConfig))

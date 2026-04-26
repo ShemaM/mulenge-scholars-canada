@@ -12,8 +12,8 @@ export const Programs: CollectionConfig = {
       name: 'index',
       type: 'text',
       required: true,
-      admin: { placeholder: '01' },
       unique: true,
+      admin: { placeholder: '01' },
     },
     {
       name: 'pillar',
@@ -25,27 +25,30 @@ export const Programs: CollectionConfig = {
         { label: 'Adult Learning & Career Pathways', value: 'adult-learning' },
         { label: 'Rebuilding Futures Initiative', value: 'rebuilding-futures' },
       ],
-      admin: { description: 'Main pillar category' },
     },
     {
       name: 'title',
       type: 'text',
       required: true,
+      localized: true,
     },
     {
       name: 'slug',
       type: 'text',
       required: true,
       unique: true,
+      localized: true,
     },
     {
       name: 'description',
       type: 'textarea',
       required: true,
+      localized: true,
     },
     {
       name: 'tagline',
       type: 'text',
+      localized: true,
       admin: { placeholder: 'Community & Growth' },
     },
     {
@@ -90,14 +93,16 @@ export const Programs: CollectionConfig = {
           name: 'label',
           type: 'text',
           required: true,
+          localized: true,
         },
         {
           name: 'desc',
           type: 'textarea',
+          localized: true,
         },
         {
           name: 'icon',
-          type: 'text', // e.g. 'Users'
+          type: 'text',
           admin: { description: 'Lucide icon name' },
         },
       ],
@@ -105,11 +110,13 @@ export const Programs: CollectionConfig = {
     {
       name: 'statValue',
       type: 'text',
+      localized: true,
       admin: { placeholder: '300+' },
     },
     {
       name: 'statLabel',
       type: 'text',
+      localized: true,
     },
   ],
 }

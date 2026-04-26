@@ -34,6 +34,7 @@ export const Blogs: CollectionConfig = {
     {
       name: 'title',
       type: 'text',
+      localized: true,
       required: true,
       admin: { description: 'The headline of the article.' },
     },
@@ -47,6 +48,7 @@ export const Blogs: CollectionConfig = {
             {
               name: 'excerpt',
               type: 'textarea',
+              localized: true,
               required: true,
               admin: {
                 description: 'A 1-2 sentence hook for the blog preview card on the homepage.',
@@ -55,6 +57,7 @@ export const Blogs: CollectionConfig = {
             {
               name: 'content',
               type: 'richText',
+              localized: true,
               required: true,
               admin: {
                 description:
@@ -91,6 +94,7 @@ export const Blogs: CollectionConfig = {
                 {
                   name: 'caption',
                   type: 'text',
+                  localized: true,
                   admin: { description: 'A short description of what is happening in this photo.' },
                 },
               ],
@@ -146,6 +150,7 @@ export const Blogs: CollectionConfig = {
             {
               name: 'slug',
               type: 'text',
+              localized: true,
               unique: true,
               admin: {
                 description: 'Auto-generates from the title. Only edit if you need a specific URL.',

@@ -1,0 +1,263 @@
+{
+  "HomePage": {
+    "title": "Welcome to Mulenge Scholars Network Canada",
+    "description": "This is the home page. Navigate to the {privacyLink}."
+  },
+  "PrivacyPage": {
+    "metadata": {
+      "title": "Privacy Policy",
+      "description": "Our privacy policy."
+    },
+    "legal": "Legal",
+    "title": "Privacy Policy",
+    "description": "Your privacy is important to us. This privacy statement explains the personal data we process, how we process it, and for what purposes.",
+    "effectiveDate": "Effective as of April 21, 2026",
+    "contactLink": "Contact us for questions",
+    "sections": {
+      "information": {
+        "title": "Information We Collect",
+        "body": ["We collect information to provide better services to all our users."]
+      },
+      "howWeUse": {
+        "title": "How We Use Information",
+        "body": ["We use the information we collect from all of our services to provide, maintain, protect and improve them."]
+      }
+    },
+    "contactSection": {
+      "title": "Have questions?",
+      "body": "If you have any questions about this Privacy Policy, please contact us at {emailLink}."
+    }
+  },
+  "StatsGrid": {
+    "stats": {
+      "youthEmpowered": {
+        "label": "Youth Empowered",
+        "description": "Direct mentorship and academic training."
+      },
+      "successRate": {
+        "label": "Success Rate",
+        "description": "Enrollment in prestigious higher education."
+      },
+      "scholarships": {
+        "label": "Scholarships",
+        "description": "Financial capital for high-potential scholars."
+      },
+      "globalPartners": {
+        "label": "Global Partners",
+        "description": "Strategic institutional collaborations."
+      }
+    }
+  },
+  "StrategicPillars": {
+    "heading": "Our Programs",
+    "subheading": "Strategic Pillars",
+    "exploreLabel": "Explore Initiative",
+    "pillars": {
+      "01": {
+        "title": "Workshops & Community Engagement",
+        "intro": "We organize interactive workshops both virtual and in-person focused on:",
+        "bullets": ["Academic success", "Career development", "Student life"],
+        "footer": "These sessions create safe and engaging spaces where youth can learn, connect, and grow."
+      },
+      "02": {
+        "title": "High School Support (Grades 11-12)",
+        "intro": "We provide targeted support to help students transition successfully into post-secondary education:",
+        "bullets": [
+          "Tutoring and mentorship",
+          "Course selection guidance",
+          "Post-secondary planning",
+          "College and university application support",
+          "Access to leadership and volunteer opportunities"
+        ]
+      },
+      "03": {
+        "title": "Adult Learning & Career Pathways",
+        "intro": "We support adult learners who want to upgrade their education or explore new career opportunities:",
+        "bullets": [
+          "Guidance on prerequisite courses",
+          "Support with enrolling in adult education programs",
+          "Information on skilled trades and alternative career paths",
+          "Personalized mentorship and academic planning"
+        ]
+      },
+      "04": {
+        "title": "Rebuilding Futures Initiative",
+        "intro": "We are committed to expanding our impact globally by supporting Banyamulenge youth living in refugee camps, particularly in Kenya, Uganda, and Burundi. This initiative focuses on vocational training in high demand fields such as:",
+        "bullets": ["Construction", "Electrical work", "Plumbing", "Mechanics", "Heavy equipment operation", "Information technology"],
+        "footer": "Our goal is to equip youth with practical, employable skills that promote self-reliance and long-term stability."
+      }
+    }
+  },
+  "TheChallenge": {
+    "sectionLabel": "The Challenge",
+    "heading": "Navigating New Systems",
+    "subheading": "For Banyamulenge families, displacement results in fragmented academic journeys. Transitioning into Canada is a multi-generational hurdle.",
+    "criticalAwarenessLabel": "Critical Awareness",
+    "criticalAwarenessBody": "Financial pressures often push our youth toward short-term labor instead of long-term professional careers. MSNC exists to rewrite this trajectory.",
+    "barrierAnalysisLabel": "Barrier Analysis",
+    "barriers": [
+      "Lack of guidance on academic pathways",
+      "Difficulty transitioning to post-secondary",
+      "Systemic unfamiliarity within families"
+    ],
+    "joinNetworkTitle": "Join the Scholars Network",
+    "viewAllPrograms": "View All Programs",
+    "learnMore": "Learn More",
+    "solutions": {
+      "mentorship": {
+        "title": "Mentorship",
+        "tagline": "Guided by Experience",
+        "detail": "Direct mentorship from experienced students and professionals who understand the unique challenges of navigating the Canadian system."
+      },
+      "academic": {
+        "title": "Academic Guidance",
+        "tagline": "Pathways to Success",
+        "detail": "Course selection and tutoring for Grades 11–12, ensuring a smooth transition into high-level post-secondary education."
+      },
+      "postSec": {
+        "title": "Post-Secondary",
+        "tagline": "Application Support",
+        "detail": "Full support for college and university planning, applications, and accessing leadership or volunteer opportunities."
+      },
+      "career": {
+        "title": "Career Pathways",
+        "tagline": "Future Direction",
+        "detail": "Guidance on skilled trades, adult education programs, and personalized career planning for adult learners."
+      },
+      "global": {
+        "title": "Global Impact",
+        "tagline": "Vocational Focus",
+        "detail": "Supporting youth in refugee camps across Kenya, Uganda, and Burundi with training in Construction, IT, and Mechanics."
+      }
+    }
+  },
+  "GlobalImpact": {
+    "sectionLabel": "The Vision",
+    "programAlignment": "Program Alignment",
+    "heading": "Our Impact",
+    "headingItalic": "Perspective.",
+    "visionStatement": "We envision a future where Banyamulenge youth flourish as self-reliant community leaders.",
+    "verifiedObjective": "Verified_Objective",
+    "footerLabel": "MSNC_Impact_Ledger_2024",
+    "strategicInterconnect": "Strategic Interconnect: Vision points aligned to Core Pillars",
+    "values": ["Resilience", "Scholarship", "Stewardship"],
+    "chapters": {
+      "01": {
+        "label": "Foundation",
+        "title": "Rooted in identity, thriving in Canada",
+        "body": "Youth who navigate two worlds with confidence, grounded in Banyamulenge heritage while fully engaged in Canadian society.",
+        "cta": "Workshops"
+      },
+      "02": {
+        "label": "Education",
+        "title": "From Grade 11 to university graduation",
+        "body": "Every scholar supported through the academic pipeline, from high school transitions to post-secondary completion and beyond.",
+        "cta": "High School Support"
+      },
+      "03": {
+        "label": "Professionalism",
+        "title": "Established in meaningful and sustainable careers",
+        "body": "Graduates building purposeful careers in skilled trades, professional fields, and leadership roles.",
+        "cta": "Career Pathways"
+      },
+      "04": {
+        "label": "Stewardship",
+        "title": "Leaders who give back to their communities",
+        "body": "A generation of Banyamulenge leaders who uplift others, mentoring the next cohort and expanding opportunity.",
+        "cta": "Global Initiative"
+      }
+    }
+  },
+  "Testimonials": {
+    "badgeLabel": "Voices from the Network",
+    "heading": "Real journeys.",
+    "headingItalic": "Real transformation.",
+    "journeyLabel": "Journey",
+    "impactSnapshot": "Impact Snapshot",
+    "impactVerified": "Impact data verified",
+    "defaultQuote": "Empowerment through education is the bridge to our future.",
+    "defaultName": "Scholar"
+  },
+  "EventPreview": {
+    "sectionLabel": "Upcoming Chapters",
+    "heading": "Join Our Next",
+    "headingItalic": "Gathering",
+    "viewAllEvents": "View All Events",
+    "featuredLabel": "Featured",
+    "secureSpot": "Secure Your Spot",
+    "viewDetails": "View Details",
+    "locationTBD": "Location TBD",
+    "dateTBD": "Date TBD",
+    "noEvents": {
+      "heading": "No Upcoming Events",
+      "body": "We're planning our next chapter. Join our newsletter to stay updated."
+    },
+    "moreEventsLoading": "More events loading..."
+  },
+  "GetInvolved": {
+    "sectionLabel": "Get Involved",
+    "heading": "Take Action",
+    "actions": {
+      "donate": {
+        "label": "Support",
+        "title": "Fund a Scholar",
+        "body": "Your contribution directly funds mentorship programs, educational resources, and scholarships for Banyamulenge youth.",
+        "cta": "Donate Now"
+      },
+      "volunteer": {
+        "label": "Volunteer",
+        "title": "Share Your Skills",
+        "body": "Mentor a student, lead a workshop, or offer career guidance. Your experience can change a trajectory.",
+        "cta": "Get Involved"
+      },
+      "partner": {
+        "label": "Partner",
+        "title": "Institutional Partnership",
+        "body": "Align your organization with MSNC's mission. Together we build systemic pathways for the next generation.",
+        "cta": "Partner With Us"
+      },
+      "join": {
+        "label": "Network",
+        "title": "Join the Network",
+        "body": "Are you a Banyamulenge student or graduate? Join our growing community of scholars across Canada.",
+        "cta": "Apply to Join"
+      }
+    }
+  },
+  "Contact": {
+    "inquiryRegistry": "Inquiry Registry",
+    "contactModuleLabel": "Contact Module Vol. 24",
+    "liveNetwork": "Live_Network",
+    "heading": "Connect with",
+    "headingItalic": "the network.",
+    "subheading": "Direct communication channels for scholars, partners, and institutional stakeholders.",
+    "globalChannels": "Global Channels",
+    "submitCorrespondence": "Submit Correspondence",
+    "transmitMessage": "Transmit Message",
+    "givenName": "Given Name",
+    "familyName": "Family Name",
+    "digitalAddress": "Digital Address",
+    "contactLine": "Contact Line",
+    "subjectOfInquiry": "Subject of Inquiry",
+    "enterName": "Enter name",
+    "inquiryPlaceholder": "Provide detailed inquiry context...",
+    "authProtocol": "Auth_Protocol_Active",
+    "globalRepository": "Global Diaspora Correspondence Repository",
+    "securityVerified": "Security_Verified",
+    "archive": "Archive_2024",
+    "contactInfo": {
+      "email": {
+        "title": "Primary Correspondence",
+        "label": "Email"
+      },
+      "phone": {
+        "title": "Telecommunications",
+        "label": "Phone"
+      },
+      "location": {
+        "title": "Institutional Presence",
+        "label": "Location"
+      }
+    }
+  }
+}

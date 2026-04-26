@@ -1,43 +1,16 @@
 'use client'
 
-import Link from 'next/link'
 import { useActionState } from 'react'
-import { Mail, MapPin, Phone, ArrowRight } from 'lucide-react'
+import { Mail, MapPin, ArrowRight } from 'lucide-react'
+import { useLocale } from 'next-intl'
+import Script from 'next/script'
+import { Link } from '@/navigation'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import Container from '@/components/ui/Container'
 import { LinkedInIcon, XIcon, InstagramIcon } from '@/components/ui/SocialIcons'
 import { submitContactForm } from '@/actions/contact'
-import Script from 'next/script'
-
-const navLinks = [
-  { name: 'About', href: '/about' },
-  { name: 'Programs', href: '/programs' },
-  { name: 'Events', href: '/events' },
-  { name: 'Leadership', href: '/leadership' },
-]
-
-const actionLinks = [
-  { name: 'Join', href: '/join' },
-  { name: 'Donate', href: '/donate' },
-  { name: 'Blog', href: '/blog' },
-  { name: 'Contact', href: '/contact' },
-]
-
-const contactInfo = [
-  {
-    icon: Mail,
-    label: 'Email',
-    value: 'info@mulengescholars.org',
-    href: 'mailto:info@mulengescholars.org',
-  },
-  {
-    icon: MapPin,
-    label: 'Locations',
-    value: 'Canada',
-  },
-  
-]
+import { getUiCopy, normalizeSiteLocale } from '@/lib/site-copy'
 
 const socialLinks = [
   {
@@ -58,34 +31,48 @@ const socialLinks = [
 ]
 
 export default function Footer() {
+  const locale = normalizeSiteLocale(useLocale())
+  const copy = getUiCopy(locale)
   const currentYear = new Date().getFullYear()
   const [state, formAction] = useActionState(submitContactForm, null)
+  const contactInfo = [
+    {
+      icon: Mail,
+      label: copy.footer.contactInfo.email.label,
+      value: copy.footer.contactInfo.email.value,
+      href: 'mailto:info@mulengescholars.org',
+    },
+    {
+      icon: MapPin,
+      label: copy.footer.contactInfo.location.label,
+      value: copy.footer.contactInfo.location.value,
+    },
+  ]
 
   return (
     <>
-      <footer role="contentinfo" className="bg-slate-50/50 backdrop-blur-sm text-slate-700 pt-24 pb-12 border-t border-slate-200/50 relative overflow-hidden">
-        {/* Subtle watermark */}
-        <div className="absolute -bottom-12 -right-12 text-[18vw] font-black text-slate-200/30 select-none pointer-events-none leading-none rotate-12">
+      <footer
+        role="contentinfo"
+        className="relative overflow-hidden border-t border-slate-200/50 bg-slate-50/50 pb-12 pt-24 text-slate-700 backdrop-blur-sm"
+      >
+        <div className="pointer-events-none absolute -bottom-12 -right-12 rotate-12 select-none text-[18vw] font-black leading-none text-slate-200/30">
           MSNC
         </div>
 
         <Container>
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-16 mb-16">
-            {/* Brand */}
+          <div className="mb-16 grid grid-cols-1 gap-12 lg:grid-cols-4 lg:gap-16">
             <div className="space-y-6 lg:col-span-1">
-              <Link href="/" className="flex items-center gap-3 group">
+              <Link href="/" className="group flex items-center gap-3">
                 <img
                   src="/media/logo-original.png"
                   alt="Mulenge Scholars Network Canada Logo"
-                  className="w-14 h-14 object-contain rounded-xl border-2 border-slate-200 p-1.5 bg-white shadow-md group-hover:shadow-lg transition-shadow"
+                  className="h-14 w-14 rounded-xl border-2 border-slate-200 bg-white p-1.5 object-contain shadow-md transition-shadow group-hover:shadow-lg"
                   width={56}
                   height={56}
                   loading="lazy"
                 />
               </Link>
-              <p className="text-sm leading-relaxed max-w-xs">
-                Empowering Mulenge diaspora youth through education, mentorship, and leadership for sustainable futures.
-              </p>
+              <p className="max-w-xs text-sm leading-relaxed">{copy.footer.brand}</p>
               <div className="flex gap-2" role="list">
                 {socialLinks.map(({ icon: Icon, href, aria }, i) => (
                   <a
@@ -93,7 +80,7 @@ export default function Footer() {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2.5 border border-slate-200 rounded-2xl bg-white hover:bg-slate-50 hover:border-slate-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                    className="rounded-2xl border border-slate-200 bg-white p-2.5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:bg-slate-50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                     aria-label={aria}
                   >
                     <Icon />
@@ -102,17 +89,16 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Navigation */}
             <div className="space-y-6 lg:col-span-1">
               <h4 className="text-xs font-black uppercase tracking-[0.3em] text-slate-900">
-                MSNC
+                {copy.footer.primaryHeading}
               </h4>
               <nav className="space-y-3" role="list">
-                {navLinks.map((link) => (
+                {copy.footer.navLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="block text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors group"
+                    className="group block text-sm font-medium text-slate-600 transition-colors hover:text-slate-900"
                   >
                     {link.name}
                   </Link>
@@ -122,14 +108,14 @@ export default function Footer() {
 
             <div className="space-y-6 lg:col-span-1">
               <h4 className="text-xs font-black uppercase tracking-[0.3em] text-slate-900">
-                Actions
+                {copy.footer.actionsHeading}
               </h4>
               <nav className="space-y-3" role="list">
-                {actionLinks.map((link) => (
+                {copy.footer.actionLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="block text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors group"
+                    className="group block text-sm font-medium text-slate-600 transition-colors hover:text-slate-900"
                   >
                     {link.name}
                   </Link>
@@ -137,20 +123,24 @@ export default function Footer() {
               </nav>
             </div>
 
-            {/* Contact & Newsletter */}
-            <div className="lg:col-span-1 space-y-8">
+            <div className="space-y-8 lg:col-span-1">
               <div>
-                <h4 className="text-xs font-black uppercase tracking-[0.3em] text-slate-900 mb-6">
-                  Get in touch
+                <h4 className="mb-6 text-xs font-black uppercase tracking-[0.3em] text-slate-900">
+                  {copy.footer.contactHeading}
                 </h4>
                 <div className="space-y-4">
                   {contactInfo.map(({ icon: Icon, label, value, href }, i) => (
-                    <div key={i} className="flex items-start gap-3 group">
-                      <Icon className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0 opacity-75 group-hover:opacity-100 transition-opacity" />
+                    <div key={i} className="group flex items-start gap-3">
+                      <Icon className="mt-0.5 h-5 w-5 shrink-0 text-blue-600 opacity-75 transition-opacity group-hover:opacity-100" />
                       <div>
-                        <div className="text-xs uppercase tracking-wide text-slate-500 font-bold mb-1">{label}</div>
+                        <div className="mb-1 text-xs font-bold uppercase tracking-wide text-slate-500">
+                          {label}
+                        </div>
                         {href ? (
-                          <a href={href} className="text-sm font-medium text-slate-900 hover:text-blue-600 transition-colors block">
+                          <a
+                            href={href}
+                            className="block text-sm font-medium text-slate-900 transition-colors hover:text-blue-600"
+                          >
                             {value}
                           </a>
                         ) : (
@@ -162,33 +152,38 @@ export default function Footer() {
                 </div>
               </div>
 
-              {/* Newsletter */}
               <div>
-                <h4 className="text-xs font-black uppercase tracking-[0.3em] text-slate-900 mb-4">
-                  Newsletter
+                <h4 className="mb-4 text-xs font-black uppercase tracking-[0.3em] text-slate-900">
+                  {copy.footer.newsletterHeading}
                 </h4>
-                <p className="text-sm text-slate-600 mb-4 leading-relaxed">
-                  Stay updated with program launches and impact stories.
+                <p className="mb-4 text-sm leading-relaxed text-slate-600">
+                  {copy.footer.newsletterBody}
                 </p>
                 <form action={formAction} className="space-y-3">
-                  <input type="hidden" name="subject" value="Newsletter Signup" />
+                  <input type="hidden" name="subject" value={copy.footer.newsletterSubject} />
                   <Input
                     type="email"
                     name="email"
-                    placeholder="your@email.com"
+                    placeholder={copy.footer.newsletterPlaceholder}
                     required
-                    className="h-12 bg-white border-slate-200 rounded-xl px-4 placeholder:text-slate-400 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
-                    aria-label="Email for newsletter"
+                    className="h-12 rounded-xl border-slate-200 bg-white px-4 shadow-sm placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
+                    aria-label={copy.footer.newsletterAria}
                   />
-                  <Button type="submit" className="w-full bg-slate-900 hover:bg-black text-white h-12 rounded-xl font-semibold transition-colors">
-                    Subscribe <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <Button
+                    type="submit"
+                    className="h-12 w-full rounded-xl bg-slate-900 font-semibold text-white transition-colors hover:bg-black"
+                  >
+                    {copy.footer.newsletterCta}
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Button>
                   {state?.message && (
-                    <p className={`text-xs p-2 rounded-lg font-medium text-center ${
-                      state.success 
-                        ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' 
-                        : 'bg-red-50 text-red-800 border border-red-200'
-                    }`}>
+                    <p
+                      className={`rounded-lg border p-2 text-center text-xs font-medium ${
+                        state.success
+                          ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+                          : 'border-red-200 bg-red-50 text-red-800'
+                      }`}
+                    >
                       {state.message}
                     </p>
                   )}
@@ -197,52 +192,52 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Bottom bar */}
-          <div className="border-t border-slate-200 pt-8 flex flex-col lg:flex-row justify-between items-center gap-4 text-xs">
-            <p className="font-bold text-slate-500 uppercase tracking-wide">
-              © {currentYear} Mulenge Scholars&apos; Network Canada. All rights reserved.
+          <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-200 pt-8 text-xs lg:flex-row">
+            <p className="font-bold uppercase tracking-wide text-slate-500">
+              {copy.footer.rights.replace('{year}', String(currentYear))}
             </p>
             <nav className="flex gap-6" role="list">
-              <Link href="/privacy" className="font-black text-slate-500 hover:text-slate-900 transition-colors">
-                Privacy
+              <Link href="/privacy" className="font-black text-slate-500 transition-colors hover:text-slate-900">
+                {copy.footer.legal.privacy}
               </Link>
-              <Link href="/terms" className="font-black text-slate-500 hover:text-slate-900 transition-colors">
-                Terms
+              <Link href="/terms" className="font-black text-slate-500 transition-colors hover:text-slate-900">
+                {copy.footer.legal.terms}
               </Link>
-              <Link href="/sitemap.xml" className="font-black text-slate-500 hover:text-slate-900 transition-colors">
-                Sitemap
+              <Link href="/sitemap.xml" className="font-black text-slate-500 transition-colors hover:text-slate-900">
+                {copy.footer.legal.sitemap}
               </Link>
             </nav>
           </div>
         </Container>
       </footer>
 
-      {/* Schema.org */}
       <Script id="msnc-schema" type="application/ld+json">
         {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "NGO",
-          "name": "Mulenge Scholars' Network Canada",
-          "url": "https://mulengescholars.org",
-          "logo": "https://mulengescholars.org/media/logo-original.png",
-          "contactPoint": [{
-            "@type": "ContactPoint",
-            "email": "info@mulengescholars.org",
-            "contactType": "general"
-          }],
-          "sameAs": [
-            "https://twitter.com/msnccanada",
-            "https://linkedin.com/company/msnc",
-            "https://instagram.com/msnccanada"
+          '@context': 'https://schema.org',
+          '@type': 'NGO',
+          name: "Mulenge Scholars' Network Canada",
+          url: 'https://mulengescholars.org',
+          logo: 'https://mulengescholars.org/media/logo-original.png',
+          contactPoint: [
+            {
+              '@type': 'ContactPoint',
+              email: 'info@mulengescholars.org',
+              contactType: 'general',
+            },
           ],
-          "address": {
-            "@type": "PostalAddress",
-            "addressCountry": "CA"
+          sameAs: [
+            'https://twitter.com/msnccanada',
+            'https://linkedin.com/company/msnc',
+            'https://instagram.com/msnccanada',
+          ],
+          address: {
+            '@type': 'PostalAddress',
+            addressCountry: 'CA',
           },
-          "founder": {
-            "@type": "Organization",
-            "name": "Mulenge Scholars Network Canada"
-          }
+          founder: {
+            '@type': 'Organization',
+            name: 'Mulenge Scholars Network Canada',
+          },
         })}
       </Script>
     </>
