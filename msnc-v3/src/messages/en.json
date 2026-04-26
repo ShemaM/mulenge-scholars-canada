@@ -259,5 +259,49 @@
         "label": "Location"
       }
     }
+  },
+  "DonatePage": {
+    "hero": {
+      "badge": "The Case for Support",
+      "titleMain": "Equip",
+      "titleItalic": "Resilience.",
+      "description": "MSNC bridges the gaps in academic guidance and professional resources for Banyamulenge youth across Canada and beyond.",
+      "quote": "\"We provide youth with the knowledge, confidence, and resources they need to succeed academically and professionally.\""
+    },
+    "stats": {
+      "badge": "Impact Vision",
+      "title": "Our Foundation.",
+      "subtitle": "We envision a future where our youth are successful in their academic journeys and established in sustainable careers.",
+      "integrity": {
+        "label": "Youth-Led Integrity",
+        "description": "Founded by students who understand the challenges of navigating education after displacement."
+      },
+      "relocation": {
+        "label": "Relocation Support",
+        "description": "Bridges the gap for families moving between international education systems into Canada."
+      },
+      "value": {
+        "label": "Value Alignment",
+        "description": "Your investment fosters community and belonging while promoting academic excellence."
+      }
+    },
+    "roadmap": {
+      "badge": "Active Programming",
+      "titleMain": "Strategic",
+      "titleItalic": "Expansion.",
+      "description": "Expanding our workshops and high school support systems to foster community and belonging.",
+      "highSchool": {
+        "title": "High School Support",
+        "body": "Targeted tutoring, course selection guidance, and university application support for Grades 11-12."
+      },
+      "adultLearning": {
+        "title": "Adult Learning Pathways",
+        "body": "Supporting adult learners to upgrade education, explore skilled trades, and transition into careers."
+      },
+      "rebuilding": {
+        "title": "Rebuilding Futures",
+        "body": "Equipping youth in refugee camps with IT, Mechanics, and Construction skills for self-reliance."
+      }
+    }
   }
 }

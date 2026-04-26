@@ -1,25 +1,32 @@
 "use server";
 
 import { getCachedPayload } from "@/lib/payload";
+import { checkRateLimit } from "@/lib/rate-limit";
 import { z } from "zod";
 
 const JoinSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters."),
-  lastName: z.string().min(2, "Last name must be at least 2 characters."),
-  email: z.string().email("Please enter a valid email address."),
-  phone: z.string().optional(),
-  interest: z.enum(["volunteer", "scholar", "partner"]),
-  message: z.string().min(10, "Please add at least 10 characters about your goals."),
+  lastName:  z.string().min(2, "Last name must be at least 2 characters."),
+  email:     z.string().email("Please enter a valid email address."),
+  phone:     z.string().optional(),
+  interest:  z.enum(["volunteer", "scholar", "partner"]),
+  message:   z.string().min(10, "Please add at least 10 characters about your goals."),
 });
 
 export async function submitJoinApplication(prevState: any, formData: FormData) {
+  try {
+    await checkRateLimit();
+  } catch {
+    return { success: false, message: "Too many requests. Please wait a moment before trying again." };
+  }
+
   const rawData = {
     firstName: formData.get("firstName"),
-    lastName: formData.get("lastName"),
-    email: formData.get("email"),
-    phone: formData.get("phone"),
-    interest: formData.get("interest"),
-    message: formData.get("message"),
+    lastName:  formData.get("lastName"),
+    email:     formData.get("email"),
+    phone:     formData.get("phone"),
+    interest:  formData.get("interest"),
+    message:   formData.get("message"),
   };
 
   const validatedFields = JoinSchema.safeParse(rawData);
@@ -56,10 +63,7 @@ export async function submitJoinApplication(prevState: any, formData: FormData) 
       message: "Application received. Our leadership team will reach out within 2-3 business days.",
     };
   } catch (error) {
-    console.error("Join Submission Error:", error);
-    return {
-      success: false,
-      message: "We could not submit right now. Please try again in a few minutes.",
-    };
+    console.error("Join submission error");
+    return { success: false, message: "We could not submit right now. Please try again in a few minutes." };
   }
 }

@@ -110,20 +110,10 @@ export default function Navbar() {
           </div>
 
           <div className="relative z-[160] flex items-center gap-3">
-            <Button
-              asChild
-              className="hidden rounded-full bg-[#002147] px-6 py-5 font-bold text-white shadow-sm transition-all hover:bg-slate-800 md:flex"
-            >
-              <Link href="/donate">
-                <span>{copy.navbar.donate}</span>
-                <Heart className="ml-2 h-4 w-4 fill-white" />
-              </Link>
-            </Button>
-
             <button
               type="button"
               onClick={handleLocaleChange}
-              className="hidden rounded-full border border-slate-200 bg-white px-4 py-3 text-xs font-black uppercase tracking-[0.2em] text-[#002147] transition-all hover:border-blue-600 hover:text-blue-600 md:inline-flex"
+              className="inline-flex rounded-full border border-slate-200 bg-white px-4 py-3 text-xs font-black uppercase tracking-[0.2em] text-[#002147] transition-all hover:border-blue-600 hover:text-blue-600"
               aria-label={`Switch language to ${switchLocale}`}
             >
               {switchLabel}
@@ -234,18 +224,6 @@ export default function Navbar() {
                 transition={{ delay: 0.5 }}
                 className="mt-auto space-y-8"
               >
-                <button
-                  type="button"
-                  onClick={handleLocaleChange}
-                  className="w-full rounded-full border border-slate-200 py-4 text-center text-sm font-black uppercase tracking-[0.25em] text-[#002147]"
-                >
-                  {switchLabel}
-                </button>
-
-                <Button asChild className="h-14 w-full rounded-full bg-[#002147] text-lg font-bold text-white hover:bg-slate-800">
-                  <Link href="/donate">{copy.navbar.mobileDonate}</Link>
-                </Button>
-
                 <div className="flex items-center justify-between pt-6">
                   <div className="flex gap-5 text-slate-400">
                     <Instagram className="h-5 w-5" />

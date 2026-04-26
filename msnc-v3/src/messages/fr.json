@@ -259,5 +259,81 @@
         "label": "Lieu"
       }
     }
+  },
+  "DonatePage": {
+    "metadata": {
+      "title": "Faire un don | MSNC",
+      "description": "Investissez dans la réussite académique et professionnelle des jeunes Banyamulenge au Canada et dans le monde. [cite: 9]"
+    },
+    "hero": {
+      "badge": "Le plaidoyer pour le soutien",
+      "titleMain": "Équipez",
+      "titleItalic": "la Résilience.",
+      "description": "Le MSNC comble les lacunes en matière d'orientation académique et de ressources professionnelles pour les jeunes Banyamulenge au Canada et ailleurs. [cite: 9, 20]",
+      "quote": "\"Nous dotons les jeunes des connaissances, de la confiance et des ressources dont ils ont besoin pour réussir sur le plan académique et professionnel.\" [cite: 26]"
+    },
+    "stats": {
+      "badge": "Vision d'impact",
+      "title": "Notre Fondation.",
+      "subtitle": "Nous envisageons un avenir où nos jeunes réussissent leur parcours académique et s'établissent dans des carrières durables. [cite: 27, 30, 31]",
+      "integrity": {
+        "label": "Intégrité dirigée par les jeunes",
+        "description": "Fondée par des étudiants qui comprennent les défis de la navigation dans l'éducation après un déplacement. [cite: 4, 11]"
+      },
+      "relocation": {
+        "label": "Soutien à la réinstallation",
+        "description": "Comble l'écart pour les familles passant de différents systèmes éducatifs internationaux vers le Canada. [cite: 11, 12]"
+      },
+      "value": {
+        "label": "Alignement des valeurs",
+        "description": "Votre investissement favorise la communauté et l'appartenance tout en promouvant l'excellence académique. [cite: 9, 71, 77]"
+      }
+    },
+    "roadmap": {
+      "badge": "Programmation active",
+      "titleMain": "Expansion",
+      "titleItalic": "Stratégique.",
+      "description": "Élargir nos ateliers et nos systèmes de soutien au secondaire pour favoriser la communauté et l'appartenance. [cite: 33, 34, 40]",
+      "highSchool": {
+        "title": "Soutien au secondaire",
+        "body": "Tutorat ciblé, orientation dans le choix des cours et soutien aux demandes d'admission à l'université (11e-12e année). [cite: 40, 42, 45]"
+      },
+      "adultLearning": {
+        "title": "Parcours d'apprentissage adulte",
+        "body": "Soutenir les apprenants adultes pour mettre à jour leur formation, explorer les métiers spécialisés et faire la transition vers une carrière. [cite: 47, 48, 51]"
+      },
+      "rebuilding": {
+        "title": "Initiative Rebâtir l'Avenir",
+        "body": "Doter les jeunes des camps de réfugiés de compétences en informatique, mécanique et construction pour l'autosuffisance. [cite: 53, 56, 66]"
+      }
+    },
+    "tiers": {
+      "badge": "Voies de soutien",
+      "title": "Devenir partenaire du MSNC.",
+      "subtitle": "Aidez-nous à élargir les opportunités pour les jeunes mal desservis au Canada et dans le monde. [cite: 83, 84]",
+      "sustain": {
+        "label": "Soutenir",
+        "description": "Couvre les frais de demande d'admission à l'université et le matériel de cours préalable pour les étudiants entrant dans le système canadien. [cite: 23, 49]"
+      },
+      "empower": {
+        "label": "Autonomiser",
+        "description": "Finance un cycle de soutien au secondaire, incluant la planification postsecondaire pour les boursiers de 11e et 12e année. [cite: 41, 44]"
+      },
+      "transform": {
+        "label": "Transformer",
+        "description": "Parraine l'initiative Rebâtir l'Avenir, offrant une formation professionnelle aux jeunes dans les camps de réfugiés. [cite: 53, 54, 66]"
+      }
+    },
+    "cta": {
+      "badge": "S'impliquer",
+      "title": "Investissez dans la mission.",
+      "description": "Soutenez notre mission visant à favoriser la communauté et la stabilité à long terme par des partenariats stratégiques et le mentorat. [cite: 9, 21, 66]",
+      "button": "Contactez-nous directement"
+    },
+    "common": {
+      "openingSoon": "Ouverture prochaine du portail",
+      "featured": "En vedette",
+      "currency": "CAD"
+    }
   }
 }
