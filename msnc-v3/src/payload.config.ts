@@ -76,7 +76,7 @@ export default buildConfig({
     defaultLocale: 'en',
     fallback: true,
   },
-  secret: process.env.PAYLOAD_SECRET || 'emergency-fallback-668852',
+  secret: process.env.PAYLOAD_SECRET || (() => { throw new Error('PAYLOAD_SECRET environment variable is required') })(),
   typescript: {
     outputFile: path.resolve(dirname, 'types/payload-types.ts'),
   },
