@@ -1,0 +1,10 @@
+diff --git a/dist/bin/loadEnv.js b/dist/bin/loadEnv.js
+index 7e9b0..e1b12 100644
+--- a/dist/bin/loadEnv.js
++++ b/dist/bin/loadEnv.js
+@@ -6,4 +6,4 @@
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.loadedEnvFiles = void 0;
+ const env_1 = __importDefault(require("@next/env"));
+-const { loadEnvConfig } = env_1.default;
++const loadEnvConfig = env_1.default?.loadEnvConfig || require("@next/env").loadEnvConfig;

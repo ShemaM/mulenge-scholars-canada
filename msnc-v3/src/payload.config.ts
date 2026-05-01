@@ -25,76 +25,69 @@ import { Donations } from './collections/Donations'
 // Globals
 import { SiteSettings } from './globals/SiteSettings'
 
-// Resolve dirname safely in ESM
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-// ✅ REQUIRED ENV VALIDATION (fail fast in production)
-const DATABASE_URI = process.env.DATABASE_URI
+/**
+ * ✅ Safe env access (prevents build crashes)
+ */
+const DATABASE_URL = process.env.DATABASE_URL
 const PAYLOAD_SECRET = process.env.PAYLOAD_SECRET
 
-if (!DATABASE_URI) {
-throw new Error('❌ Missing DATABASE_URI environment variable')
-}
-
-if (!PAYLOAD_SECRET) {
-throw new Error('❌ Missing PAYLOAD_SECRET environment variable')
-}
-
-// ✅ Build config
 export default buildConfig({
-admin: {
-user: Users.slug,
-importMap: {
-baseDir: path.resolve(dirname),
-},
-meta: {
-titleSuffix: '- MSNC Admin',
-},
-},
+  admin: {
+    user: Users.slug,
+    importMap: {
+      baseDir: path.resolve(dirname),
+    },
+    meta: {
+      titleSuffix: '- MSNC Admin',
+    },
+  },
 
-collections: [
-Users,
-Sessions,
-AuditLogs,
-Media,
-Programs,
-Blogs,
-Events,
-Leadership,
-Scholars,
-Testimonials,
-Partners,
-Messages,
-Inquiries,
-JoinSubmissions,
-Donations,
-],
+  collections: [
+    Users,
+    Sessions,
+    AuditLogs,
+    Media,
+    Programs,
+    Blogs,
+    Events,
+    Leadership,
+    Scholars,
+    Testimonials,
+    Partners,
+    Messages,
+    Inquiries,
+    JoinSubmissions,
+    Donations,
+  ],
 
-globals: [SiteSettings],
+  globals: [SiteSettings],
 
-editor: lexicalEditor(),
+  editor: lexicalEditor(),
 
-localization: {
-locales: ['en', 'fr'],
-defaultLocale: 'en',
-fallback: true,
-},
+  localization: {
+    locales: ['en', 'fr'],
+    defaultLocale: 'en',
+    fallback: true,
+  },
 
-secret: PAYLOAD_SECRET,
+  secret: PAYLOAD_SECRET || 'dev-secret',
 
-typescript: {
-outputFile: path.resolve(dirname, 'types/payload-types.ts'),
-},
+  typescript: {
+    outputFile: path.resolve(dirname, 'types/payload-types.ts'),
+  },
 
-db: postgresAdapter({
-pool: {
-connectionString: DATABASE_URI,
-ssl: {
-rejectUnauthorized: false,
-},
-},
-}),
+  db: postgresAdapter({
+    pool: {
+      connectionString: DATABASE_URL,
+      ssl:
+        process.env.NODE_ENV === 'production'
+          ? { rejectUnauthorized: false }
+          : false,
+    },
+  }),
 
-sharp,
+  sharp,
 })

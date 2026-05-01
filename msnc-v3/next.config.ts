@@ -17,10 +17,8 @@ poweredByHeader: false,
 reactStrictMode: true,
 compress: true,
 
-// ✅ FIX: Required for pnpm + Payload
+// ✅ FIXED (NO payload here)
 transpilePackages: [
-'payload',
-'@payloadcms/ui',
 '@payloadcms/richtext-lexical',
 ],
 
