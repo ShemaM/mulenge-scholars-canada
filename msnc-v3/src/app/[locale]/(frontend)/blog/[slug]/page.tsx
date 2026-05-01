@@ -92,7 +92,7 @@ export default async function BlogPostPage({ params }: PageArgs) {
 
       {/* ── Hero — full bleed image ────────────────────────────────────────── */}
       {post.featuredImage && typeof post.featuredImage === 'object' && (post.featuredImage as Media).url && (
-        <div className="relative h-[55vh] min-h-[400px] w-full overflow-hidden md:h-[70vh]">
+        <div className="relative h-[55vh] min-h-100 w-full overflow-hidden md:h-[70vh]">
           <Image
             src={(post.featuredImage as Media).url!}
             alt={post.title}

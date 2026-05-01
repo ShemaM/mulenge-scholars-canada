@@ -5,11 +5,9 @@ import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   ArrowUpRight,
-  BookOpen,
   Calendar,
   ChevronDown,
   Globe,
-  GraduationCap,
   Heart,
   Instagram,
   Loader2,

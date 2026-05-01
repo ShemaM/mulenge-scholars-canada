@@ -43,7 +43,13 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: '**',
+        hostname: 'mulengescholars.org',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.mulengescholars.org',
+        pathname: '/**',
       },
     ],
   },
