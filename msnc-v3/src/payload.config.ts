@@ -1,11 +1,11 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
-import path from 'node:path'
 import { buildConfig } from 'payload'
+import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
 
-// MSNC Collection Imports
+// Collections
 import { Users } from './collections/Users'
 import { Sessions } from './collections/Sessions'
 import { AuditLogs } from './collections/Auditlogs'
@@ -22,72 +22,79 @@ import Inquiries from './collections/Inquiries'
 import { JoinSubmissions } from './collections/JoinSubmissions'
 import { Donations } from './collections/Donations'
 
-// MSNC Global Imports
+// Globals
 import { SiteSettings } from './globals/SiteSettings'
 
+// Resolve dirname safely in ESM
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
-const isProduction = process.env.NODE_ENV === 'production'
 
-function getDatabaseConnectionString(): string {
-  const rawConnectionString = process.env.DATABASE_URL || ''
-  if (!rawConnectionString || !isProduction) return rawConnectionString
+// ✅ REQUIRED ENV VALIDATION (fail fast in production)
+const DATABASE_URI = process.env.DATABASE_URI
+const PAYLOAD_SECRET = process.env.PAYLOAD_SECRET
 
-  try {
-    const url = new URL(rawConnectionString)
-    if (url.searchParams.get('sslmode') === 'require' && !url.searchParams.has('uselibpqcompat')) {
-      url.searchParams.set('uselibpqcompat', 'true')
-    }
-    return url.toString()
-  } catch {
-    return rawConnectionString
-  }
+if (!DATABASE_URI) {
+throw new Error('❌ Missing DATABASE_URI environment variable')
 }
 
+if (!PAYLOAD_SECRET) {
+throw new Error('❌ Missing PAYLOAD_SECRET environment variable')
+}
+
+// ✅ Build config
 export default buildConfig({
-  admin: {
-    user: Users.slug,
-    importMap: {
-      baseDir: path.resolve(dirname),
-    },
-    meta: {
-      titleSuffix: '- MSNC Admin',
-    },
-  },
-  collections: [
-    Users,
-    Sessions,
-    AuditLogs,
-    Media,
-    Programs,
-    Blogs,
-    Events,
-    Leadership,
-    Scholars,
-    Testimonials,
-    Partners,
-    Messages,
-    Inquiries,
-    JoinSubmissions,
-    Donations,
-  ],
-  globals: [SiteSettings],
-  editor: lexicalEditor(),
-  localization: {
-    locales: ['en', 'fr'],
-    defaultLocale: 'en',
-    fallback: true,
-  },
-// Use a placeholder during build, but production requires real secret via env var
-secret: process.env.PAYLOAD_SECRET || (process.env.NODE_ENV === 'production' ? 'placeholder-build-secret-do-not-use-in-prod' : 'test-secret-for-local-dev'),
-  typescript: {
-    outputFile: path.resolve(dirname, 'types/payload-types.ts'),
-  },
-  db: postgresAdapter({
-    pool: {
-      connectionString: getDatabaseConnectionString(),
-      ssl: isProduction ? { rejectUnauthorized: false } : false,
-    },
-  }),
-  sharp,
+admin: {
+user: Users.slug,
+importMap: {
+baseDir: path.resolve(dirname),
+},
+meta: {
+titleSuffix: '- MSNC Admin',
+},
+},
+
+collections: [
+Users,
+Sessions,
+AuditLogs,
+Media,
+Programs,
+Blogs,
+Events,
+Leadership,
+Scholars,
+Testimonials,
+Partners,
+Messages,
+Inquiries,
+JoinSubmissions,
+Donations,
+],
+
+globals: [SiteSettings],
+
+editor: lexicalEditor(),
+
+localization: {
+locales: ['en', 'fr'],
+defaultLocale: 'en',
+fallback: true,
+},
+
+secret: PAYLOAD_SECRET,
+
+typescript: {
+outputFile: path.resolve(dirname, 'types/payload-types.ts'),
+},
+
+db: postgresAdapter({
+pool: {
+connectionString: DATABASE_URI,
+ssl: {
+rejectUnauthorized: false,
+},
+},
+}),
+
+sharp,
 })
