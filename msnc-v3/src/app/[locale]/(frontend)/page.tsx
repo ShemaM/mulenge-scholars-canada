@@ -3,6 +3,10 @@ import { Suspense } from 'react'
 import { getEvents, getBlogs, getScholarStats, getScholarTestimonials } from '@/lib/payload'
 import { fallbackEvents, fallbackBlogs } from '@/lib/fallbacks'
 
+// ✅ FORCE DYNAMIC RENDERING
+// This ensures the page is never cached and always fetches fresh data from the database
+export const dynamic = 'force-dynamic'
+
 // Section Components
 import Hero from '@/components/sections/Hero'
 import TheChallenge from '@/components/sections/TheChallenge'
@@ -130,8 +134,8 @@ export default async function HomePage({
 
 async function AsyncUpdatesSection({ locale }: { locale: string }) {
   const [events, blogs] = await Promise.all([
-    getEvents({ upcoming: true, limit: 3, locale }).catch(() => fallbackEvents),
-    getBlogs({ limit: 3, locale }).catch(() => fallbackBlogs),
+    getEvents({ upcoming: true, limit: 3 }).catch(() => fallbackEvents),
+    getBlogs({ limit: 3 }).catch(() => fallbackBlogs),
   ])
   return <EventPreview events={events} blogs={blogs} />
 }

@@ -1,9 +1,13 @@
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
-import { getPrograms } from '@/lib/payload'
+import { getCollection } from '@/lib/payload'
 import { ArrowRight, GraduationCap, Users, Briefcase, HeartHandshake } from 'lucide-react'
 import { Link } from '@/navigation'
 import { SITE_NAME, SITE_URL } from '@/lib/site'
+
+// ✅ FORCE DYNAMIC RENDERING
+// This ensures fresh program data is always fetched from the database
+export const dynamic = 'force-dynamic'
 import PageHeader from '@/components/ui/PageHeader'
 import { Breadcrumb } from '@/components/ui/breadcrumb'
 import Container from '@/components/ui/Container'
@@ -109,8 +113,8 @@ export default async function Programs({ params }: Props) {
   let data: ProgramItem[] = []
 
   try {
-    // 1. Pass locale to getPrograms so the CMS returns translated fields
-    const result = await getPrograms(locale)
+    // 1. Fetch programs from the CMS collection
+    const result = await getCollection('programs', { locale })
     data = Array.isArray(result) && result.length > 0
       ? (result as ProgramItem[])
       : FALLBACK_PROGRAMS
