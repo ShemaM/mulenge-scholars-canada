@@ -1,135 +1,77 @@
-/**
- * MSNC Hero - Refined Scholarly Editorial
- * Focus: Full-width typography & enhanced legibility
- */
-
-'use client'
-
-import { motion } from 'framer-motion'
-import { Globe, Compass, Star, MoveRight, BookOpen } from 'lucide-react'
-import { useLocale } from 'next-intl'
+import { ArrowRight } from 'lucide-react'
+import { getTranslations } from 'next-intl/server'
 import { Link } from '@/navigation'
-import { getUiCopy, normalizeSiteLocale } from '@/lib/site-copy'
 
-export default function Hero() {
-  const copy = getUiCopy(normalizeSiteLocale(useLocale()))
+export default async function Hero() {
+  const t = await getTranslations('Hero')
+  const title = t('title').trim()
+  const titleItalic = t('titleItalic').trim()
+  const subtitle = t('subtitle').trim()
 
   return (
-    <section className="relative overflow-hidden border-b border-slate-200 bg-white pb-16 pt-20 md:pb-24 md:pt-28">
-      <div
-        className="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-size-[2rem_2rem] opacity-60"
-        aria-hidden="true"
-      />
+    <section className="relative flex min-h-[92vh] flex-col justify-end overflow-hidden border-b border-border bg-background pb-16 pt-32">
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div className="absolute inset-x-0 top-0 h-[55vh] bg-[radial-gradient(circle_at_top,_rgba(3,105,161,0.14),_transparent_62%)]" />
+        <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-border/60" />
+        <div className="absolute inset-x-6 top-10 h-px bg-gradient-to-r from-transparent via-border to-transparent md:inset-x-20" />
+        <span
+          className="absolute right-0 top-4 select-none font-display text-[clamp(10rem,26vw,22rem)] leading-none text-primary/[0.04]"
+        >
+          M
+        </span>
+      </div>
 
-      <div className="relative z-10 mx-auto w-full max-w-425 px-6 md:px-10 lg:px-16">
-        <header className="mb-10 flex items-center justify-between border-b-2 border-slate-900 pb-4">
-          <div className="flex items-center gap-4">
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600">
-              MSNC
-            </span>
-            <span className="h-3 w-px bg-slate-300" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
-              {copy.hero.country}
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="h-2 w-2 animate-pulse rounded-full bg-blue-600" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-slate-900">
-              2026
-            </span>
-          </div>
-        </header>
-
-        <div className="mb-16 w-full">
-          <motion.h1
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="w-full text-[clamp(2.5rem,7vw,7.5rem)] font-black leading-[0.85] tracking-tighter text-[#002147]"
-          >
-            Empowering <br />
-            <span className="mr-4 font-serif font-light italic tracking-tight text-slate-400">
-              Banyamulenge Youth
-            </span>{' '}
-            <br />
-            Through Academic Excellence.
-          </motion.h1>
+      <div className="container-editorial relative z-10">
+        <div className="mb-8 flex items-center gap-3">
+          <div className="h-px w-12 shrink-0 bg-secondary" aria-hidden="true" />
+          <span className="section-label text-secondary">{t('label')}</span>
         </div>
 
-        <div className="grid gap-0 divide-slate-900 border-t border-slate-900 lg:grid-cols-12 lg:divide-x lg:divide-y-0">
-          <div className="py-10 lg:col-span-5 lg:pr-10">
-            <div className="mb-6 flex items-center gap-3">
-              <Compass className="h-5 w-5 text-blue-600" />
-              <h2 className="text-[11px] font-black uppercase tracking-widest text-slate-900">
-                {copy.hero.commitmentLabel}
-              </h2>
-            </div>
+        <div className="max-w-6xl">
+          <h1
+            className="mb-0 text-pretty font-display text-primary"
+            style={{
+            fontSize: 'clamp(2.25rem, 5.5vw, 4.75rem)',
+            lineHeight: '1.05',
+            }}
+          >
+            {title}
+            {titleItalic ? (
+              <>
+                {' '}
+                <span className="text-secondary">{titleItalic}</span>
+              </>
+            ) : null}
+          </h1>
+        </div>
 
-            <p className="mb-8 border-l-4 border-blue-600 pl-6 text-2xl font-bold leading-tight tracking-tight text-[#002147] md:text-3xl">
-              {copy.hero.commitmentLead}
+        <div className="my-10 flex items-center gap-4" aria-hidden="true">
+          <div className="h-px flex-1 bg-border" />
+          <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-secondary" />
+          <div className="h-px w-10 bg-secondary/60" />
+        </div>
+
+        <div className="flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <p className="mb-0 text-base leading-7 text-muted-foreground md:text-lg md:leading-8">
+              {subtitle}
             </p>
-
-            <p className="mb-10 text-sm font-bold leading-relaxed text-slate-500">
-              {copy.hero.commitmentBody}
-            </p>
-
-            <div className="flex flex-col gap-4 sm:flex-row">
-              <Link
-                href="/about"
-                className="group flex h-14 w-full items-center justify-between rounded-xl bg-primary-500 px-6 text-[10px] font-black uppercase tracking-widest text-white transition-all hover:bg-blue-700 sm:w-1/2"
-              >
-                <span>{copy.hero.learnMore}</span>
-                <MoveRight className="h-4 w-4 transition-transform group-hover:translate-x-2" />
-              </Link>
-              <Link
-                href="/programs"
-                className="group flex h-14 w-full items-center justify-between rounded-xl border border-slate-200 bg-white px-6 text-[10px] font-black uppercase tracking-widest text-[#002147] transition-all hover:border-slate-900 sm:w-1/2"
-              >
-                <span>{copy.hero.programs}</span>
-                <BookOpen className="h-4 w-4 text-slate-300 transition-colors group-hover:text-blue-600" />
-              </Link>
-            </div>
           </div>
 
-          <div className="py-10 lg:col-span-4 lg:px-10">
-            <div className="mb-6 flex items-center gap-3">
-              <Globe className="h-5 w-5 text-blue-600" />
-              <h2 className="text-[11px] font-black uppercase tracking-widest text-slate-900">
-                {copy.hero.heritageLabel}
-              </h2>
-            </div>
-            <p className="mb-6 text-lg font-medium leading-relaxed text-slate-700">
-              {copy.hero.heritageBody}
-            </p>
-            <div className="grid grid-cols-2 gap-y-4">
-              {copy.hero.tags.map((tag) => (
-                <div
-                  key={tag}
-                  className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-400"
-                >
-                  <div className="h-1.5 w-1.5 rounded-full bg-blue-600" /> {tag}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="py-10 lg:col-span-3 lg:pl-10">
-            <div className="mb-6 flex items-center gap-3">
-              <Star className="h-5 w-5 text-blue-600" />
-              <h2 className="text-[11px] font-black uppercase tracking-widest text-slate-900">
-                {copy.hero.visionLabel}
-              </h2>
-            </div>
-            <p className="mb-8 text-xl font-serif italic leading-snug text-slate-700">
-              &quot;{copy.hero.visionQuote}&quot;
-            </p>
-            <div className="border-t border-slate-100 pt-8">
-              <span className="mb-2 block text-[9px] font-black uppercase tracking-[0.2em] text-slate-300">
-                {copy.hero.principles}
-              </span>
-              <span className="text-sm font-black uppercase tracking-widest italic text-blue-600">
-                {copy.hero.principlesValue}
-              </span>
-            </div>
+          <div className="flex shrink-0 flex-wrap items-center gap-3">
+            <Link href="/programs" className="btn btn-primary group gap-2.5 px-7 py-3.5">
+              {t('ctaPrimary')}
+              <ArrowRight
+                className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
+                aria-hidden="true"
+              />
+            </Link>
+            <Link
+              href="/about"
+              className="btn btn-outline gap-2 px-7 py-3.5 text-primary hover:text-primary"
+            >
+              {t('ctaSecondary')}
+            </Link>
           </div>
         </div>
       </div>

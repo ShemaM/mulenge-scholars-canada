@@ -25,7 +25,7 @@ export default async function ProgramsPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Programs Management</h1>
+          <h1 className="text-3xl text-primary mb-2">Programs Management</h1>
           <p className="text-slate-600">{programs.length} programs</p>
         </div>
         <Link href="/admin/programs/new">

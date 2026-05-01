@@ -4,7 +4,7 @@
  * Features: Manuscript Bio, Strategic Alignment, Collective Gallery, Institutional CTA
  */
 
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { getCachedPayload } from '@/lib/payload'
 import {
   ArrowLeft,
@@ -74,7 +74,7 @@ function RenderBio({ content }: { content: any }) {
       {content.root.children.map((block: any, i: number) => {
         if (block.type === 'paragraph') {
           return (
-            <p key={i} className="text-xl text-slate-700 leading-[1.8] font-serif">
+            <p key={i} className="text-xl text-slate-700 leading-relaxed font-serif">
               {block.children?.map((child: any, j: number) => (
                 <span key={j} className={child.format === 1 ? 'font-bold' : ''}>
                   {child.text}
@@ -95,6 +95,12 @@ export default async function LeaderProfilePage({
   params: Promise<{ locale: string; slug: string }>
 }) {
   const { slug, locale } = await params
+
+  // Fix: Early validation for null/empty slugs (prevents /leadership/null)
+  if (!slug || slug === 'null' || slug.trim() === '') {
+    redirect('/leadership')
+  }
+
   const activeLocale = normalizeSiteLocale(locale)
   const payload = await getCachedPayload()
 
@@ -121,7 +127,7 @@ export default async function LeaderProfilePage({
   })
 
   return (
-    <main className="min-h-screen bg-white text-[#002147] selection:bg-blue-100 pb-32 relative overflow-x-hidden">
+    <main className="min-h-screen bg-white text-primary selection:bg-blue-100 pb-32 relative overflow-x-hidden">
       {/* Structural UI Grid Background */}
       <div className="fixed inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:40px_40px] opacity-[0.4] pointer-events-none" />
 
@@ -130,16 +136,13 @@ export default async function LeaderProfilePage({
         <nav className="pt-32 pb-6 border-b-2 border-slate-900 mb-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <Link
             href="/leadership"
-            className="group flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 transition-colors"
+            className="group flex items-center gap-4 text-2xs font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 transition-colors"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-2 transition-transform" />
             Back to Leadership Ledger
           </Link>
           <div className="flex items-center gap-8">
-            <span className="text-[10px] font-mono text-slate-300 uppercase tracking-widest flex items-center gap-2">
-              <Hash className="w-3 h-3" /> STEWARD_ID:{' '}
-              {String(leader.id).padStart(8, '0').toUpperCase()}
-            </span>
+            {/* Removed STEWARD_ID tag */}
             <button className="text-slate-300 hover:text-blue-600 transition-colors">
               <Share2 className="w-4 h-4" />
             </button>
@@ -174,18 +177,18 @@ export default async function LeaderProfilePage({
             <header className="space-y-8">
               <div className="flex items-center gap-3 text-blue-600">
                 <ShieldCheck className="w-4 h-4" />
-                <span className="text-[10px] font-black uppercase tracking-[0.3em]">
+                <span className="text-2xs font-black uppercase tracking-widest">
                   {leader.pillar || 'Strategic Leadership'}
                 </span>
               </div>
 
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.9] text-[#002147]">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl tracking-tighter leading-none text-primary">
                 {leader.name}
               </h1>
 
               <div className="flex flex-col md:flex-row md:items-center gap-8 border-t border-slate-100 pt-8">
                 <div>
-                  <span className="block text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
+                  <span className="block text-2xs font-black uppercase tracking-widest text-slate-400 mb-1">
                     Board Appointment
                   </span>
                   <p className="text-2xl font-bold italic font-serif text-slate-600">
@@ -196,7 +199,7 @@ export default async function LeaderProfilePage({
                   <Link
                     href={leader.linkedinUrl}
                     target="_blank"
-                    className="h-12 px-6 bg-slate-50 border border-slate-200 rounded-full flex items-center gap-3 text-[10px] font-black uppercase tracking-widest hover:bg-[#0077b5] hover:text-white transition-all w-max"
+                    className="h-12 px-6 bg-slate-50 border border-slate-200 rounded-full flex items-center gap-3 text-2xs font-black uppercase tracking-widest hover:bg-[#0077b5] hover:text-white transition-all w-max"
                   >
                     Executive LinkedIn <ArrowRight className="w-3 h-3" />
                   </Link>
@@ -211,11 +214,11 @@ export default async function LeaderProfilePage({
                 className="prose prose-xl prose-slate max-w-none
                 [&>div>p:first-of-type]:first-letter:text-8xl 
                 [&>div>p:first-of-type]:first-letter:font-black 
-                [&>div>p:first-of-type]:first-letter:text-[#002147] 
+                [&>div>p:first-of-type]:first-letter:text-primary 
                 [&>div>p:first-of-type]:first-letter:float-left 
                 [&>div>p:first-of-type]:first-letter:mr-6 
                 [&>div>p:first-of-type]:first-letter:mt-3
-                [&>div>p:first-of-type]:first-letter:leading-[0.7]
+                [&>div>p:first-of-type]:first-letter:leading-none
               "
               >
                 <RenderBio content={leader.bio} />
@@ -226,7 +229,7 @@ export default async function LeaderProfilePage({
             <div className="p-10 bg-slate-50 border border-slate-100 rounded-[2.5rem] flex items-start gap-6">
               <FileText className="w-6 h-6 text-blue-600 shrink-0" />
               <div>
-                <h4 className="text-xs font-black uppercase tracking-widest text-[#002147] mb-2">
+                <h4 className="text-xs uppercase tracking-widest text-primary mb-2">
                   Governance Statement
                 </h4>
                 <p className="text-sm text-slate-500 font-medium leading-relaxed">
@@ -244,11 +247,11 @@ export default async function LeaderProfilePage({
           <div className="flex items-center justify-between mb-16">
             <div className="flex items-center gap-4 text-blue-600">
               <Bookmark className="w-6 h-6" />
-              <h2 className="text-3xl font-black uppercase tracking-tighter">
+              <h2 className="text-3xl uppercase tracking-tighter">
                 Stewardship Alignment
               </h2>
             </div>
-            <span className="text-[10px] font-mono text-slate-300">REF_STRATEGY_LEDGER</span>
+            <span className="text-2xs font-mono text-slate-300">REF_STRATEGY_LEDGER</span>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -274,7 +277,7 @@ export default async function LeaderProfilePage({
                 className="p-10 rounded-[2.5rem] border border-slate-100 bg-white hover:border-blue-600 transition-colors group"
               >
                 <align.icon className="w-8 h-8 text-blue-600 mb-6 group-hover:scale-110 transition-transform" />
-                <h4 className="text-xl font-black uppercase tracking-tighter mb-4">{align.t}</h4>
+                <h4 className="text-xl uppercase tracking-tighter mb-4">{align.t}</h4>
                 <p className="text-sm text-slate-500 font-medium leading-relaxed">{align.d}</p>
               </div>
             ))}
@@ -284,12 +287,12 @@ export default async function LeaderProfilePage({
         {/* ─── PHASE 05: COLLECTIVE STEWARDSHIP (RELATED BOARD MEMBERS) ─── */}
         <section className="mt-32">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
-            <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase">
+            <h2 className="text-4xl md:text-6xl tracking-tighter uppercase">
               The Collective.
             </h2>
             <Link
               href="/leadership"
-              className="text-[10px] font-black uppercase tracking-widest text-blue-600 hover:text-[#002147] transition-colors flex items-center gap-2"
+              className="text-2xs font-black uppercase tracking-widest text-blue-600 hover:text-primary transition-colors flex items-center gap-2"
             >
               Full Board Registry <ArrowRight className="w-3 h-3" />
             </Link>
@@ -314,10 +317,8 @@ export default async function LeaderProfilePage({
                   )}
                 </div>
                 <div>
-                  <span className="text-[9px] font-mono text-blue-600 uppercase mb-2 block">
-                    Executive_Registry_{member.id.toString().slice(-4)}
-                  </span>
-                  <h3 className="text-2xl font-black group-hover:text-blue-600 transition-colors uppercase leading-tight">
+                  {/* Removed Executive_Registry tag */}
+                  <h3 className="text-2xl group-hover:text-blue-600 transition-colors uppercase leading-tight">
                     {member.name}
                   </h3>
                   <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2">
@@ -330,41 +331,30 @@ export default async function LeaderProfilePage({
         </section>
 
         {/* ─── PHASE 06: INSTITUTIONAL CTA (THE BRIDGE) ─── */}
-        <section className="mt-40">
-          <div className="bg-[#002147] rounded-[4rem] p-12 md:p-24 flex flex-col lg:flex-row items-center justify-between gap-12 relative overflow-hidden shadow-2xl border-4 border-white">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.1),transparent)] pointer-events-none" />
-            <div className="relative z-10 lg:max-w-2xl text-center lg:text-left">
-              <span className="text-blue-400 font-black text-[10px] uppercase tracking-[0.4em] mb-8 block">
-                Institutional Engagement
-              </span>
-              <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter leading-[0.9] uppercase">
-                Support Our <br /> Stewardship.
-              </h2>
-              <p className="text-lg text-slate-400 font-medium mt-8 leading-relaxed">
-                Join the leaders of MSNC in our mission to redefine educational equity. Whether
-                through partnership or contribution, your involvement scales our impact.
-              </p>
-            </div>
-            <div className="relative z-10 flex flex-col sm:flex-row gap-6 shrink-0">
-              <Link
-                href="/donate"
-                className="h-16 px-12 bg-white text-[#002147] rounded-full inline-flex items-center justify-center gap-4 font-black uppercase text-[11px] tracking-widest hover:bg-blue-600 hover:text-white transition-all group active:scale-95 shadow-xl"
-              >
-                Invest in Mission <Star className="w-4 h-4 group-hover:fill-current" />
+        <section className="mt-40 section border-t border-border">
+          <div className="bg-paper-50 border border-border rounded-[2.5rem] p-12 md:p-20 text-center">
+            <span className="text-secondary font-black text-2xs uppercase tracking-widest mb-8 block">
+              Get Involved
+            </span>
+            <h2 className="max-w-3xl mx-auto mb-8 text-4xl md:text-6xl text-primary tracking-tighter leading-none uppercase">
+              Support Our <br /> Stewardship.
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed">
+              Join the leaders of MSNC in our mission to redefine educational equity. Whether through partnership or contribution, your involvement scales our impact.
+            </p>
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+              <Link href="/donate" className="btn btn-primary">
+                Donate <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
-              <Link
-                href="/contact"
-                className="h-16 px-12 border-2 border-white/20 text-white rounded-full inline-flex items-center justify-center gap-4 font-black uppercase text-[11px] tracking-widest hover:bg-white hover:text-[#002147] transition-all active:scale-95 group"
-              >
-                Inquire Partnership{' '}
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
+              <Link href="/contact" className="btn btn-outline">
+                Contact Us <ArrowRight className="h-4 w-4 ml-2" />
               </Link>
             </div>
           </div>
         </section>
 
         {/* ─── FOOTER ─── */}
-        <footer className="mt-32 border-t-2 border-slate-900 pt-10 flex flex-col md:flex-row items-center justify-between gap-6 mb-10 text-[9px] font-black uppercase tracking-[0.4em] text-slate-300">
+        <footer className="mt-32 border-t-2 border-slate-900 pt-10 flex flex-col md:flex-row items-center justify-between gap-6 mb-10 text-label font-black uppercase tracking-widest text-slate-300">
           <span>Secured Document</span>
           <div className="flex gap-8">
             <span>Leadership</span>

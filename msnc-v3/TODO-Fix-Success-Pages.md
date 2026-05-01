@@ -6,8 +6,8 @@
 3. **Manual Locale Prepend:** `JoinClient.tsx` manually prepends `locale` to the redirect path instead of using the localized router from `next-intl`.
 
 ## Steps
-- [ ] Create dynamic success page `src/app/[locale]/(frontend)/success/join/[role]/page.tsx`
-- [ ] Add `SuccessPage` translations to `src/messages/en.json`
-- [ ] Add `SuccessPage` translations to `src/messages/fr.json`
+- [x] Create dynamic success page `src/app/[locale]/(frontend)/success/join/[role]/page.tsx`
+- [x] Add `SuccessPage` translations to `src/messages/en.json`
+- [x] Add `SuccessPage` translations to `src/messages/fr.json`
 - [ ] Update `JoinClient.tsx` to use localized `useRouter` from `@/navigation`
 - [ ] Run dev server and verify `/fr/success/join/scholar` resolves

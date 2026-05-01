@@ -1,37 +1,95 @@
 /**
- * MSNC Event Detail - Technical Brief Version
- * Architecture: Content Sidebar + Artifact Sticky Portrait
+ * MSNC Event Detail
+ * Schema-accurate: title, eventDate, location, description,
+ * registrationLink, image (upload→media), content (richText), slug
+ *
+ * Layout mirrors the Impact Journal blog post page:
+ * fixed nav → full-bleed hero → overlapping header → body → related → CTA
  */
 
 import { getCachedPayload } from '@/lib/payload'
-import Container from '@/components/ui/Container'
 import { notFound } from 'next/navigation'
+import { Metadata } from 'next'
 import Image from 'next/image'
+import { convertLexicalToHTML } from '@payloadcms/richtext-lexical/html'
 import {
+  ArrowLeft,
+  ArrowRight,
   Calendar,
   MapPin,
-  ArrowLeft,
-  Clock,
   Share2,
-  Quote,
-  Hash,
-  UserCircle,
-  FileText,
+  Bookmark,
+  ExternalLink,
 } from 'lucide-react'
 import { Link } from '@/navigation'
-import { getSiteDateLocale, normalizeSiteLocale } from '@/lib/site-copy'
+import {
+  getSiteDateLocale,
+  normalizeSiteLocale,
+  getUiCopy,
+} from '@/lib/site-copy'
+import type { Event, Media } from '@/types/payload-types'
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+type PageArgs = { params: Promise<{ locale: string; slug: string }> }
 
 export const dynamic = 'force-dynamic'
 
-export default async function EventDetailPage({
-  params,
-}: {
-  params: Promise<{ locale: string; slug: string }>
-}) {
+// ---------------------------------------------------------------------------
+// Metadata
+// ---------------------------------------------------------------------------
+export async function generateMetadata({ params }: PageArgs): Promise<Metadata> {
   const { slug, locale } = await params
   const activeLocale = normalizeSiteLocale(locale)
+  try {
+    const payload = await getCachedPayload()
+    const { docs } = await payload.find({
+      collection: 'events',
+      where: { slug: { equals: slug } },
+      limit: 1,
+      locale: activeLocale,
+      fallbackLocale: 'en',
+    })
+    const event = docs?.[0] as Event | undefined
+    return {
+      title: event ? `${event.title} | MSNC Events` : 'Events | MSNC',
+      description: event?.description ?? undefined,
+    }
+  } catch {
+    return { title: 'Events | MSNC' }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+function toLogRef(id: string | number): string {
+  const str = String(id)
+  return str.includes('-')
+    ? str.replaceAll('-', '').slice(-8).toUpperCase()
+    : str.slice(-8).toUpperCase().padStart(8, '0')
+}
+
+/** Safely unwrap a Payload upload/relation field to its URL */
+function resolveMedia(field: unknown): { url: string; alt?: string } | null {
+  if (field && typeof field === 'object' && 'url' in field) {
+    const media = field as Media
+    return media.url ? { url: media.url, alt: media.alt ?? undefined } : null
+  }
+  return null
+}
+
+// ---------------------------------------------------------------------------
+// Page
+// ---------------------------------------------------------------------------
+export default async function EventDetailPage({ params }: PageArgs) {
+  const { slug, locale } = await params
+  const activeLocale = normalizeSiteLocale(locale)
+  const ui = getUiCopy(activeLocale)
   const payload = await getCachedPayload()
 
+  // ── Current event ────────────────────────────────────────────────────────
   const { docs } = await payload.find({
     collection: 'events',
     where: { slug: { equals: slug } },
@@ -39,132 +97,239 @@ export default async function EventDetailPage({
     locale: activeLocale,
     fallbackLocale: 'en',
   })
-
-  const event = docs[0]
+  const event = docs[0] as Event | undefined
   if (!event) return notFound()
 
-  const imageUrl = typeof event.image === 'object' ? event.image?.url : null
+  // ── Related events ───────────────────────────────────────────────────────
+  const { docs: relatedDocs } = await payload.find({
+    collection: 'events',
+    depth: 1,
+    limit: 3,
+    sort: '-eventDate',
+    where: { slug: { not_equals: slug } },
+    locale: activeLocale,
+    fallbackLocale: 'en',
+  })
+  const relatedEvents = relatedDocs as Event[]
+
+  // ── Derived values ───────────────────────────────────────────────────────
+  const hero = resolveMedia(event.image)
+  const contentHTML = event.content
+    ? convertLexicalToHTML({ data: event.content as any })
+    : ''
+
+  const formattedDate = new Date(event.eventDate).toLocaleDateString(
+    getSiteDateLocale(activeLocale),
+    { dateStyle: 'long' },
+  )
 
   return (
-    <main className="min-h-screen bg-white text-[#002147] pt-32 pb-24 relative selection:bg-blue-100">
-      {/* Background Grid */}
-      <div className="fixed inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:40px_40px] opacity-[0.3] pointer-events-none" />
+    <main className="min-h-screen bg-background">
 
-      <div className="w-full px-6 md:px-10 lg:px-16 relative z-10 mx-auto max-w-375">
-        {/* Navigation Masthead */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 mb-16 border-b-2 border-slate-900 pb-8">
+      {/* ── Fixed top nav ─────────────────────────────────────────────────── */}
+      <div className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
+        <div className="container-editorial flex h-14 items-center justify-between">
           <Link
             href="/events"
-            className="group flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 transition-colors"
+            className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-primary"
           >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-2 transition-transform" />
-            Back to Chronicles Repository
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+            <span className="section-label">{ui.pages.events.backToEvents}</span>
           </Link>
-          <div className="flex items-center gap-6">
-            <span className="text-[10px] font-mono text-slate-400 uppercase tracking-widest">
-              LOG_REF_ID: {event.id.slice(-8).toUpperCase()}
+
+          {/* Truncated title — centre anchor on desktop */}
+          <span className="hidden max-w-xs truncate section-label text-muted-foreground/60 md:block">
+            {event.title}
+          </span>
+
+          <div className="flex items-center gap-4">
+            <span className="hidden section-label font-mono text-muted-foreground/40 tracking-widest sm:block">
+              {ui.pages.events.logRef}&nbsp;{toLogRef(event.id)}
             </span>
-            <button className="text-slate-400 hover:text-blue-600 transition-colors">
-              <Share2 className="w-4 h-4" />
+            <button
+              type="button"
+              aria-label="Share event"
+              className="text-muted-foreground transition-colors hover:text-secondary"
+            >
+              <Share2 className="h-4 w-4" />
             </button>
           </div>
         </div>
+      </div>
 
-        <div className="grid lg:grid-cols-12 gap-16 lg:gap-24 items-start">
-          {/* Content side (Ledger) */}
-          <div className="lg:col-span-7 space-y-16">
-            <div className="space-y-6">
-              <div className="flex flex-wrap items-center gap-6 text-blue-600 font-black text-[11px] uppercase tracking-[0.2em]">
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />{' '}
-                  {new Date(event.eventDate).toLocaleDateString(getSiteDateLocale(activeLocale), {
-                    dateStyle: 'medium',
-                  })}
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4" /> {event.location}
-                </div>
-                <div className="px-3 py-1 bg-blue-50 border border-blue-100 rounded-full">
-                  Status: Documented
-                </div>
-              </div>
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-[#002147] tracking-tighter leading-[0.9] uppercase">
-                {event.title}
-              </h1>
-            </div>
+      {/* ── Full-bleed hero ────────────────────────────────────────────────── */}
+      {hero && (
+        <div className="relative h-[55vh] min-h-100 w-full overflow-hidden md:h-[70vh]">
+          <Image
+            src={hero.url}
+            alt={hero.alt ?? event.title}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+          {/* Gradient pulls hero colour into the page background */}
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/25 to-transparent" />
+        </div>
+      )}
 
-            {/* Event Descriptiontreated as Abstract */}
-            <div className="prose prose-xl prose-slate max-w-none">
-              <p className="text-2xl font-serif italic text-slate-600 leading-relaxed border-l-4 border-blue-600 pl-8 mb-12">
-                {event.description}
-              </p>
-            </div>
+      {/* ── Article header — overlaps hero ────────────────────────────────── */}
+      <div
+        className="container-editorial pt-8"
+        style={{ marginTop: hero ? '-4rem' : '5rem' }}
+      >
+        <div className="mx-auto max-w-5xl">
 
-            {/* Story-telling Interlude: Field Notes / Testimonials */}
-            <div className="p-12 lg:p-16 border-2 border-slate-900 rounded-[3rem] bg-[#FAFAFA] relative overflow-hidden group">
-              <Quote className="absolute top-0 right-0 w-32 h-32 text-slate-100 -mr-8 -mt-8" />
-              <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-10 text-blue-600">
-                  <FileText className="w-5 h-5" />
-                  <span className="text-xs font-black uppercase tracking-[0.3em]">
-                    Voices from the Summit
-                  </span>
-                </div>
-                <p className="text-2xl lg:text-3xl font-medium text-slate-800 leading-snug italic mb-12">
-                  &quot;Seeing the community gathered for academic excellence transforms the
-                  collective narrative from displacement to leadership.&quot;
-                </p>
-                <div className="flex items-center gap-4 pt-8 border-t border-slate-200">
-                  <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center">
-                    <UserCircle className="w-8 h-8 text-slate-400" />
-                  </div>
-                  <div>
-                    <span className="block font-black text-xs uppercase tracking-widest text-slate-900">
-                      Verified Attendee
-                    </span>
-                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-                      Post-Event Reflection Ledger
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {/* Status pill + date */}
+          <div className="mb-6 flex flex-wrap items-center gap-3">
+            <span className="rounded-full bg-secondary px-4 py-1 text-xs font-black uppercase tracking-widest text-white">
+              {ui.pages.events.status}
+            </span>
+            <span className="section-label text-muted-foreground">{formattedDate}</span>
           </div>
 
-          {/* Artifact side (Imagery as Evidence) */}
-          <div className="lg:col-span-5 lg:sticky lg:top-32">
-            <div className="relative aspect-4/5 rounded-[3.5rem] overflow-hidden shadow-2xl border-12 border-white bg-slate-50 rotate-1 group transition-transform hover:rotate-0 duration-700">
-              <Image
-                src={
-                  imageUrl ||
-                  'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80'
-                }
-                alt={event.title}
-                fill
-                className="object-cover transition-transform duration-[3s] group-hover:scale-110"
-                priority
-              />
-              <div className="absolute inset-0 bg-linear-to-t from-slate-900/40 via-transparent to-transparent opacity-60" />
-              <div className="absolute bottom-10 left-10 right-10">
-                <div className="bg-white/95 backdrop-blur-md p-6 rounded-2xl shadow-2xl">
-                  <span className="block text-[9px] font-black uppercase tracking-widest text-slate-400 mb-1">
-                    Visual_Record
-                  </span>
-                  <span className="block font-black text-sm uppercase tracking-tight text-[#002147]">
-                    Artifact_Field_Photography
-                  </span>
-                </div>
-              </div>
-            </div>
+          {/* Title */}
+          <h1 className="mb-6 font-display font-normal text-primary text-5xl md:text-6xl lg:text-7xl leading-tight tracking-tight">
+            {event.title}
+          </h1>
 
-            <div className="mt-12 flex justify-between items-center text-[9px] font-black uppercase tracking-[0.4em] text-slate-300">
-              <span>Secured Record</span>
-              <span>{'//'}</span>
-              <span>Archives</span>
+          {/* Description as editorial deck */}
+          <p className="mb-5 text-lg font-medium leading-relaxed text-foreground/65 border-l-2 border-secondary pl-5">
+            {event.description}
+          </p>
+
+          {/* Meta strip */}
+          <div className="flex flex-wrap items-center gap-5 border-y border-border py-3">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <Calendar className="h-3.5 w-3.5 text-secondary" />
+              <span className="section-label">{formattedDate}</span>
             </div>
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <MapPin className="h-3.5 w-3.5 text-secondary" />
+              <span className="section-label">{event.location}</span>
+            </div>
+            {event.registrationLink && (
+              <a
+                href={event.registrationLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ml-auto inline-flex items-center gap-2 rounded-full bg-secondary px-5 py-1.5 text-xs font-bold uppercase tracking-widest text-white transition-opacity hover:opacity-90"
+              >
+                {ui.pages.events.register ?? 'Register'}
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            )}
           </div>
         </div>
       </div>
+
+      {/* ── Rich-text body ────────────────────────────────────────────────── */}
+      {contentHTML && (
+        <div className="container-editorial py-10">
+          <div className="mx-auto max-w-5xl">
+            <div
+              className="
+                prose prose-lg max-w-none
+                prose-p:text-foreground/75 prose-p:leading-relaxed
+                prose-headings:font-display prose-headings:font-normal prose-headings:text-primary
+                prose-headings:tracking-tight
+                prose-h2:text-3xl prose-h2:mt-14 prose-h2:mb-6
+                prose-h3:text-2xl prose-h3:mt-10 prose-h3:mb-4
+                prose-blockquote:border-l-2 prose-blockquote:border-secondary
+                prose-blockquote:not-italic prose-blockquote:text-foreground/80
+                prose-blockquote:py-4 prose-blockquote:px-6
+                prose-img:rounded-2xl prose-img:border prose-img:border-border
+                prose-a:text-secondary prose-a:no-underline hover:prose-a:underline
+                prose-strong:text-primary prose-strong:font-semibold
+                [&>p:first-of-type]:text-xl [&>p:first-of-type]:leading-relaxed
+                [&>p:first-of-type]:first-letter:float-left
+                [&>p:first-of-type]:first-letter:mr-3 [&>p:first-of-type]:first-letter:mt-1
+                [&>p:first-of-type]:first-letter:font-display [&>p:first-of-type]:first-letter:text-7xl
+                [&>p:first-of-type]:first-letter:text-primary [&>p:first-of-type]:first-letter:leading-none
+              "
+              dangerouslySetInnerHTML={{ __html: contentHTML }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* ── Related events ────────────────────────────────────────────────── */}
+      {relatedEvents.length > 0 && (
+        <section className="border-t border-border bg-muted/30 py-16">
+          <div className="container-editorial">
+            <div className="mb-10 flex items-center justify-between">
+              <h2 className="font-display font-normal text-primary text-2xl md:text-3xl tracking-tight">
+                {ui.pages.events.relatedEvents ?? 'More Events'}
+              </h2>
+              <Link href="/events" className="group flex items-center gap-2">
+                <span className="section-label text-secondary">
+                  {ui.pages.events.archives}
+                </span>
+                <ArrowRight className="h-3 w-3 text-secondary transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-3">
+              {relatedEvents.map((related) => {
+                const relatedHero = resolveMedia(related.image)
+                const relatedDate = new Date(related.eventDate).toLocaleDateString(
+                  getSiteDateLocale(activeLocale),
+                  { dateStyle: 'medium' },
+                )
+                return (
+                  <Link
+                    key={related.id}
+                    href={`/events/${related.slug}`}
+                    className="group space-y-4"
+                  >
+                    <div className="relative aspect-[16/10] overflow-hidden rounded-xl border border-border bg-muted shadow-sm transition-shadow group-hover:shadow-md">
+                      {relatedHero ? (
+                        <Image
+                          src={relatedHero.url}
+                          alt={relatedHero.alt ?? related.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <Bookmark className="h-10 w-10 text-muted-foreground/10" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="space-y-1">
+                      <span className="section-label text-secondary block">{relatedDate}</span>
+                      <h4 className="font-display font-normal text-primary transition-colors group-hover:text-secondary text-lg leading-snug">
+                        {related.title}
+                      </h4>
+                      <span className="section-label text-muted-foreground flex items-center gap-1.5">
+                        <MapPin className="h-3 w-3 shrink-0" />
+                        {related.location}
+                      </span>
+                    </div>
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── CTA ───────────────────────────────────────────────────────────── */}
+      <section className="py-24 border-t border-border bg-muted/30">
+        <div className="container-editorial text-center">
+          <h2 className="font-display text-3xl md:text-4xl font-normal max-w-2xl mx-auto mb-8 text-primary">
+            {ui.pages.events.ctaTitle ?? 'Explore all our events'}
+          </h2>
+          <Link
+            href="/events"
+            className="btn inline-flex bg-primary text-white hover:bg-primary/90 px-8 font-semibold"
+          >
+            {ui.pages.events.archives}
+          </Link>
+        </div>
+      </section>
+
     </main>
   )
 }

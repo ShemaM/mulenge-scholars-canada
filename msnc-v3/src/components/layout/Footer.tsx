@@ -1,271 +1,230 @@
 'use client'
 
-import Link from 'next/link'
-import { useActionState } from 'react'
-import { Mail, MapPin, Phone, ArrowRight } from 'lucide-react'
+import { useActionState, useEffect } from 'react'
+import { ArrowRight, Loader2 } from 'lucide-react'
+import Image from 'next/image'
+import { useLocale, useTranslations } from 'next-intl'
+import Script from 'next/script'
+import { Link, usePathname, useRouter } from '@/navigation'
+import { submitNewsletterForm } from '@/actions/newsletter'
+import { toast } from 'sonner'
+import { getUiCopy, normalizeSiteLocale, SiteLocale } from '@/lib/site-copy'
+import { InstagramIcon, SocialLink } from '@/components/ui/SocialIcons'
+import Container from '@/components/ui/Container'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
-import Container from '@/components/ui/Container'
-import { LinkedInIcon, XIcon, InstagramIcon } from '@/components/ui/SocialIcons'
-import { submitContactForm } from '@/actions/contact'
-import Script from 'next/script'
-
-const navLinks = [
-  { name: 'About', href: '/about' },
-  { name: 'Programs', href: '/programs' },
-  { name: 'Events', href: '/events' },
-  { name: 'Leadership', href: '/leadership' },
-]
-
-const actionLinks = [
-  { name: 'Join', href: '/join' },
-  { name: 'Donate', href: '/donate' },
-  { name: 'Blog', href: '/blog' },
-  { name: 'Contact', href: '/contact' },
-]
-
-const contactInfo = [
-  {
-    icon: Mail,
-    label: 'Email',
-    value: 'info@mulengescholars.org',
-    href: 'mailto:info@mulengescholars.org',
-  },
-  {
-    icon: MapPin,
-    label: 'Locations',
-    value: 'Canada',
-  },
-]
-
-const socialLinks = [
-  {
-    icon: InstagramIcon,
-    href: 'https://instagram.com/msnccanada',
-    aria: 'Instagram',
-  },
-  {
-    icon: XIcon,
-    href: 'https://twitter.com/msnccanada',
-    aria: 'X (Twitter)',
-  },
-  {
-    icon: LinkedInIcon,
-    href: 'https://linkedin.com/company/msnc',
-    aria: 'LinkedIn',
-  },
-]
 
 export default function Footer() {
+  const locale = normalizeSiteLocale(useLocale())
+  const copy = getUiCopy(locale)
+  const router = useRouter()
+  const pathname = usePathname()
   const currentYear = new Date().getFullYear()
-  const [state, formAction] = useActionState(submitContactForm, null)
+  const [state, formAction, isPending] = useActionState(submitNewsletterForm, null)
+  const t = useTranslations('Footer')
+
+  useEffect(() => {
+    if (state?.success) {
+      toast.success(state.message)
+      router.push('/')
+    } else if (state?.message) {
+      toast.error(state.message)
+    }
+  }, [state])
+
+  const handleLanguageToggle = (targetLocale: SiteLocale) => {
+    router.replace(pathname, { locale: targetLocale })
+  }
+
+  const orgName = copy.footer.brand.split(' ').slice(0, 3).join(' ')
 
   return (
     <>
-      <footer
-        role="contentinfo"
-        className="bg-slate-50/50 backdrop-blur-sm text-slate-700 pt-24 pb-12 border-t border-slate-200/50 relative overflow-hidden"
-      >
-        {/* Subtle watermark */}
-        <div className="absolute -bottom-12 -right-12 text-[18vw] font-black text-slate-200/30 select-none pointer-events-none leading-none rotate-12">
+      <footer role="contentinfo" className="relative overflow-hidden border-t border-border bg-paper-50 pb-12 pt-24 text-primary">
+        <div className="pointer-events-none absolute -bottom-12 -right-12 rotate-12 select-none text-[18vw] font-black leading-none text-muted-foreground/5" aria-hidden="true">
           MSNC
         </div>
 
-        <Container>
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-16 mb-16">
-            {/* Brand */}
-            <div className="space-y-6 lg:col-span-1">
-              <Link href="/" className="flex items-center gap-3 group">
-                <img
-                  src="/media/logo-original.png"
-                  alt="Mulenge Scholars Network Canada Logo"
-                  className="w-14 h-14 object-contain rounded-xl border-2 border-slate-200 p-1.5 bg-white shadow-md group-hover:shadow-lg transition-shadow"
-                  width={56}
-                  height={56}
-                  loading="lazy"
-                />
-              </Link>
-              <p className="text-sm leading-relaxed max-w-xs">
-                Empowering Mulenge diaspora youth through education, mentorship, and leadership for
-                sustainable futures.
-              </p>
-              <div className="flex gap-2" role="list">
-                {socialLinks.map(({ icon: Icon, href, aria }, i) => (
-                  <a
-                    key={i}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2.5 border border-slate-200 rounded-2xl bg-white hover:bg-slate-50 hover:border-slate-300 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                    aria-label={aria}
-                  >
-                    <Icon />
-                  </a>
-                ))}
-              </div>
-            </div>
+        <Container className="relative z-10">
+          <div className="mb-16 grid grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-20">
 
-            {/* Navigation */}
-            <div className="space-y-6 lg:col-span-1">
-              <h4 className="text-xs font-black uppercase tracking-[0.3em] text-slate-900">MSNC</h4>
-              <nav className="space-y-3" role="list">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="block text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors group"
-                  >
-                    {link.name}
-                  </Link>
-                ))}
-              </nav>
-            </div>
+            {/* Column 1: Contact & Organization Info */}
+            <section aria-labelledby="org-info-heading">
+              <h2 id="org-info-heading" className="section-label sr-only">Organization Information</h2>
 
-            <div className="space-y-6 lg:col-span-1">
-              <h4 className="text-xs font-black uppercase tracking-[0.3em] text-slate-900">
-                Actions
-              </h4>
-              <nav className="space-y-3" role="list">
-                {actionLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="block text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors group"
-                  >
-                    {link.name}
-                  </Link>
-                ))}
-              </nav>
-            </div>
-
-            {/* Contact & Newsletter */}
-            <div className="lg:col-span-1 space-y-8">
-              <div>
-                <h4 className="text-xs font-black uppercase tracking-[0.3em] text-slate-900 mb-6">
-                  Get in touch
-                </h4>
-                <div className="space-y-4">
-                  {contactInfo.map(({ icon: Icon, label, value, href }, i) => (
-                    <div key={i} className="flex items-start gap-3 group">
-                      <Icon className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0 opacity-75 group-hover:opacity-100 transition-opacity" />
-                      <div>
-                        <div className="text-xs uppercase tracking-wide text-slate-500 font-bold mb-1">
-                          {label}
-                        </div>
-                        {href ? (
-                          <a
-                            href={href}
-                            className="text-sm font-medium text-slate-900 hover:text-blue-600 transition-colors block"
-                          >
-                            {value}
-                          </a>
-                        ) : (
-                          <span className="text-sm font-medium text-slate-900">{value}</span>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+              <Link href="/" className="group mb-6 flex w-fit items-center gap-4 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-4 focus-visible:ring-offset-paper-50">
+                <div className="relative h-14 w-14 rounded-xl border border-border bg-white p-1.5 shadow-sm transition-all group-hover:shadow-md">
+                  <Image
+                    src="/media/logo-emblem-transparent.png"
+                    alt={`${orgName} logo`}
+                    fill
+                    className="object-contain"
+                    sizes="56px"
+                  />
                 </div>
-              </div>
+                <div>
+                  <span className="font-black uppercase tracking-widest text-primary text-sm leading-tight">
+                    {orgName}
+                  </span>
+                </div>
+              </Link>
 
-              {/* Newsletter */}
-              <div>
-                <h4 className="text-xs font-black uppercase tracking-[0.3em] text-slate-900 mb-4">
-                  Newsletter
-                </h4>
-                <p className="text-sm text-slate-600 mb-4 leading-relaxed">
-                  Stay updated with program launches and impact stories.
-                </p>
-                <form action={formAction} className="space-y-3">
+              <address className="not-italic space-y-4 text-muted-foreground">
+                <div className="font-medium text-primary">{orgName}</div>
+                <a
+                  href="mailto:info@mulengescholars.org"
+                  className="block font-medium text-primary hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-sm"
+                  aria-label="Email info@mulengescholars.org"
+                >
+                  info@mulengescholars.org
+                </a>
+                <Link
+                  href="/contact"
+                  className="inline-block font-medium text-primary hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-sm"
+                >
+                  {t('contactUs')}
+                </Link>
+              </address>
+            </section>
+
+            {/* Column 2: Engagement */}
+            <section aria-labelledby="engagement-heading">
+              <h2 id="engagement-heading" className="mb-6 block section-label">Engagement</h2>
+
+              <div className="space-y-4 rounded-2xl border border-border bg-white p-6 shadow-sm">
+                <h3 className="font-black uppercase tracking-widest text-primary text-2xs">
+                  {t('newsletter.heading')}
+                </h3>
+                <form action={formAction} className="space-y-4">
+                  <input type="hidden" name="locale" value={locale} />
+                  <input type="hidden" name="fullName" value="Newsletter Subscriber" />
                   <input type="hidden" name="subject" value="Newsletter Signup" />
+                  <input type="hidden" name="message" value="Newsletter subscription" />
+
                   <Input
                     type="email"
                     name="email"
-                    placeholder="your@email.com"
+                    placeholder={t('newsletter.placeholder')}
                     required
-                    className="h-12 bg-white border-slate-200 rounded-xl px-4 placeholder:text-slate-400 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
-                    aria-label="Email for newsletter"
+                    aria-label={t('newsletter.ariaLabel')}
+                    disabled={isPending}
+                    className="focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-1"
                   />
+
                   <Button
                     type="submit"
-                    className="w-full bg-slate-900 hover:bg-black text-white h-12 rounded-xl font-semibold transition-colors"
+                    variant="secondary"
+                    size="default"
+                    className="w-full focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-1"
+                    isLoading={isPending}
                   >
-                    Subscribe{' '}
-                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    {isPending ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                        {t('newsletter.buttonPending')}
+                      </>
+                    ) : (
+                      <>
+                        {t('newsletter.button')}
+                        <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                      </>
+                    )}
                   </Button>
+
+                  <p className="text-xs text-muted-foreground leading-relaxed">{t('newsletter.privacyReassurance')}</p>
+
                   {state?.message && (
-                    <p
-                      className={`text-xs p-2 rounded-lg font-medium text-center ${
+                    <div
+                      role="alert"
+                      aria-live="polite"
+                      className={`rounded-lg border p-3 text-center text-xs font-bold uppercase tracking-wider ${
                         state.success
-                          ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-                          : 'bg-red-50 text-red-800 border border-red-200'
+                          ? 'border-green-200 bg-green-50 text-green-800'
+                          : 'border-destructive bg-destructive/10 text-destructive'
                       }`}
                     >
                       {state.message}
-                    </p>
+                    </div>
                   )}
                 </form>
               </div>
-            </div>
+
+              <div className="mt-8 flex gap-3" role="list">
+                <SocialLink
+                  href="https://instagram.com/msnccanada"
+                  ariaLabel={t('socialInstagram')}
+                >
+                  <InstagramIcon />
+                </SocialLink>
+              </div>
+            </section>
+
+            {/* Column 3: Utility */}
+            <section aria-labelledby="utility-heading">
+              <h2 id="utility-heading" className="mb-6 block section-label">Utility</h2>
+
+              <nav className="mb-8 flex flex-col space-y-2" role="navigation" aria-label="Legal policies">
+                <Link href="/privacy" className="block py-2 text-sm font-medium text-muted-foreground hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-md">
+                  {copy.footer.legal.privacy}
+                </Link>
+                <Link href="/terms" className="block py-2 text-sm font-medium text-muted-foreground hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-md">
+                  {copy.footer.legal.terms}
+                </Link>
+                <Link href="/accessibility" className="block py-2 text-sm font-medium text-muted-foreground hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-md">
+                  {t('legal.accessibility')}
+                </Link>
+              </nav>
+
+              <div className="rounded-full border border-border bg-white p-1 shadow-sm" role="group" aria-label="Language selector">
+                <button
+                  type="button"
+                  onClick={() => handleLanguageToggle('en')}
+                  className={`rounded-full px-4 py-2 text-xs font-black uppercase tracking-widest transition-colors w-full text-left ${
+                    locale === 'en'
+                      ? 'bg-primary text-white shadow-md'
+                      : 'text-muted-foreground hover:text-primary hover:bg-paper-50'
+                  }`}
+                  aria-pressed={locale === 'en'}
+                >
+                  English
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleLanguageToggle('fr')}
+                  className={`rounded-full px-4 py-2 text-xs font-black uppercase tracking-widest transition-colors w-full text-left ${
+                    locale === 'en'
+                      ? 'text-muted-foreground hover:text-primary hover:bg-paper-50'
+                      : 'bg-primary text-white shadow-md'
+                  }`}
+                  aria-pressed={locale !== 'en'}
+                >
+                  Français
+                </button>
+              </div>
+            </section>
+
           </div>
 
-          {/* Bottom bar */}
-          <div className="border-t border-slate-200 pt-8 flex flex-col lg:flex-row justify-between items-center gap-4 text-xs">
-            <p className="font-bold text-slate-500 uppercase tracking-wide">
-              © {currentYear} Mulenge Scholars&apos; Network Canada. All rights reserved.
+          {/* Bottom Bar */}
+          <div className="flex flex-col items-center justify-between gap-6 border-t border-border pt-8 lg:flex-row">
+            <p className="text-[11px] font-medium text-muted-foreground/70 text-center lg:text-left tracking-normal normal-case">
+              {t('copyright', { year: currentYear.toString() })}
             </p>
-            <nav className="flex gap-6" role="list">
-              <Link
-                href="/privacy"
-                className="font-black text-slate-500 hover:text-slate-900 transition-colors"
-              >
-                Privacy
-              </Link>
-              <Link
-                href="/terms"
-                className="font-black text-slate-500 hover:text-slate-900 transition-colors"
-              >
-                Terms
-              </Link>
-              <Link
-                href="/sitemap.xml"
-                className="font-black text-slate-500 hover:text-slate-900 transition-colors"
-              >
-                Sitemap
-              </Link>
-            </nav>
           </div>
         </Container>
       </footer>
 
-      {/* Schema.org */}
       <Script id="msnc-schema" type="application/ld+json">
         {JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'NGO',
           name: "Mulenge Scholars' Network Canada",
           url: 'https://mulengescholars.org',
-          logo: 'https://mulengescholars.org/media/logo-original.png',
-          contactPoint: [
-            {
-              '@type': 'ContactPoint',
-              email: 'info@mulengescholars.org',
-              contactType: 'general',
-            },
-          ],
-          sameAs: [
-            'https://twitter.com/msnccanada',
-            'https://linkedin.com/company/msnc',
-            'https://instagram.com/msnccanada',
-          ],
-          address: {
-            '@type': 'PostalAddress',
-            addressCountry: 'CA',
-          },
-          founder: {
-            '@type': 'Organization',
-            name: 'Mulenge Scholars Network Canada',
-          },
+          logo: 'https://mulengescholars.org/media/logo-emblem-transparent.png',
+          contactPoint: [{ '@type': 'ContactPoint', email: 'info@mulengescholars.org', contactType: 'general' }],
+          sameAs: ['https://instagram.com/msnccanada'],
+          address: { '@type': 'PostalAddress', addressCountry: 'CA' },
+          founder: { '@type': 'Organization', name: 'Mulenge Scholars Network Canada' },
         })}
       </Script>
     </>

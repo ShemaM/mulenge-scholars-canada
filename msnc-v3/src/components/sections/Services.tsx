@@ -36,9 +36,9 @@ export default function Services() {
           <div className="lg:col-span-8">
             <div className="inline-flex items-center gap-3 mb-6">
               <span className="w-12 h-px bg-primary" />
-              <span className="text-xs font-black uppercase tracking-[0.3em] text-primary">Service Index</span>
+              <span className="text-xs font-black uppercase tracking-widest text-primary">Service Index</span>
             </div>
-            <h2 className="font-display font-black text-6xl md:text-8xl text-primary leading-[0.9] tracking-tighter">
+            <h2 className="font-display text-6xl md:text-8xl text-primary leading-none tracking-tighter">
               Comprehensive <br />
               <span className="text-secondary italic font-normal">Support Engine.</span>
             </h2>
@@ -72,15 +72,15 @@ async function ServicesList() {
           >
             <div className="grid lg:grid-cols-12 gap-8 items-center">
               <div className="lg:col-span-1">
-                <span className="font-display text-4xl font-black opacity-20 group-hover:opacity-100 transition-all duration-500 text-primary">
+                <span className="font-display text-4xl opacity-20 group-hover:opacity-100 transition-all duration-500 text-primary">
                   {service.index || String(index +1).padStart(2,'0')}
                 </span>
               </div>
               <div className="lg:col-span-4">
-                <h3 className="text-3xl font-black text-primary font-display tracking-tight group-hover:translate-x-2 transition-transform duration-500">
+                <h3 className="text-3xl text-primary font-display tracking-tight group-hover:translate-x-2 transition-transform duration-500">
                   {service.title}
                 </h3>
-                <span className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mt-2 block">
+                <span className="text-xs font-black uppercase tracking-widest text-slate-400 mt-2 block">
                   {service.tagline || 'Pillar Service'}
                 </span>
               </div>

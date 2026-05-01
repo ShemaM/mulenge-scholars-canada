@@ -46,12 +46,12 @@ export default function ScholarshipList({ scholars = [] }: ScholarshipListProps)
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-md border border-slate-200/60 mb-6">
               <GraduationCap className="w-3 h-3 text-secondary" />
-              <span className="text-xs font-semibold text-primary uppercase tracking-[0.15em]">
+              <span className="text-xs font-semibold text-primary uppercase tracking-widest">
                 Wall of Excellence
               </span>
             </div>
             
-            <h2 className="font-display font-black text-5xl md:text-7xl text-primary mb-6 tracking-tight leading-[1.05]">
+            <h2 className="font-display text-5xl md:text-7xl text-primary mb-6 tracking-tight leading-tight">
               Celebrating Our
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-secondary to-primary mt-2">
                 Scholars
@@ -84,7 +84,7 @@ export default function ScholarshipList({ scholars = [] }: ScholarshipListProps)
                   
                   <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200">
                     <Calendar className="w-3 h-3 text-slate-500" />
-                    <span className="text-[10px] font-bold text-primary uppercase tracking-wider">
+                    <span className="text-2xs font-bold text-primary uppercase tracking-wider">
                       {award.year}
                     </span>
                   </div>
@@ -92,7 +92,7 @@ export default function ScholarshipList({ scholars = [] }: ScholarshipListProps)
 
                 <div className="space-y-6">
                   <div>
-                    <h3 className="font-display text-2xl md:text-3xl font-bold text-primary mb-3 tracking-tight leading-tight group-hover:text-secondary transition-colors">
+                    <h3 className="font-display text-2xl md:text-3xl text-primary mb-3 tracking-tight leading-tight group-hover:text-secondary transition-colors">
                       {award.recipientName}
                     </h3>
                     
@@ -103,10 +103,10 @@ export default function ScholarshipList({ scholars = [] }: ScholarshipListProps)
                   </div>
 
                   <div className="pt-6 border-t border-slate-100">
-                    <div className="text-xs font-bold text-slate-400 uppercase tracking-[0.15em] mb-2">
+                    <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
                       Award Value
                     </div>
-                    <div className="font-display text-3xl font-black text-primary">
+                    <div className="font-display text-3xl text-primary">
                       {/* Formatted Card Amount */}
                       {currencyFormatter.format(cleanAmount(award.amount))}
                     </div>
@@ -121,7 +121,7 @@ export default function ScholarshipList({ scholars = [] }: ScholarshipListProps)
         <div className="mt-20 pt-12 border-t border-slate-200/60 text-center">
           <p className="text-lg text-slate-500 leading-relaxed italic">
             Totaling over{' '}
-            <span className="font-display text-3xl md:text-5xl font-black text-primary not-italic mx-2">
+            <span className="font-display text-3xl md:text-5xl text-primary not-italic mx-2">
               {currencyFormatter.format(totalAwarded)}
             </span>
             {' '}in educational support across the network

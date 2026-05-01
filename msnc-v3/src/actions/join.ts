@@ -1,35 +1,35 @@
 "use server";
 
-import { getCachedPayload } from "@/lib/payload";
-import { checkRateLimit } from "@/lib/rate-limit";
 import { z } from "zod";
+import { getPayload } from "payload";
+import config from "@payload-config";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const JoinSchema = z.object({
-  firstName: z.string().min(2, "First name must be at least 2 characters."),
-  lastName:  z.string().min(2, "Last name must be at least 2 characters."),
-  email:     z.string().email("Please enter a valid email address."),
-  phone:     z.string().optional(),
-  interest:  z.enum(["volunteer", "scholar", "partner"]),
-  message:   z.string().min(10, "Please add at least 10 characters about your goals."),
+  firstName: z.string().trim().min(1, "First name is required.").max(50),
+  lastName: z.string().trim().min(1, "Last name is required.").max(50),
+  email: z.string().trim().email("Please enter a valid email address."),
+  interest: z.enum(["volunteer", "scholar", "partner", "support", "general"]),
+  message: z.string().trim().min(10, "Please add at least 10 characters about your goals.").max(5000),
 });
 
 export async function submitJoinApplication(prevState: any, formData: FormData) {
   try {
     await checkRateLimit();
   } catch {
-    return { success: false, message: "Too many requests. Please wait a moment before trying again." };
+    return {
+      success: false,
+      message: "Too many requests. Please wait a moment before trying again.",
+    };
   }
 
-  const rawData = {
+  const validatedFields = JoinSchema.safeParse({
     firstName: formData.get("firstName"),
-    lastName:  formData.get("lastName"),
-    email:     formData.get("email"),
-    phone:     formData.get("phone"),
-    interest:  formData.get("interest"),
-    message:   formData.get("message"),
-  };
-
-  const validatedFields = JoinSchema.safeParse(rawData);
+    lastName: formData.get("lastName"),
+    email: formData.get("email"),
+    interest: formData.get("interest"),
+    message: formData.get("message"),
+  });
 
   if (!validatedFields.success) {
     return {
@@ -39,21 +39,19 @@ export async function submitJoinApplication(prevState: any, formData: FormData) 
     };
   }
 
-  const { firstName, lastName, email, phone, interest, message } = validatedFields.data;
+  const { firstName, lastName, email, interest, message } = validatedFields.data;
   const fullName = `${firstName} ${lastName}`.trim();
-  const resolvedMessage = phone ? `Phone: ${phone}\n\n${message}` : message;
 
   try {
-    const payload = await getCachedPayload();
+    const payload = await getPayload({ config });
 
     await payload.create({
       collection: "join-submissions",
       data: {
         fullName,
         email,
-        phone,
         interest,
-        message: resolvedMessage,
+        message,
         status: "new",
       },
     });
@@ -63,7 +61,10 @@ export async function submitJoinApplication(prevState: any, formData: FormData) 
       message: "Application received. Our leadership team will reach out within 2-3 business days.",
     };
   } catch (error) {
-    console.error("Join submission error");
-    return { success: false, message: "We could not submit right now. Please try again in a few minutes." };
+    console.error("Join submission error:", error);
+    return {
+      success: false,
+      message: "We could not submit right now. Please try again in a few minutes.",
+    };
   }
 }

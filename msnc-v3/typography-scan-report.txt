@@ -1,0 +1,24 @@
+
+== src/app/[locale]/(frontend)/impact/rebuilding-futures/page.tsx ==
+  L107 [arbitrary-text-size]: <div className="absolute top-1/2 right-0 -translate-y-1/2 text-[25vw] font-black text-foreground/[0.03] leading-none pointer-events-none select-none tracking-tighter flex justify-end">
+
+== src/app/[locale]/(frontend)/join/JoinClient.tsx ==
+  L120 [arbitrary-text-size]: <div className="absolute right-10 top-1/2 -translate-y-1/2 text-[12vw] text-primary/5 font-display select-none pointer-events-none leading-none uppercase">
+
+== src/app/[locale]/(frontend)/programs/adult-learning-pathways/page.tsx ==
+  L55 [arbitrary-text-size]: className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 select-none text-[30vw] font-display text-primary/5 leading-none tracking-tighter"
+
+== src/app/[locale]/(frontend)/programs/high-school-support/page.tsx ==
+  L56 [arbitrary-text-size]: className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 select-none text-[30vw] font-display text-primary/5 leading-none tracking-tighter"
+
+== src/app/[locale]/(frontend)/programs/workshops-community/page.tsx ==
+  L54 [arbitrary-text-size]: className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 select-none text-[30vw] font-display text-primary/5 leading-none tracking-tighter"
+
+== src/app/[locale]/(frontend)/programs/[slug]/page.tsx ==
+  L82 [arbitrary-text-size]: <div className="absolute top-1/2 right-0 -translate-y-1/2 text-[30vw] font-display text-primary/5 leading-none pointer-events-none select-none tracking-tighter">
+
+== src/components/layout/Footer.tsx ==
+  L40 [arbitrary-text-size]: <div className="pointer-events-none absolute -bottom-12 -right-12 rotate-12 select-none text-[18vw] font-black leading-none text-muted-foreground/5" aria-hidden="true">
+
+== src/components/sections/ProgramContextSection.tsx ==
+  L45 [arbitrary-text-size]: className="font-display text-[8rem] leading-none tracking-tighter text-foreground/[0.04] select-none"

@@ -28,8 +28,8 @@ export default async function NotFound() {
     <Container className="min-h-screen flex items-center justify-center py-12">
       <div className="max-w-md w-full space-y-8 text-center">
         <div className="space-y-4">
-          <h2 className="text-4xl font-bold text-slate-900 tracking-tight">{copy.title}</h2>
-          <p className="text-lg text-slate-500">{copy.body}</p>
+<h2 className="text-4xl text-primary">{copy.title}</h2>
+          <p className="text-lg text-muted-foreground">{copy.body}</p>
         </div>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link href="/" className="w-full sm:w-auto">
@@ -49,3 +49,4 @@ export default async function NotFound() {
     </Container>
   )
 }
+

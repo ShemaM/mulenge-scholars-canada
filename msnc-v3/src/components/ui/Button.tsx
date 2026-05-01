@@ -6,29 +6,24 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-2xl text-sm font-black uppercase tracking-widest transition-all duration-500 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-95",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-bold uppercase tracking-widest transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 active:scale-95",
   {
     variants: {
       variant: {
-        default:
-          "bg-primary text-primary-foreground shadow-brand hover:bg-secondary hover:shadow-xl hover:-translate-y-0.5",
-        destructive:
-          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
-        outline:
-          "border-2 border-slate-200 bg-background text-primary hover:border-primary hover:bg-slate-50 shadow-sm",
-        secondary:
-          "bg-secondary text-secondary-foreground shadow-brand hover:bg-secondary/90 hover:-translate-y-0.5",
-        ghost: "text-primary hover:bg-slate-100",
+        default: "bg-primary text-white shadow-sm hover:bg-primary/90 hover:shadow-lg hover:-translate-y-0.5",
+        destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+        outline: "border-2 border-border bg-transparent text-primary hover:border-primary/30 hover:bg-paper-50 shadow-sm",
+        secondary: "bg-secondary text-white shadow-sm hover:bg-secondary/90 hover:-translate-y-0.5",
+        ghost: "text-primary hover:bg-paper-50",
         link: "text-primary underline-offset-8 hover:underline decoration-2 decoration-secondary/30 hover:decoration-secondary",
-        accent: 
-          "bg-accent text-white shadow-brand hover:bg-primary hover:-translate-y-0.5",
+        accent: "bg-accent text-white shadow-sm hover:bg-primary hover:-translate-y-0.5",
       },
       size: {
-        default: "h-11 px-6",
-        sm: "h-9 rounded-xl px-4 text-[10px]",
-        lg: "h-14 rounded-[1.25rem] px-10 text-xs",
+        default: "h-12 rounded-xl px-8",
+        sm: "h-10 rounded-lg px-4 text-2xs",
+        lg: "h-14 rounded-2xl px-10 text-xs",
         xl: "h-16 rounded-[1.5rem] px-12 text-sm",
-        icon: "h-11 w-11 rounded-xl",
+        icon: "h-12 w-12 rounded-xl",
       },
     },
     defaultVariants: {

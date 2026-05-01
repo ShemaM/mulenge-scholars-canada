@@ -9,67 +9,75 @@ export const JoinSubmissions: CollectionConfig = {
     description: 'Applications submitted via the frontend Join/Partner forms.',
   },
   access: {
-    create: () => true, // Public can submit
-    read: ({ req: { user } }) => !!user, // Only admins can read
-    update: ({ req: { user } }) => !!user, // Only admins can update status
-    delete: ({ req: { user } }) => !!user, // Only admins can delete
+    create: () => true,
+    read: ({ req: { user } }) => !!user,
+    update: ({ req: { user } }) => !!user,
+    delete: ({ req: { user } }) => !!user,
   },
   fields: [
     {
-      type: 'row', // UX: Groups fields side-by-side in the admin panel
-      fields: [
-        { 
-          name: 'fullName', 
-          type: 'text', 
-          required: true, 
-          admin: { readOnly: true } // Prevents admins from accidentally changing user input
+      name: 'emailView',
+      type: 'ui',
+      admin: {
+        components: {
+          Field: '/components/admin/SubmissionEmailView#SubmissionEmailView',
         },
-        { 
-          name: 'email', 
-          type: 'email', 
-          required: true, 
-          admin: { readOnly: true } 
+      },
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'fullName',
+          type: 'text',
+          required: true,
+          admin: { readOnly: true },
+        },
+        {
+          name: 'email',
+          type: 'email',
+          required: true,          // unique: true removed — same person can reapply
+          admin: { readOnly: true },
         },
       ],
     },
-    { 
-      name: 'phone', 
-      type: 'text', 
-      admin: { readOnly: true } 
+    {
+      name: 'phone',
+      type: 'text',
+      admin: { readOnly: true },
     },
-    { 
-      name: 'interest', 
-      type: 'select', 
+    {
+      name: 'interest',
+      type: 'select',
       required: true,
+      defaultValue: 'general',
       admin: { readOnly: true },
       options: [
-        // CRITICAL FIX: Matches the frontend form roles exactly to prevent database rejections
-        { label: 'Scholar Applicant', value: 'scholar' },
-        { label: 'Volunteer Mentor', value: 'volunteer' },
+        { label: 'Scholar Applicant',    value: 'scholar' },
+        { label: 'Volunteer Mentor',     value: 'volunteer' },
         { label: 'Institutional Partner', value: 'partner' },
-        { label: 'General Support', value: 'support' },
-        { label: 'General Inquiry', value: 'general' },
+        { label: 'General Support',      value: 'support' },
+        { label: 'General Inquiry',      value: 'general' },
       ],
-      defaultValue: 'general',
     },
-    { 
-      name: 'message', 
-      type: 'textarea', 
-      admin: { readOnly: true } 
+    {
+      name: 'message',
+      type: 'textarea',
+      admin: { readOnly: true },
     },
-    // ─── ADMIN CONTROLS ───
     {
       name: 'status',
       type: 'select',
+      required: true,             // added — prevents status being nulled via API
       defaultValue: 'new',
       admin: {
-        position: 'sidebar', // UX: Moves this to the right-hand sidebar for workflow management
+        position: 'sidebar',
         description: 'Update this status as you process the application.',
       },
       options: [
-        { label: '🟢 New / Unread', value: 'new' },
+        { label: '🟢 New',         value: 'new' },
         { label: '🟡 Under Review', value: 'reviewed' },
-        { label: '⚪ Archived', value: 'archived' },
+        { label: '⚪ Archived',    value: 'archived' },
       ],
     },
   ],

@@ -10,7 +10,7 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded-[2.5rem] border border-slate-200 bg-card text-card-foreground shadow-brand transition-all duration-500 hover:shadow-xl hover:-translate-y-1",
+      "rounded-[2.5rem] border border-border bg-white text-primary shadow-sm transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] hover:shadow-lg hover:-translate-y-1",
       className
     )}
     {...props}
@@ -24,7 +24,7 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-2.5 p-10", className)}
+    className={cn("flex flex-col space-y-3 p-8 md:p-10", className)}
     {...props}
   />
 ))
@@ -37,7 +37,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "font-display text-2xl font-black leading-tight tracking-tight text-primary",
+      "font-display text-2xl leading-tight tracking-tight text-primary",
       className
     )}
     {...props}
@@ -51,7 +51,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-base font-medium text-primary/60 leading-relaxed", className)}
+    className={cn("text-base font-sans font-medium text-muted-foreground leading-relaxed", className)}
     {...props}
   />
 ))
@@ -61,7 +61,7 @@ const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-10 pt-0", className)} {...props} />
+  <div ref={ref} className={cn("p-8 md:p-10 pt-0", className)} {...props} />
 ))
 CardContent.displayName = "CardContent"
 
@@ -71,7 +71,7 @@ const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex items-center p-10 pt-0 border-t border-slate-200 mt-4", className)}
+    className={cn("flex items-center p-8 md:p-10 pt-0 border-t border-border mt-2", className)}
     {...props}
   />
 ))

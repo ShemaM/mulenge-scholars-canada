@@ -1,21 +1,22 @@
 "use client";
 
 import * as React from "react";
-import { ChevronRight, MoreHorizontal } from "lucide-react";
-import Link from "next/link";
+import { ChevronRight } from "lucide-react";
+import { Link } from "@/navigation"; 
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const breadcrumbVariants = cva(
-  "inline-flex items-center text-[10px] uppercase tracking-[0.2em] transition-all duration-300",
+  "inline-flex items-center text-2xs uppercase tracking-widest transition-all duration-300",
   {
     variants: {
       variant: {
-        default: "text-slate-400 font-medium",
-        editorial: "text-primary/50 font-black hover:text-primary", 
-        admin: "text-slate-500 font-black",
+        default: "text-muted-foreground/60 font-medium",
+        editorial: "text-primary/40 font-bold hover:text-secondary",
+        admin: "text-muted-foreground font-bold",
       },
     },
     defaultVariants: {
@@ -34,11 +35,20 @@ interface BreadcrumbProps
 const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(
   ({ className, variant, separator = <ChevronRight className="w-3.5 h-3.5" />, auto = false, children, ...props }, ref) => {
     const pathname = usePathname();
+    const t = useTranslations("Breadcrumbs");
 
-    // HCI Principle #4: Error Prevention - Don't render on Home
-    if (auto && (pathname === "/" || !pathname)) return null;
+    // 1. Logic: Identify path segments and filter out locale indicators (en/fr)
+    const pathSegments = pathname.split("/").filter(Boolean);
+    const filteredSegments = pathSegments.filter(s => s !== 'en' && s !== 'fr');
+    
+    // HCI Principle: If we are on the Home landing page, don't show breadcrumbs (reduces noise)
+    if (auto && filteredSegments.length === 0) return null;
 
     const formatSegment = (segment: string) => {
+      // Use dictionary translation if it exists, otherwise fallback to title-case split
+      if (t.has(segment as any)) {
+        return t(segment as any);
+      }
       return segment
         .split("-")
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
@@ -50,42 +60,42 @@ const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(
         ref={ref}
         aria-label="breadcrumb"
         className={cn(
-          breadcrumbVariants({ variant }), 
-          auto && "max-w-7xl mx-auto px-6 md:px-12", 
+          breadcrumbVariants({ variant }),
+          auto && "container-editorial py-6 w-full", 
           className
         )}
         {...props}
       >
         {auto ? (
           <BreadcrumbList>
+            {/* Start with Home anchor */}
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+              <BreadcrumbLink href="/">{t("home")}</BreadcrumbLink>
             </BreadcrumbItem>
-            
-            {pathname
-              .split("/")
-              .filter(Boolean)
-              .map((segment, index, array) => {
-                const href = "/" + array.slice(0, index + 1).join("/");
-                const isLast = index === array.length - 1;
 
-                return (
-                  <React.Fragment key={href}>
-                    <BreadcrumbSeparator className="opacity-30">{separator}</BreadcrumbSeparator>
-                    <BreadcrumbItem>
-                      {isLast ? (
-                        <span className="text-primary font-black" aria-current="page">
-                          {formatSegment(segment)}
-                        </span>
-                      ) : (
-                        <BreadcrumbLink href={href}>
-                          {formatSegment(segment)}
-                        </BreadcrumbLink>
-                      )}
-                    </BreadcrumbItem>
-                  </React.Fragment>
-                );
-              })}
+            {filteredSegments.map((segment, index) => {
+              const label = formatSegment(segment);
+              // Build clean href: e.g. /about or /about/history
+              const href = `/${filteredSegments.slice(0, index + 1).join("/")}`;
+              const isLast = index === filteredSegments.length - 1;
+
+              return (
+                <React.Fragment key={href}>
+                  <BreadcrumbSeparator>{separator}</BreadcrumbSeparator>
+                  <BreadcrumbItem>
+                    {isLast ? (
+                      <span className="text-primary font-bold" aria-current="page">
+                        {label}
+                      </span>
+                    ) : (
+                      <BreadcrumbLink href={href}>
+                        {label}
+                      </BreadcrumbLink>
+                    )}
+                  </BreadcrumbItem>
+                </React.Fragment>
+              );
+            })}
           </BreadcrumbList>
         ) : (
           children
@@ -96,13 +106,11 @@ const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(
 );
 Breadcrumb.displayName = "Breadcrumb";
 
-// --- Semantic List Components with Strict Typing ---
-
 const BreadcrumbList = React.forwardRef<HTMLOListElement, React.OlHTMLAttributes<HTMLOListElement>>(
   ({ className, ...props }, ref) => (
     <ol
       ref={ref}
-      className={cn("flex flex-wrap items-center gap-1.5 break-words sm:gap-2", className)}
+      className={cn("flex flex-wrap items-center gap-1.5 break-words", className)}
       {...props}
     />
   )
@@ -116,13 +124,14 @@ const BreadcrumbItem = React.forwardRef<HTMLLIElement, React.LiHTMLAttributes<HT
 );
 BreadcrumbItem.displayName = "BreadcrumbItem";
 
-const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, React.AnchorHTMLAttributes<HTMLAnchorElement> & { asChild?: boolean }>(
-  ({ className, asChild, ...props }, ref) => {
-    const Comp = (asChild ? Slot : Link) as any;
+const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, React.AnchorHTMLAttributes<HTMLAnchorElement> & { asChild?: boolean; href: string }>(
+  ({ className, asChild, href, ...props }, ref) => {
+    const Comp = asChild ? Slot : Link;
     return (
       <Comp
-        ref={ref}
-        className={cn("transition-colors hover:text-secondary focus-visible:outline-none", className)}
+        ref={ref as any}
+        href={href}
+        className={cn("transition-colors hover:text-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary rounded-sm", className)}
         {...props}
       />
     );
@@ -130,17 +139,21 @@ const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, React.AnchorHTMLAttri
 );
 BreadcrumbLink.displayName = "BreadcrumbLink";
 
-const BreadcrumbSeparator = React.forwardRef<HTMLLIElement, React.LiHTMLAttributes<HTMLLIElement>>(
+/**
+ * CRITICAL FIX: The separator is a SPAN, not an LI.
+ * This prevents the hydration error [<li> cannot be a descendant of <li>]
+ */
+const BreadcrumbSeparator = React.forwardRef<HTMLSpanElement, React.HTMLAttributes<HTMLSpanElement>>(
   ({ className, children, ...props }, ref) => (
-    <li
+    <span
       role="presentation"
       aria-hidden="true"
       ref={ref}
-      className={cn("[&>svg]:size-3.5 mx-1 flex-shrink-0", className)}
+      className={cn("[&>svg]:size-3.5 mx-1 flex-shrink-0 text-muted-foreground/30", className)}
       {...props}
     >
       {children ?? <ChevronRight />}
-    </li>
+    </span>
   )
 );
 BreadcrumbSeparator.displayName = "BreadcrumbSeparator";

@@ -4,10 +4,13 @@ interface IconProps {
   className?: string;
 }
 
+/**
+ * Custom LinkedIn Icon
+ */
 export const LinkedInIcon = ({ className }: IconProps) => (
-  <svg 
-    viewBox="0 0 24 24" 
-    fill="currentColor" 
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
     className={cn("w-5 h-5", className)}
     aria-hidden="true"
   >
@@ -15,17 +18,9 @@ export const LinkedInIcon = ({ className }: IconProps) => (
   </svg>
 );
 
-export const XIcon = ({ className }: IconProps) => (
-  <svg 
-    viewBox="0 0 24 24" 
-    fill="currentColor" 
-    className={cn("w-5 h-5", className)}
-    aria-hidden="true"
-  >
-    <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932 6.064-6.932zm-1.292 19.494h2.039L6.486 3.24H4.298l13.311 17.407z"/>
-  </svg>
-);
-
+/**
+ * Custom Instagram Icon (Stroke-based for clarity)
+ */
 export const InstagramIcon = ({ className }: IconProps) => (
   <svg 
     viewBox="0 0 24 24" 
@@ -41,4 +36,46 @@ export const InstagramIcon = ({ className }: IconProps) => (
     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
     <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
   </svg>
+);
+
+/**
+ * Custom Email Icon (Lucide-based Mail)
+ */
+export const EmailIcon = ({ className }: IconProps) => (
+  <svg 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={cn("w-5 h-5", className)}
+    aria-hidden="true"
+  >
+    <rect width="20" height="16" x="2" y="4" rx="2"/>
+    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+  </svg>
+);
+
+/**
+ * Standardized Social Link Wrapper
+ */
+export const SocialLink = ({ 
+  href, 
+  children, 
+  ariaLabel 
+}: { 
+  href: string; 
+  children: React.ReactNode; 
+  ariaLabel: string;
+}) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label={ariaLabel}
+    className="flex h-12 w-12 items-center justify-center rounded-full border border-border text-primary transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] hover:border-secondary hover:bg-secondary hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2"
+  >
+    {children}
+  </a>
 );

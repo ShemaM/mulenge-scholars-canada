@@ -23,6 +23,12 @@ const serverFunction = async (args: any) => {
   })
 }
 
+export const metadata = {
+  other: {
+    'grammarly-disable-extension': 'true',
+  },
+}
+
 export default function Layout({ children }: Args) {
   return (
     <RootLayout serverFunction={serverFunction} config={config} importMap={importMap}>

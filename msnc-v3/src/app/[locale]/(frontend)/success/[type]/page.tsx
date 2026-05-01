@@ -95,7 +95,7 @@ export default async function SuccessPage({ params }: SuccessPageProps) {
               <span className="w-8 h-0.5 bg-secondary" />
               {defaultsByLocale.badge}
             </div>
-            <h1 className="text-5xl md:text-7xl font-black text-primary leading-[1.05] tracking-tight font-display mb-6">
+            <h1 className="text-5xl md:text-7xl text-primary leading-tight tracking-tight font-display mb-6">
               {content.title}
             </h1>
             <p className="text-xl text-foreground/70 leading-relaxed font-medium max-w-2xl border-l-4 border-secondary pl-6">

@@ -1,83 +1,89 @@
-import { Button } from '@/components/ui/Button';
-import Link from 'next/link';
-import { GraduationCap, HeartHandshake, ArrowRight } from 'lucide-react';
-
 /**
- * CTA_Split Component
- * -------------------
- * A high-conversion dual-pathway section.
- * Separates the "Service Receivers" from the "Service Givers" 
- * to ensure clear user journeys.
+ * MSNC CTA_Split — Clean Split with Borders
+ * No dark blue or dark secondary backgrounds. White + borders.
  */
+
+'use client'
+
+import { GraduationCap, HeartHandshake, ArrowRight } from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import { Link } from '@/navigation'
+
 export default function CtaSplit() {
+  const t = useTranslations('CtaSplit')
+
   return (
-    <section className="relative overflow-hidden bg-white">
-      <div className="grid lg:grid-cols-2">
-        
-        {/* Path A: For Scholars (The "Blue" Path) */}
-        <div className="relative group bg-primary py-24 md:py-32 px-8 md:px-16 overflow-hidden">
-          {/* Animated Background Element */}
-          <div className="absolute -right-20 -top-20 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-colors duration-700" />
-          
-          <div className="relative z-10 max-w-xl ml-auto space-y-8">
-            <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-white">
-              <GraduationCap className="w-8 h-8" />
-            </div>
-            
-            <div className="space-y-4">
-              <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight">
-                Are you a <span className="italic">Scholar</span> seeking a roadmap?
-              </h2>
-              <p className="text-white/80 text-lg leading-relaxed">
-                Join a community that understands your journey. Get access to verified 
-                mentors, scholarship alerts, and a network of peers who have walked the path before you.
-              </p>
-            </div>
+    <section className="relative overflow-hidden bg-white border-t border-border" aria-labelledby="cta-heading">
+      <div className="container-editorial">
+        <div className="grid lg:grid-cols-2 gap-0">
+          {/* Path A: Scholars */}
+          <div className="group px-8 py-20 md:px-16 md:py-28 border-b lg:border-b-0 lg:border-r border-border">
+            <div className="max-w-lg space-y-10">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary/10 text-secondary">
+                <GraduationCap className="h-8 w-8" />
+              </div>
 
-            <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 rounded-2xl px-10 h-16 text-lg font-black shadow-xl">
-              <Link href="/join?role=STUDENT">
-                Apply as a Scholar <ArrowRight className="ml-2 w-5 h-5" />
+              <div className="space-y-6">
+                <h2 id="cta-heading" className="text-primary text-4xl md:text-5xl font-display leading-tight tracking-tight">
+                  {t('scholar.heading')}{' '}
+                  <em className="font-display font-normal not-italic text-secondary">
+                    {t('scholar.headingItalic')}
+                  </em>{' '}
+                  {t('scholar.headingEnd')}
+                </h2>
+                <p className="text-lg font-sans leading-relaxed text-muted-foreground mb-0">
+                  {t('scholar.body')}
+                </p>
+              </div>
+
+              <Link
+                href="/join?role=scholar"
+                className="btn btn-primary group/btn"
+              >
+                <span>{t('scholar.cta')}</span>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
               </Link>
-            </Button>
-          </div>
-        </div>
-
-        {/* Path B: For Mentors/Partners (The "Slate" Path) */}
-        <div className="relative group bg-secondary py-24 md:py-32 px-8 md:px-16 overflow-hidden border-t lg:border-t-0 lg:border-l border-white/10">
-          {/* Animated Background Element */}
-          <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-colors duration-700" />
-          
-          <div className="relative z-10 max-w-xl space-y-8">
-            <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center text-white">
-              <HeartHandshake className="w-8 h-8" />
-            </div>
-            
-            <div className="space-y-4">
-              <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight">
-                Ready to <span className="italic text-white/90">Empower</span> the next generation?
-              </h2>
-              <p className="text-white/85 text-lg leading-relaxed">
-                Your expertise is the bridge someone else needs to cross. Whether as a 
-                mentor, institutional partner, or donor, your involvement changes lives.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-4">
-              <Button asChild size="lg" className="bg-primary hover:bg-primary/90 rounded-2xl px-10 h-16 text-lg font-black shadow-xl shadow-primary/20">
-                <Link href="/join?role=MENTOR">
-                  Become a Mentor
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 rounded-2xl px-10 h-16 text-lg font-black">
-                <Link href="/contact">
-                  Partner With Us
-                </Link>
-              </Button>
             </div>
           </div>
-        </div>
 
+          {/* Path B: Mentors & Partners */}
+          <div className="group px-8 py-20 md:px-16 md:py-28">
+            <div className="max-w-lg space-y-10">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary/10 text-secondary">
+                <HeartHandshake className="h-8 w-8" />
+              </div>
+
+              <div className="space-y-6">
+                <h2 className="text-primary text-4xl md:text-5xl font-display leading-tight tracking-tight">
+                  {t('partner.heading')}{' '}
+                  <em className="font-display font-normal not-italic text-secondary">
+                    {t('partner.headingItalic')}
+                  </em>{' '}
+                  {t('partner.headingEnd')}
+                </h2>
+                <p className="text-lg font-sans leading-relaxed text-muted-foreground mb-0">
+                  {t('partner.body')}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-4">
+                <Link 
+                  href="/join?role=volunteer" 
+                  className="btn btn-primary"
+                >
+                  {t('partner.ctaMentor')}
+                </Link>
+                <Link
+                  href="/contact"
+                  className="btn btn-outline"
+                >
+                  {t('partner.ctaPartner')}
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
-  );
+  )
 }

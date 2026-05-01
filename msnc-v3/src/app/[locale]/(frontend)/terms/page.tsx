@@ -40,7 +40,7 @@ const sections = [
   {
     title: 'Intellectual Property',
     body: [
-      'Unless otherwise stated, the content on this website, including text, branding, graphics, layouts, and other materials, belongs to Mulenge Scholars’ Network Canada or is used with permission.',
+      "Unless otherwise stated, the content on this website, including text, branding, graphics, layouts, and other materials, belongs to Mulenge Scholars' Network Canada or is used with permission.",
       'You may not copy, reproduce, republish, distribute, or modify site content for commercial use without prior written permission.',
     ],
   },
@@ -54,7 +54,7 @@ const sections = [
   {
     title: 'Disclaimer',
     body: [
-      'This website and its content are provided on an “as is” and “as available” basis. While we aim for accuracy and reliability, we do not guarantee that the site will always be error-free, uninterrupted, or current.',
+      'This website and its content are provided on an "as is" and "as available" basis. While we aim for accuracy and reliability, we do not guarantee that the site will always be error-free, uninterrupted, or current.',
     ],
   },
   {
@@ -87,15 +87,15 @@ export default async function TermsPage({
   const copy =
     activeLocale === 'fr'
       ? {
-          legal: 'Juridique',
+          legal: 'Mentions légales',
           title: "Conditions d'utilisation",
           intro:
-            "Ces conditions regissent votre utilisation du site du Mulenge Scholars' Network Canada, y compris les pages d'information, formulaires, dons et autres interactions numeriques.",
-          effective: "Date d'entree en vigueur : 19 avril 2026",
-          privacy: 'Voir la politique de confidentialite',
+            "Ces conditions régissent votre utilisation du site du Mulenge Scholars' Network Canada, y compris les pages d'information, formulaires, dons et autres interactions numériques.",
+          effective: "Date d'entrée en vigueur : 19 avril 2026",
+          privacy: 'Voir la politique de confidentialité',
           contact: 'Contact',
           contactIntro:
-            "Si vous avez des questions sur ces conditions d'utilisation, contactez MSNC a ",
+            "Si vous avez des questions sur ces conditions d'utilisation, contactez le MSNC à ",
         }
       : {
           legal: 'Legal',
@@ -109,21 +109,21 @@ export default async function TermsPage({
         }
 
   return (
-    <main className="min-h-screen bg-white">
-      <section className="border-b border-slate-200 bg-slate-50 pt-32 pb-16">
+    <main className="min-h-screen bg-background">
+      <section className="border-b border-border bg-paper-50 pt-32 pb-16">
         <Container className="max-w-5xl">
-          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-sky-700">
+          <p className="section-label text-secondary">
             {copy.legal}
           </p>
-          <h1 className="mt-4 text-5xl font-semibold tracking-[-0.05em] text-[#002147] md:text-6xl">
+          <h1 className="mt-4 text-5xl text-primary md:text-6xl">
             {copy.title}
           </h1>
-          <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-600">
+          <p className="mt-6 max-w-3xl text-lg leading-8 text-muted-foreground">
             {copy.intro}
           </p>
-          <div className="mt-8 flex flex-wrap gap-6 text-sm text-slate-500">
+          <div className="mt-8 flex flex-wrap gap-6 text-sm text-muted-foreground">
             <span>{copy.effective}</span>
-            <Link href="/privacy" className="font-medium text-[#002147] transition hover:text-sky-700">
+            <Link href="/privacy" className="font-medium text-primary transition hover:text-secondary">
               {copy.privacy}
             </Link>
           </div>
@@ -134,13 +134,13 @@ export default async function TermsPage({
         <Container className="max-w-5xl">
           <div className="space-y-12">
             {sections.map((section) => (
-              <section key={section.title} className="border-b border-slate-100 pb-10 last:border-b-0 last:pb-0">
-                <h2 className="text-2xl font-semibold tracking-[-0.03em] text-[#002147]">
+              <section key={section.title} className="border-b border-border pb-10 last:border-b-0 last:pb-0">
+                <h2 className="text-2xl text-primary">
                   {section.title}
                 </h2>
                 <div className="mt-5 space-y-4">
                   {section.body.map((paragraph) => (
-                    <p key={paragraph} className="text-base leading-8 text-slate-600">
+                    <p key={paragraph} className="text-base leading-8 text-muted-foreground">
                       {paragraph}
                     </p>
                   ))}
@@ -148,15 +148,15 @@ export default async function TermsPage({
               </section>
             ))}
 
-            <section className="rounded-3xl border border-slate-200 bg-slate-50 px-6 py-8 sm:px-8">
-              <h2 className="text-2xl font-semibold tracking-[-0.03em] text-[#002147]">
+            <section className="rounded-3xl border border-border bg-paper-50 px-6 py-8 sm:px-8">
+              <h2 className="text-2xl text-primary">
                 {copy.contact}
               </h2>
-              <p className="mt-5 text-base leading-8 text-slate-600">
+              <p className="mt-5 text-base leading-8 text-muted-foreground">
                 {copy.contactIntro}
                 <a
                   href="mailto:info@mulengescholars.org"
-                  className="font-medium text-[#002147] transition hover:text-sky-700"
+                  className="font-medium text-primary transition hover:text-secondary"
                 >
                   info@mulengescholars.org
                 </a>

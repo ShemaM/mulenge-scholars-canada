@@ -4,7 +4,6 @@
   "version": "1.0.0",
   "description": "Mulenge Scholars Network Canada - Production Enterprise Core",
   "license": "MIT",
-  "type": "module",
   "scripts": {
     "dev": "next dev",
     "dev:safe": "rm -rf .next && next dev",
@@ -19,7 +18,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "ci": "pnpm run lint && pnpm run test && pnpm run build"
+    "ci": "pnpm run lint && pnpm run test && pnpm run build",
+    "i18n:check": "npx @lingual/i18n-check@latest --source en --locales src/messages"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.80.0",
@@ -42,6 +42,7 @@
     "next": "15.3.9",
     "next-intl": "^3.26.5",
     "next-nprogress-bar": "^2.4.7",
+    "nodemailer": "^8.0.7",
     "payload": "3.80.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -57,10 +58,12 @@
     "@tailwindcss/typography": "0.5.16",
     "@testing-library/react": "16.2.0",
     "@types/node": "22.13.4",
+    "@types/nodemailer": "^8.0.0",
     "@types/react": "19.0.8",
     "@types/react-dom": "19.0.3",
     "@vitejs/plugin-react": "4.3.4",
     "autoprefixer": "^10.4.20",
+    "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9.20.1",
     "eslint-config-next": "15.1.7",
     "jsdom": "26.0.0",

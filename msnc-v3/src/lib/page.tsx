@@ -76,7 +76,7 @@ export default async function BlogPage({ params }: { params: { slug: string } })
               <p className="text-base font-semibold leading-7 text-sky-600">
                 {format(new Date(createdAt), 'MMMM d, yyyy')}
               </p>
-              <h1 className="mt-2 text-2xl font-bold tracking-tight text-primary sm:text-3xl md:text-4xl">
+              <h1 className="mt-2 text-2xl text-primary sm:text-3xl md:text-4xl">
                 {title}
               </h1>
               {excerpt && (

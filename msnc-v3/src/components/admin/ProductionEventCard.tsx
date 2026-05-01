@@ -5,16 +5,14 @@ import FallbackImage from '@/components/ui/FallbackImage'
 import { cn } from '@/lib/utils'
 
 type Event = {
-  id: string
+  id: string | number
   title?: string
   eventDate?: string
   location?: string
   description?: string
-  mainImage?: {
-    url?: string
-  }
+  image?: { url?: string | null } | number | null
   slug?: string
-  isPublished?: boolean
+  _status?: ('draft' | 'published') | null
 }
 
 interface ProductionEventCardProps {
@@ -23,9 +21,10 @@ interface ProductionEventCardProps {
 }
 
 export function ProductionEventCard({ event, className }: ProductionEventCardProps) {
-  const imageUrl = event.mainImage?.url
-    ? `https://msnc-canada.sgp1.digitaloceanspaces.com${event.mainImage.url}`
-    : '/placeholder-event.jpg'
+  const imageUrl =
+    typeof event.image === 'object' && event.image?.url
+      ? `https://msnc-canada.sgp1.digitaloceanspaces.com${event.image.url}`
+      : '/placeholder-event.jpg'
 
   return (
     <Card className={cn('hover:shadow-lg transition-shadow h-full', className)}>
@@ -33,6 +32,7 @@ export function ProductionEventCard({ event, className }: ProductionEventCardPro
         <div className="relative h-48 w-full rounded-lg overflow-hidden">
           <FallbackImage
             src={imageUrl}
+            fallbackSrc="/placeholder-event.jpg"
             alt={event.title || 'Event'}
             fill
             className="object-cover"
@@ -51,7 +51,8 @@ export function ProductionEventCard({ event, className }: ProductionEventCardPro
                   clipRule="evenodd"
                 />
               </svg>
-              <span>{new Date(event.eventDate).toLocaleDateString()}</span>
+              <span>{new Date(event.eventDate).toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+            
             </div>
           )}
           {event.location && (
@@ -66,7 +67,7 @@ export function ProductionEventCard({ event, className }: ProductionEventCardPro
               <span>{event.location}</span>
             </div>
           )}
-          {event.isPublished === false && (
+          {event._status === 'draft' && (
             <span className="inline-flex px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">
               Draft
             </span>

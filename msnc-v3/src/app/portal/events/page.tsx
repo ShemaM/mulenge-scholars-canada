@@ -7,15 +7,14 @@ import { Card } from '@/components/ui/Card'
 export const dynamic = 'force-dynamic'
 
 export type Event = {
-  id: string
+  id: string | number
   title?: string
   eventDate?: string
   location?: string
   description?: string
-  mainImage?: string
-  category?: string
+  image?: { url?: string | null } | number | null
   slug?: string
-  isPublished?: boolean
+  _status?: ('draft' | 'published') | null
 }
 
 export default async function EventsPage() {
@@ -26,7 +25,7 @@ export default async function EventsPage() {
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Events Management</h1>
+          <h1 className="text-3xl text-primary mb-2">Events Management</h1>
           <p className="text-slate-600">{events.length} total events</p>
         </div>
         <Link href="/admin/events/new">

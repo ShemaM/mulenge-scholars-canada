@@ -1,89 +1,162 @@
 import type { Metadata } from 'next'
-import { getTranslations } from 'next-intl/server'
-import Container from '@/components/ui/Container'
-import { Link } from '@/navigation'
+import { Suspense } from 'react'
+import { getEvents, getBlogs, getScholarStats } from '@/lib/payload'
+import { fallbackEvents, fallbackBlogs } from '@/lib/fallbacks'
 
-type Props = {
+// Section Components
+import Hero from '@/components/sections/Hero'
+import TheChallenge from '@/components/sections/TheChallenge'
+import StrategicPillars from '@/components/sections/StrategicPillars'
+import StatsGrid from '@/components/sections/StatsGrid'
+import Programs from '@/components/sections/Programs'
+import GlobalImpact from '@/components/sections/GlobalImpact'
+import Features from '@/components/sections/Features'
+import Testimonials from '@/components/sections/Testimonials'
+import EventPreview from '@/components/sections/EventPreview'
+import GetInvolved from '@/components/sections/GetInvolved'
+import CtaSplit from '@/components/sections/CTA_Split'
+import PartnerMarquee from '@/components/sections/PartnerMarquee'
+import Contact from '@/components/sections/Contact'
+
+// ─── Metadata ─────────────────────────────────────────────────────────────────
+
+export async function generateMetadata({
+  params,
+}: {
   params: Promise<{ locale: string }>
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+}): Promise<Metadata> {
   const { locale } = await params
-  const t = await getTranslations({ locale, namespace: 'PrivacyPage' })
+
+  const title       = 'MSNC — Mulenge Scholars Network Canada'
+  const description = 'Empowering Banyamulenge youth through mentorship, academic guidance, and leadership development. Supporting scholars across Canada and East Africa.'
+  const url         = 'https://mulengescholars.org'
 
   return {
-    title: t('metadata.title'),
-    description: t('metadata.description'),
+    title,
+    description,
+    metadataBase: new URL(url),
     alternates: {
-      canonical: `https://mulengescholars.org/${locale}/privacy`,
+      canonical: `/${locale}`,
+      languages: {
+        'en': '/en',
+        'fr': '/fr',
+      },
+    },
+    openGraph: {
+      type:        'website',
+      url:         `${url}/${locale}`,
+      title,
+      description,
+      siteName:    'Mulenge Scholars Network Canada',
+      locale:      locale === 'fr' ? 'fr_CA' : 'en_CA',
+      images: [
+        {
+          url:    `${url}/og-image.jpg`,
+          width:  1200,
+          height: 630,
+          alt:    'MSNC — Mulenge Scholars Network Canada',
+        },
+      ],
+    },
+    twitter: {
+      card:        'summary_large_image',
+      title,
+      description,
+      images:      [`${url}/og-image.jpg`],
+      site:        '@msnccanada',
+    },
+    keywords: [
+      'Banyamulenge',
+      'Mulenge scholars',
+      'African youth Canada',
+      'diaspora education',
+      'mentorship Canada',
+      'scholarship program',
+      'Congolese youth',
+      'refugee education',
+      'MSNC',
+    ],
+    robots: {
+      index:          true,
+      follow:         true,
+      googleBot: {
+        index:               true,
+        follow:              true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet':       -1,
+      },
     },
   }
 }
 
-const sectionKeys = ['information', 'howWeUse'] as const
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default async function PrivacyPage({ params }: Props) {
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
   const { locale } = await params
-  const t = await getTranslations({ locale, namespace: 'PrivacyPage' })
 
   return (
-    <main className="min-h-screen bg-white">
-      <section className="border-b border-slate-200 bg-slate-50 pb-16 pt-32">
-        <Container className="max-w-5xl">
-          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.28em] text-sky-700">
-            {t('legal')}
-          </p>
-          <h1 className="mt-4 text-5xl font-semibold tracking-[-0.05em] text-[#002147] md:text-6xl">
-            {t('title')}
-          </h1>
-          <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-600">{t('description')}</p>
-          <div className="mt-8 flex flex-wrap gap-6 text-sm text-slate-500">
-            <span>{t('effectiveDate')}</span>
-            <Link href="/contact" className="font-medium text-[#002147] transition hover:text-sky-700">
-              {t('contactLink')}
-            </Link>
-          </div>
-        </Container>
-      </section>
+    <main className="flex-1 bg-background">
+      <Hero />
+      <TheChallenge />
+      <StrategicPillars />
+      <StatsGridWrapper />
+      <Programs />
+      <GlobalImpact />
+      <Features />
 
-      <section className="py-16 sm:py-20">
-        <Container className="max-w-5xl">
-          <div className="space-y-12">
-            {sectionKeys.map((key) => (
-              <section key={key} className="border-b border-slate-100 pb-10 last:border-b-0 last:pb-0">
-                <h2 className="text-2xl font-semibold tracking-[-0.03em] text-[#002147]">
-                  {t(`sections.${key}.title`)}
-                </h2>
-                <div className="mt-5 space-y-4">
-                  {(t.raw(`sections.${key}.body`) as string[]).map((paragraph) => (
-                    <p key={paragraph} className="text-base leading-8 text-slate-600">
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              </section>
-            ))}
+      <TestimonialsWrapper locale={locale} />
 
-            <section className="rounded-3xl border border-slate-200 bg-slate-50 px-6 py-8 sm:px-8">
-              <h2 className="text-2xl font-semibold tracking-[-0.03em] text-[#002147]">
-                {t('contactSection.title')}
-              </h2>
-              <p className="mt-5 text-base leading-8 text-slate-600">
-                {t.rich('contactSection.body', {
-                  emailLink: (chunks) => (
-                    <a
-                      href="mailto:info@mulengescholars.org"
-                      className="font-medium text-[#002147] transition hover:text-sky-700"
-                    >
-                      {chunks}
-                    </a>
-                  ),
-                })}
-              </p>
-            </section>
-          </div>
-        </Container>
-      </section>
+      <Suspense fallback={<div className="h-96 animate-pulse bg-paper-50" />}>
+        <AsyncUpdatesSection locale={locale} />
+      </Suspense>
+
+      <GetInvolved />
+      <CtaSplit />
+
+      {/* Self-fetching server component — no wrapper needed */}
+      <PartnerMarquee />
+
+      <Contact />
     </main>
   )
+}
+
+// ─── Async wrappers ───────────────────────────────────────────────────────────
+
+async function AsyncUpdatesSection({ locale }: { locale: string }) {
+  const [events, blogs] = await Promise.all([
+    getEvents({ upcoming: true, limit: 3, locale }).catch(() => fallbackEvents),
+    getBlogs({ limit: 3, locale }).catch(() => fallbackBlogs),
+  ])
+  return <EventPreview events={events} blogs={blogs} />
+}
+
+async function StatsGridWrapper() {
+  const stats = await getScholarStats().catch(() => ({
+    total: 500,
+    active: 42,
+    completed: 0,
+    successRate: 94,
+    locations: 12,
+  }))
+
+  const statItems = [
+    { id: 'youth', value: `${stats.total}+` },
+    { id: 'success', value: `${stats.successRate}%` },
+    { id: 'scholarships', value: String(stats.active) },
+    { id: 'partners', value: String(stats.locations) },
+  ]
+
+  return <StatsGrid stats={statItems} />
+}
+
+async function TestimonialsWrapper({ locale }: { locale: string }) {
+  // TODO: replace with real Payload testimonials fetcher
+  const testimonials = await Promise.resolve(fallbackBlogs.slice(0, 3))
+  return <Testimonials data={testimonials as any} />
 }
