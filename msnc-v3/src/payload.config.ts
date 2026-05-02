@@ -1,6 +1,7 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { buildConfig } from 'payload'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
@@ -28,9 +29,6 @@ import { SiteSettings } from './globals/SiteSettings'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-/**
- * ✅ Safe env access (prevents build crashes)
- */
 const DATABASE_URL = process.env.DATABASE_URL
 const PAYLOAD_SECRET = process.env.PAYLOAD_SECRET
 
@@ -88,6 +86,16 @@ export default buildConfig({
           : false,
     },
   }),
+
+  plugins: [
+    vercelBlobStorage({
+      enabled: process.env.NODE_ENV === 'production',
+      collections: {
+        media: true,
+      },
+      token: process.env.BLOB_READ_WRITE_TOKEN || '',
+    }),
+  ],
 
   sharp,
 })
