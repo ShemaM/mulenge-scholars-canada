@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import { getTestimonials } from '@/lib/payload'
-import { Link } from '@/navigation'
 import {
-  Target, Eye, Layers, ArrowRight, Quote,
+  Target, Eye, Layers, Quote,
   Users, GraduationCap, BookOpen, Globe, ArrowUpRight,
 } from 'lucide-react'
 import { normalizeSiteLocale } from '@/lib/site-copy'
+import { SITE_URL } from '@/lib/site'
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
@@ -15,8 +15,22 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   return {
-    title:       'Impact Framework | MSNC',
-    description: 'Measuring our Mission and Vision through the verified results of our four strategic pillars.',
+    title: 'Impact Framework | Mulenge Scholars Network Canada',
+    description: 'Measuring the MSNC Mission and Vision through verified results across four strategic pillars — workshops, high school support, adult learning, and rebuilding futures.',
+    keywords: [
+      'MSNC impact',
+      'Mulenge Scholars Network Canada results',
+      'Banyamulenge youth programs',
+      'community impact Canada',
+    ],
+    openGraph: {
+      title: 'Impact Framework | MSNC',
+      description: 'Measuring our Mission and Vision through the verified results of our four strategic pillars.',
+      url: `${SITE_URL}/impact/rebuilding-futures`,
+    },
+    alternates: {
+      canonical: `${SITE_URL}/impact/rebuilding-futures`,
+    },
   }
 }
 
@@ -92,26 +106,24 @@ export default async function ImpactPage({
 }: {
   params: Promise<{ locale: string }>
 }) {
-  const { locale }     = await params
-  const activeLocale   = normalizeSiteLocale(locale)
+  const { locale } = await params
+  const activeLocale = normalizeSiteLocale(locale)
 
   const rawTestimonials = await getTestimonials(6, activeLocale).catch(() => [])
   const testimonials = rawTestimonials.length > 0
     ? rawTestimonials.slice(0, 4).map((t: any) => ({
-        pillar:   t.role ? `${t.role}` : 'Featured Voice',
-        quote:    t.quote,
-        author:   t.name,
+        pillar: t.role ? `${t.role}` : 'Featured Voice',
+        quote: t.quote,
+        author: t.name,
         location: t.role || 'MSNC Network',
       }))
     : fallbackTestimonials
 
-  const newLocal = "space-y-6 lg:col-span-8"
   return (
     <main className="min-h-screen bg-background">
 
-      {/* ── Hero ─────────────────────────────────────────────────────────────── */}
+      {/* ── Hero ── */}
       <section className="relative overflow-hidden border-b border-border bg-paper-50 pb-20 pt-32 md:pb-28 md:pt-40">
-        {/* Watermark */}
         <div
           className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 select-none font-black leading-none tracking-tighter text-foreground/3"
           style={{ fontSize: 'clamp(6rem, 20vw, 18rem)' }}
@@ -143,7 +155,7 @@ export default async function ImpactPage({
         </div>
       </section>
 
-      {/* ── Mission & Vision ─────────────────────────────────────────────────── */}
+      {/* ── Mission & Vision ── */}
       <section className="section border-b border-border bg-background">
         <div className="container-editorial">
           <div className="grid items-start gap-12 lg:grid-cols-2">
@@ -188,10 +200,9 @@ export default async function ImpactPage({
         </div>
       </section>
 
-      {/* ── Program verification ─────────────────────────────────────────────── */}
+      {/* ── Program Verification ── */}
       <section className="section bg-paper-50">
         <div className="container-editorial">
-
           <div className="mb-12 grid items-end gap-8 lg:grid-cols-12">
             <div className="lg:col-span-7">
               <h2 className="mb-0">Program Verification.</h2>
@@ -203,14 +214,12 @@ export default async function ImpactPage({
             </div>
           </div>
 
-<div className="grid gap-12 md:gap-16 md:grid-cols-2 lg:gap-20 lg:grid-cols-2 xl:grid-cols-4"
-            >
-              {pillars.map((pillar) => (
+          <div className="grid gap-12 md:grid-cols-2 md:gap-16 lg:gap-20 xl:grid-cols-4">
+            {pillars.map((pillar) => (
               <article
                 key={pillar.id}
-                className="group flex flex-col rounded-2xl border border-border bg-background p-7 transition-all duration-300 hover:border-secondary hover:-translate-y-0.5 hover:shadow-md"
+                className="group flex flex-col rounded-2xl border border-border bg-background p-7 transition-all duration-300 hover:-translate-y-0.5 hover:border-secondary hover:shadow-md"
               >
-                {/* Header row */}
                 <div className="mb-8 flex items-center justify-between">
                   <span className="section-label text-muted-foreground">
                     Pillar {pillar.id}
@@ -222,13 +231,12 @@ export default async function ImpactPage({
 
                 <h3 className="mb-6 text-lg">{pillar.title}</h3>
 
-                {/* Metric */}
                 <div className="mt-auto">
-                  <p className="mb-2 font-display text-5xl italic text-primary tracking-tight">
+                  <p className="mb-2 font-display text-5xl italic tracking-tight text-primary">
                     {pillar.metric}
                   </p>
                   <div className="mb-4 h-px w-10 bg-border transition-all duration-500 group-hover:w-full group-hover:bg-secondary" />
-                  <span className="section-label text-primary block mb-2">{pillar.label}</span>
+                  <span className="section-label mb-2 block text-primary">{pillar.label}</span>
                   <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
                     {pillar.desc}
                   </p>
@@ -243,7 +251,7 @@ export default async function ImpactPage({
         </div>
       </section>
 
-      {/* ── Testimonials ─────────────────────────────────────────────────────── */}
+      {/* ── Testimonials ── */}
       <section className="section border-y border-border bg-background">
         <div className="container-editorial">
           <div className="grid items-start gap-14 lg:grid-cols-12">
@@ -262,7 +270,7 @@ export default async function ImpactPage({
             </div>
 
             {/* Quote cards */}
-            <div className={newLocal}>
+            <div className="space-y-6 lg:col-span-8">
               {testimonials.map((item: any, i: number) => (
                 <article
                   key={i}
@@ -280,7 +288,7 @@ export default async function ImpactPage({
 
                   <Quote className="mb-4 h-6 w-6 text-border" strokeWidth={1.5} />
 
-                  <p className="mb-8 text-xl font-medium leading-relaxed tracking-tight text-primary md:text-2xl">
+                  <p className="mb-8 font-serif text-2xl font-light italic leading-[1.25] tracking-tight text-primary md:text-3xl">
                     &ldquo;{item.quote}&rdquo;
                   </p>
 
@@ -296,38 +304,6 @@ export default async function ImpactPage({
               ))}
             </div>
 
-          </div>
-        </div>
-      </section>
-
-      {/* ── CTA ──────────────────────────────────────────────────────────────── */}
-      <section className="section-sm">
-        <div className="container-editorial">
-          <div className="relative overflow-hidden rounded-2xl bg-primary p-12 md:p-20">
-            <div
-              className="pointer-events-none absolute -left-20 -top-20 h-72 w-72 rounded-full bg-secondary/20 blur-[100px]"
-              aria-hidden="true"
-            />
-            <div className="relative z-10 flex flex-col items-start justify-between gap-10 lg:flex-row lg:items-center">
-              <div className="max-w-xl">
-                <span className="section-label mb-4 block text-white/50">
-                  Invest in the Framework
-                </span>
-                <h2 className="text-white mb-3">
-                  Support the{' '}
-                  <em className="font-display font-normal not-italic text-white/40">
-                    Mission.
-                  </em>
-                </h2>
-                <p className="mb-0 text-base font-medium italic leading-relaxed text-white/65">
-                  Your investment fuels the pillars that turn our vision of self-reliance into verifiable reality.
-                </p>
-              </div>
-              <Link href="/donate" className="btn shrink-0 bg-white text-primary hover:bg-white/90 w-full lg:w-auto">
-                Make a Contribution
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
           </div>
         </div>
       </section>

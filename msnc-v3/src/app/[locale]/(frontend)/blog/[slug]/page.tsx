@@ -9,10 +9,11 @@ import { Link } from '@/navigation'
 import Image from 'next/image'
 import { getCachedPayload } from '@/lib/payload'
 import { convertLexicalToHTML } from '@payloadcms/richtext-lexical/html'
-import { ArrowLeft, Calendar, Clock, Feather, Camera, ArrowRight, Heart, Share2, Bookmark } from 'lucide-react'
+import { ArrowLeft, Calendar, Clock, Feather, Camera, ArrowRight, Share2, Bookmark } from 'lucide-react'
 import type { Blog, Media } from '@/types/payload-types'
 import { getSiteDateLocale, normalizeSiteLocale } from '@/lib/site-copy'
 import { getTranslations } from 'next-intl/server'
+import { SITE_URL } from '@/lib/site'
 
 type PageArgs = { params: Promise<{ locale: string; slug: string }> }
 
@@ -22,14 +23,53 @@ export const dynamicParams = true
 export async function generateMetadata({ params }: PageArgs): Promise<Metadata> {
   const { slug, locale } = await params
   const activeLocale = normalizeSiteLocale(locale)
+
   try {
     const payload = await getCachedPayload()
+    if (!payload) return { title: 'Impact Journal | MSNC' }
+
     const { docs } = await payload.find({
-      collection: 'blogs', where: { slug: { equals: slug } },
-      limit: 1, locale: activeLocale, fallbackLocale: 'en',
+      collection: 'blogs',
+      where: { slug: { equals: slug } },
+      limit: 1,
+      locale: activeLocale,
+      fallbackLocale: 'en',
     })
+
     const post = docs?.[0] as Blog | undefined
-    return { title: post ? `${post.title} | MSNC Journal` : 'Journal' }
+    if (!post) return { title: 'Journal | MSNC' }
+
+    const featuredImageUrl = post.featuredImage && typeof post.featuredImage === 'object' && 'url' in post.featuredImage
+      ? post.featuredImage.url
+      : null
+
+    const metaTitle = (post as any).metaTitle || `${post.title} | MSNC Journal`
+    const metaDescription = (post as any).metaDescription || post.excerpt || `Read ${post.title} on the Mulenge Scholars Network Canada journal.`
+    const canonicalUrl = `${SITE_URL}/blog/${slug}`
+
+    return {
+      title: metaTitle,
+      description: metaDescription,
+      keywords: [
+        'MSNC',
+        'Mulenge Scholars Network Canada',
+        'Banyamulenge',
+        'impact journal',
+        post.title,
+      ],
+      openGraph: {
+        title: metaTitle,
+        description: metaDescription,
+        url: canonicalUrl,
+        type: 'article',
+        images: featuredImageUrl
+          ? [{ url: featuredImageUrl, alt: post.title }]
+          : [{ url: '/og-image.jpg', alt: 'MSNC Journal' }],
+      },
+      alternates: {
+        canonical: canonicalUrl,
+      },
+    }
   } catch {
     return { title: 'Impact Journal | MSNC' }
   }
@@ -45,70 +85,120 @@ export default async function BlogPostPage({ params }: PageArgs) {
   const { slug, locale } = await params
   const activeLocale = normalizeSiteLocale(locale)
   const t = await getTranslations({ locale, namespace: 'BlogPage' })
-  const payload = await getCachedPayload()
 
-  const { docs } = await payload.find({
-    collection: 'blogs', depth: 2, limit: 1,
-    where: { slug: { equals: slug } },
-    locale: activeLocale, fallbackLocale: 'en',
-  })
+  const payload = await getCachedPayload()
+  if (!payload) notFound()
+
+  const [{ docs }, { docs: relatedDocs }] = await Promise.all([
+    payload.find({
+      collection: 'blogs',
+      depth: 2,
+      limit: 1,
+      where: { slug: { equals: slug } },
+      locale: activeLocale,
+      fallbackLocale: 'en',
+    }),
+    payload.find({
+      collection: 'blogs',
+      depth: 1,
+      limit: 3,
+      sort: '-createdAt',
+      where: { slug: { not_equals: slug }, status: { equals: 'published' } },
+      locale: activeLocale,
+      fallbackLocale: 'en',
+    }),
+  ])
+
   const post = docs?.[0] as Blog | undefined
   if (!post) notFound()
 
-  const { docs: relatedDocs } = await payload.find({
-    collection: 'blogs', depth: 1, limit: 3, sort: '-createdAt',
-    where: { slug: { not_equals: slug }, status: { equals: 'published' } },
-    locale: activeLocale, fallbackLocale: 'en',
-  })
   const relatedPosts = relatedDocs as Blog[]
-
   const contentHTML = post?.content ? convertLexicalToHTML({ data: post.content as any }) : ''
   const readTime = calculateReadTime(contentHTML)
+
   const publishDate = (
-    (post as any).publishedDate ? new Date((post as any).publishedDate)
-    : post.createdAt ? new Date(post.createdAt)
-    : new Date()
+    (post as any).publishedDate
+      ? new Date((post as any).publishedDate)
+      : post.createdAt
+      ? new Date(post.createdAt)
+      : new Date()
   ).toLocaleDateString(getSiteDateLocale(activeLocale), { dateStyle: 'long' })
+
+  const featuredImage = post.featuredImage && typeof post.featuredImage === 'object'
+    ? (post.featuredImage)
+    : null
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: (post as any).publishedDate || post.createdAt,
+    dateModified: post.updatedAt,
+    author: {
+      '@type': 'Organization',
+      name: (post as any).author || 'MSNC Editorial',
+    },
+    publisher: {
+      '@type': 'NGO',
+      name: "Mulenge Scholars' Network Canada",
+      url: SITE_URL,
+    },
+    url: `${SITE_URL}/blog/${slug}`,
+    image: featuredImage?.url,
+  }
 
   return (
     <main className="min-h-screen bg-background">
+      {/* JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
 
-      {/* ── Top nav bar ────────────────────────────────────────────────────── */}
+      {/* ── Top nav bar ── */}
       <div className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/95 backdrop-blur-sm">
         <div className="container-editorial flex h-14 items-center justify-between">
-          <Link href="/blog"
-            className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-primary">
+          <Link
+            href="/blog"
+            className="group flex items-center gap-2 text-muted-foreground transition-colors hover:text-primary"
+          >
             <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
             <span className="section-label">{t('detail.back')}</span>
           </Link>
           <span className="hidden max-w-sm truncate section-label text-muted-foreground/60 md:block">
             {post.title}
           </span>
-          <button className="text-muted-foreground transition-colors hover:text-secondary" aria-label="Share">
+          <button
+            className="text-muted-foreground transition-colors hover:text-secondary"
+            aria-label="Share"
+          >
             <Share2 className="h-4 w-4" />
           </button>
         </div>
       </div>
 
-      {/* ── Hero — full bleed image ────────────────────────────────────────── */}
-      {post.featuredImage && typeof post.featuredImage === 'object' && (post.featuredImage as Media).url && (
-        <div className="relative h-[55vh] min-h-100 w-full overflow-hidden md:h-[70vh]">
+      {/* ── Hero — full bleed image ── */}
+      {featuredImage?.url && (
+        <div className="relative w-full overflow-hidden" style={{ height: '70vh', minHeight: '420px' }}>
           <Image
-            src={(post.featuredImage as Media).url!}
-            alt={post.title}
+            src={featuredImage.url}
+            alt={featuredImage.alt || post.title}
             fill
             priority
-            className="object-cover"
+            sizes="100vw"
+            className="object-cover object-center"
           />
-          {/* Dark gradient overlay for text legibility */}
-          <div className="absolute inset-0 bg-linear-to-t from-background via-background/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
         </div>
       )}
 
-      {/* ── Article header — overlaps hero ────────────────────────────────── */}
-      <div className="container-editorial pt-8" style={{ marginTop: post.featuredImage ? '-3rem' : '4rem' }}>
+      {/* ── Article header ── */}
+      <div
+        className="container-editorial pt-8"
+        style={{ marginTop: featuredImage ? '-3rem' : '4rem' }}
+      >
         <div className="mx-auto max-w-5xl">
-
           {/* Category + date */}
           <div className="mb-6 flex flex-wrap items-center gap-3">
             <span className="rounded-full bg-secondary px-4 py-1 text-2xs font-black uppercase tracking-widest text-white">
@@ -122,7 +212,7 @@ export default async function BlogPostPage({ params }: PageArgs) {
             {post.title}
           </h1>
 
-          {/* Excerpt as deck */}
+          {/* Excerpt */}
           {post.excerpt && (
             <p className="mb-5 text-lg font-medium leading-relaxed text-foreground/65 border-l-2 border-secondary pl-5">
               {post.excerpt}
@@ -149,7 +239,7 @@ export default async function BlogPostPage({ params }: PageArgs) {
         </div>
       </div>
 
-      {/* ── Article body ──────────────────────────────────────────────────── */}
+      {/* ── Article body ── */}
       <div className="container-editorial py-8">
         <div className="mx-auto max-w-5xl">
           <div
@@ -190,8 +280,13 @@ export default async function BlogPostPage({ params }: PageArgs) {
                   return (
                     <figure key={idx} className="group space-y-3">
                       <div className="relative aspect-square overflow-hidden rounded-xl border border-border bg-paper-50">
-                        <Image src={media.url} alt={media.alt || 'Field record'} fill
-                          className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                        <Image
+                          src={media.url}
+                          alt={media.alt || 'Field record'}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
                       </div>
                       {item.caption && (
                         <figcaption className="section-label border-l border-secondary pl-4 italic text-muted-foreground">
@@ -207,7 +302,7 @@ export default async function BlogPostPage({ params }: PageArgs) {
         </div>
       </div>
 
-      {/* ── Related stories ───────────────────────────────────────────────── */}
+      {/* ── Related stories ── */}
       {relatedPosts.length > 0 && (
         <section className="border-t border-border bg-paper-50 py-16">
           <div className="container-editorial">
@@ -221,31 +316,43 @@ export default async function BlogPostPage({ params }: PageArgs) {
               </Link>
             </div>
             <div className="grid gap-6 md:grid-cols-3">
-              {relatedPosts.map((related) => (
-                <Link key={related.id}
-                  href={`/blog/${related.slug}`}
-                  className="group space-y-4">
-                  <div className="relative aspect-16/10 overflow-hidden rounded-xl border border-border bg-muted shadow-sm transition-shadow group-hover:shadow-md">
-                    {related.featuredImage && typeof related.featuredImage === 'object' && (related.featuredImage).url ? (
-                      <Image src={(related.featuredImage).url} alt={related.title} fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105" />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Bookmark className="h-10 w-10 text-muted-foreground/10" />
-                      </div>
-                    )}
-                  </div>
-                  <h4 className="font-display font-normal text-primary transition-colors group-hover:text-secondary mb-0 text-lg leading-snug">
-                    {related.title}
-                  </h4>
-                </Link>
-              ))}
+              {relatedPosts.map((related) => {
+                const relatedImage = related.featuredImage && typeof related.featuredImage === 'object'
+                  ? (related.featuredImage as Media)
+                  : null
+                return (
+                  <Link
+                    key={related.id}
+                    href={`/blog/${related.slug}`}
+                    className="group space-y-4"
+                  >
+                    <div className="relative aspect-video overflow-hidden rounded-xl border border-border bg-muted shadow-sm transition-shadow group-hover:shadow-md">
+                      {relatedImage?.url ? (
+                        <Image
+                          src={relatedImage.url}
+                          alt={relatedImage.alt || related.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <Bookmark className="h-10 w-10 text-muted-foreground/10" />
+                        </div>
+                      )}
+                    </div>
+                    <h4 className="font-display font-normal text-primary transition-colors group-hover:text-secondary mb-0 text-lg leading-snug">
+                      {related.title}
+                    </h4>
+                  </Link>
+                )
+              })}
             </div>
           </div>
         </section>
       )}
 
-      {/* ── CTA ───────────────────────────────────────────────────────────── */}
+      {/* ── CTA ── */}
       <section className="py-24 border-t border-border bg-paper-50">
         <div className="container-editorial text-center">
           <h2 className="font-display text-3xl md:text-4xl font-normal max-w-2xl mx-auto mb-8">
@@ -259,7 +366,6 @@ export default async function BlogPostPage({ params }: PageArgs) {
           </Link>
         </div>
       </section>
-
     </main>
   )
 }

@@ -205,7 +205,7 @@ export async function getEvents({ upcoming = true, limit = 10 } = {}) {
 
 /* ---------------- TESTIMONIALS COLLECTION ---------------- */
 
-export async function getTestimonials(limit = 5) {
+export async function getTestimonials(limit = 5, activeLocale: string) {
   const result = await safeFind('testimonials', {
     limit,
     sort: '-createdAt',

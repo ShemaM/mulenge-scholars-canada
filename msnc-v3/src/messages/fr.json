@@ -1,6 +1,6 @@
 {
   "Metadata": {
-    "title": "MSNC | Réseau des Boursiers de Mulenge Canada",
+    "title": "MSNC | Mulenge Scholars Network Canada",
     "description": "Autonomiser les jeunes à travers le Canada par le mentorat, l'orientation académique et le développement du leadership."
   },
   "Navbar": {
@@ -12,9 +12,9 @@
         "name": "Accueil",
         "href": "/",
         "tagline": "Autonomiser les jeunes",
-        "desc": "Combler les lacunes pour les boursiers Mulenge par le mentorat et le soutien académique."
+        "desc": "Combler les lacunes pour les Mulenge Scholars par le mentorat et le soutien académique."
       },
-{
+      {
         "id": "about",
         "name": "À Propos",
         "href": "/about",
@@ -27,7 +27,7 @@
         "href": "/programs",
         "desc": "Du soutien au secondaire à la reconstruction de l'avenir à l'échelle mondiale."
       },
-{
+      {
         "id": "impact",
         "name": "Impact",
         "href": "/impact/rebuilding-futures",
@@ -45,9 +45,9 @@
   },
   "Hero": {
     "label": "Une Organisation Dirigée par des Jeunes",
-"title": "Permettre aux jeunes Banyamulenge de réussir dans leurs études, leur carrière et leur communauté",
+    "title": "Permettre aux jeunes Banyamulenge de réussir dans leurs études, leur carrière et leur communauté",
     "titleItalic": "partout au Canada.",
-"subtitle": "Fondé par des étudiants Banyamulenge, le MSNC aide les jeunes à s'orienter dans de nouveaux systèmes éducatifs grâce au mentorat, à l'accompagnement scolaire, au leadership et à un fort sentiment d'appartenance.",
+    "subtitle": "Fondé par des étudiants Banyamulenge, le MSNC aide les jeunes à s'orienter dans de nouveaux systèmes éducatifs grâce au mentorat, à l'accompagnement scolaire, au leadership et à un fort sentiment d'appartenance.",
     "ctaPrimary": "Nos Programmes",
     "ctaSecondary": "Qui Nous Sommes",
     "scrollLabel": "Défilez pour explorer"
@@ -302,7 +302,7 @@
     }
   },
   "Footer": {
-    "missionStatement": "Autonomiser les boursiers de Mulenge grâce à un mentorat adapté et à la centralisation des opportunités mondiales.",
+    "missionStatement": "Autonomiser les jeunes Banyamulenge grâce à un mentorat adapté et à la centralisation des opportunités mondiales.",
     "linksHeader": "Navigation",
     "contactHeader": "Contactez-nous",
     "socialHeader": "Communauté",
@@ -325,7 +325,7 @@
       "cookies": "Politique des cookies",
       "accessibility": "Accessibilité"
     },
-    "copyright": "© 2026 Réseau des Boursiers de Mulenge Canada. Tous droits réservés."
+    "copyright": "© 2026 Mulenge Scholars Network Canada. Tous droits réservés."
   },
   "Features": {
     "title": "Nos Valeurs Fondamentales",
@@ -370,7 +370,7 @@
   "ContactPage": {
     "metadata": {
       "title": "Contacter le MSNC",
-      "description": "Contactez le Réseau des Boursiers de Mulenge Canada pour du soutien, des partenariats ou des opportunités de bénévolat. Nous sommes là pour vous aider."
+      "description": "Contactez Mulenge Scholars Network Canada pour du soutien, des partenariats ou des opportunités de bénévolat. Nous sommes là pour vous aider."
     },
     "header": {
       "label": "Connecter",
@@ -452,7 +452,7 @@
   "JoinPage": {
     "metadata": {
       "title": "Rejoindre le réseau",
-      "description": "Postulez comme boursier, mentor, partenaire ou soutien pour rejoindre le Réseau des Boursiers de Mulenge."
+      "description": "Postulez comme boursier, mentor, partenaire ou soutien pour rejoindre Mulenge Scholars Network Canada."
     },
     "steps": {
       "pathway": "Étape 01 - Choisissez votre parcours",
@@ -488,7 +488,7 @@
       "volunteer": {
         "badge": "Réseau de mentorat",
         "title": "Accompagnez l'avenir.",
-        "description": "Partagez votre parcours professionnel pour aider à ouvrir la voie à la prochaine génération de leaders mulenge.",
+        "description": "Partagez votre parcours professionnel pour aider à ouvrir la voie à la prochaine génération de leaders Mulenge Scholars.",
         "label": "Parcours professionnel",
         "placeholder": "Parlez-nous de votre carrière et de la manière dont vous souhaitez soutenir notre jeunesse...",
         "button": "Rejoindre comme mentor"
@@ -694,14 +694,14 @@
     "breadcrumb": "À Propos",
     "missionLabel": "Mission",
     "missionTitle": "Autonomiser les Jeunes Banyamulenge",
-    "missionDescription": "Le Réseau des Boursiers de Mulenge Canada (MSNC) est une organisation dirigée par des étudiants Banyamulenge qui connaissent directement les défis de la navigation dans les nouveaux systèmes éducatifs. Les Banyamulenge sont une communauté résiliente de l'est de la RDC confrontée aux cycles de déplacement. Nous autonomisons les jeunes à travers le Canada par le mentorat, l'orientation académique, le développement du leadership et le renforcement de l'appartenance communautaire.",
+    "missionDescription": "Mulenge Scholars Network Canada (MSNC) est une organisation dirigée par des étudiants Banyamulenge qui connaissent directement les défis de la navigation dans les nouveaux systèmes éducatifs. Les Banyamulenge sont une communauté résiliente de l'est de la RDC confrontée aux cycles de déplacement. Nous autonomisons les jeunes à travers le Canada par le mentorat, l'orientation académique, le développement du leadership et le renforcement de l'appartenance communautaire.",
     "missionQuote": "Combler les lacunes grâce à un mentorat adapté à la culture et à la centralisation des opportunités mondiales.",
     "originsLabel": "Origines",
     "heritageTitle": "Notre Héritage et Identité",
     "heritageDescription": "Le MSNC a été fondé avec une compréhension profonde des défis uniques auxquels est confrontée la diaspora Banyamulenge. Nous nous engageons à bâtir une communauté solide qui célèbre notre héritage culturel tout en naviguant dans le paysage canadien.",
     "heritageQuote": "Notre héritage est notre force, notre communauté est notre avenir.",
     "valuesLabel": "Valeurs",
-"valuesTitle": "Les Principes Que Nous Défendons"
+    "valuesTitle": "Les Principes Que Nous Défendons"
   },
   "ProgramsPage": {
     "metadata": {
@@ -811,7 +811,7 @@
     "listing": {
       "subtitle": "Archives",
       "title": "Le Journal",
-      "description": "Histoires, perspectives et mises à jour de la communauté du Réseau des Boursiers de Mulenge Canada.",
+      "description": "Histoires, perspectives et mises à jour de la communauté Mulenge Scholars Network Canada.",
       "featured": "En Vedette",
       "readArticle": "Lire l'article",
       "latest": "Dernières Publications",
