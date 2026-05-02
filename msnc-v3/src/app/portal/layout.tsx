@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { redirect } from 'next/navigation'
-import Logo from '@/components/admin/Logo'
+import { Logo } from '@/components/admin/Logo'
 import Icon from '@/components/admin/Icon'
 import Container from '@/components/ui/Container'
 import Link from 'next/link'

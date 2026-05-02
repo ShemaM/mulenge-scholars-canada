@@ -1,7 +1,6 @@
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { fallbackScholarships, fallbackPartners } from '@/lib/fallbacks'
-import { normalizeSiteLocale } from '@/lib/site-copy'
 
 let cachedPayload: any = (globalThis as any).payload || null
 
@@ -188,6 +187,26 @@ export async function getTestimonials(limit = 5) {
   })
 
   return result?.docs || []
+}
+
+/* ---------------- PROGRAMS ---------------- */
+
+export async function getPrograms(locale?: string) {
+  const result = await safeFind('programs', {
+    limit: 20,
+    sort: 'order',
+    depth: 1,
+  })
+
+  const docs = result?.docs || []
+
+  // Filter by locale if provided
+  if (locale) {
+    const normalized = locale === 'fr' ? 'fr' : 'en'
+    return docs.filter((d: any) => d.locale === normalized || !d.locale)
+  }
+
+  return docs
 }
 
 /* ---------------- GLOBAL ---------------- */

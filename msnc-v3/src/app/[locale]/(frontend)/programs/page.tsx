@@ -1,16 +1,16 @@
 import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
-import { getCollection } from '@/lib/payload'
+import { getPrograms } from '@/lib/payload'
 import { ArrowRight, GraduationCap, Users, Briefcase, HeartHandshake } from 'lucide-react'
 import { Link } from '@/navigation'
 import { SITE_NAME, SITE_URL } from '@/lib/site'
+import PageHeader from '@/components/ui/PageHeader'
+import { Breadcrumb } from '@/components/ui/breadcrumb'
+import Container from '@/components/ui/Container'
 
 // ✅ FORCE DYNAMIC RENDERING
 // This ensures fresh program data is always fetched from the database
 export const dynamic = 'force-dynamic'
-import PageHeader from '@/components/ui/PageHeader'
-import { Breadcrumb } from '@/components/ui/breadcrumb'
-import Container from '@/components/ui/Container'
 
 interface Props {
   params: Promise<{ locale: string }>
@@ -112,9 +112,9 @@ export default async function Programs({ params }: Props) {
   
   let data: ProgramItem[] = []
 
-  try {
+try {
     // 1. Fetch programs from the CMS collection
-    const result = await getCollection('programs', { locale })
+    const result = await getPrograms(locale)
     data = Array.isArray(result) && result.length > 0
       ? (result as ProgramItem[])
       : FALLBACK_PROGRAMS
@@ -122,7 +122,7 @@ export default async function Programs({ params }: Props) {
     data = FALLBACK_PROGRAMS
   }
 
- // 2. If CMS is empty and we use the fallback array, translate its contents
+  // 2. If CMS is empty and we use the fallback array, translate its contents
   if (data === FALLBACK_PROGRAMS) {
     try {
       const td = await getTranslations({ locale, namespace: 'ProgramDetails' })
