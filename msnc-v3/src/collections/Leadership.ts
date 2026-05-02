@@ -1,19 +1,18 @@
-import { CollectionConfig } from 'payload';
+import { CollectionConfig } from 'payload'
 
 const Leadership: CollectionConfig = {
   slug: 'leadership',
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'role', 'pillar', 'order'],
-    // Groups this in the admin sidebar for better organization
-    group: 'Organization', 
+    group: 'Organization',
   },
   access: {
-    read: () => true, 
+    read: () => true,
   },
   fields: [
     {
-      type: 'row', // HCI: Groups name and role horizontally in the admin
+      type: 'row',
       fields: [
         { name: 'name', type: 'text', required: true, localized: true, admin: { width: '50%' } },
         { name: 'role', type: 'text', required: true, localized: true, admin: { width: '50%' } },
@@ -31,17 +30,17 @@ const Leadership: CollectionConfig = {
         { label: 'Executive Leadership', value: 'Executive' },
       ],
       required: true,
-      admin: { position: 'sidebar' }
+      admin: { position: 'sidebar' },
     },
     {
       name: 'image',
       type: 'upload',
       relationTo: 'media',
-      required: true, // Editorial pages need high-quality photos
+      required: true,
     },
     {
       name: 'bio',
-      type: 'richText', // UPGRADE: Allows for formatted storytelling (paragraphs, bold, etc.)
+      type: 'richText',
       required: true,
       localized: true,
     },
@@ -57,35 +56,57 @@ const Leadership: CollectionConfig = {
       name: 'order',
       type: 'number',
       defaultValue: 10,
-      admin: { 
+      admin: {
         position: 'sidebar',
-        description: 'Lower numbers appear first in the list.'
+        description: 'Lower numbers appear first in the list.',
       },
     },
     {
       name: 'slug',
       type: 'text',
-      localized: true,
-      unique: true, // Crucial for preventing 404s and duplicates
-      admin: { 
+      localized: false, // ← shared across locales for consistent URLs
+      unique: true,
+      index: true,
+      admin: {
         position: 'sidebar',
-        description: 'The URL-friendly name (e.g., pacific-muhumure)'
+        description: 'Auto-generates from name. Only edit if you need a specific URL.',
       },
       hooks: {
         beforeValidate: [
           ({ value, data }) => {
-            if (value) return value;
-            // Robust slugification: removes special chars, handles spaces
-            return data?.name?.toLowerCase()
+            if (value) return value
+            const name = typeof data?.name === 'string'
+              ? data.name
+              : data?.name?.en || ''
+            return name
+              .toLowerCase()
               .trim()
-              .replaceAll(/[^\w\s-]/g, '')
-              .replaceAll(/[\s_-]+/g, '-')
-              .replaceAll(/^-+|-+$/g, '');
-          }
+              .replace(/[^\w\s-]/g, '')
+              .replace(/[\s_-]+/g, '-')
+              .replace(/^-+|-+$/g, '')
+          },
         ],
       },
     },
+    {
+      name: 'metaTitle',
+      type: 'text',
+      localized: true,
+      admin: {
+        position: 'sidebar',
+        description: 'Override SEO title (optional).',
+      },
+    },
+    {
+      name: 'metaDescription',
+      type: 'textarea',
+      localized: true,
+      admin: {
+        position: 'sidebar',
+        description: 'Override SEO description (optional). Recommended: 150-160 characters.',
+      },
+    },
   ],
-};
+}
 
-export default Leadership;
+export default Leadership

@@ -1,6 +1,5 @@
 import type { CollectionConfig, FieldHook } from 'payload'
 
-// Hook to automatically generate a URL slug from the title
 const formatSlug: FieldHook = ({ value, data }) => {
   if (value)
     return value
@@ -8,7 +7,7 @@ const formatSlug: FieldHook = ({ value, data }) => {
       .replace(/ /g, '-')
       .replace(/[^\w-]+/g, '')
   if (data?.title)
-    return data.title
+    return (typeof data.title === 'string' ? data.title : data.title?.en || '')
       .toLowerCase()
       .replace(/ /g, '-')
       .replace(/[^\w-]+/g, '')
@@ -150,14 +149,31 @@ export const Blogs: CollectionConfig = {
             {
               name: 'slug',
               type: 'text',
-              localized: true,
+              localized: false, // ← slug is shared across locales for consistent URLs
               unique: true,
+              index: true,
               admin: {
-                description: 'Auto-generates from the title. Only edit if you need a specific URL.',
+                description: 'Auto-generates from the English title. Only edit if you need a specific URL.',
                 position: 'sidebar',
               },
               hooks: {
                 beforeValidate: [formatSlug],
+              },
+            },
+            {
+              name: 'metaTitle',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Override the SEO title for this post (optional).',
+              },
+            },
+            {
+              name: 'metaDescription',
+              type: 'textarea',
+              localized: true,
+              admin: {
+                description: 'Override the SEO description for this post (optional). Recommended: 150-160 characters.',
               },
             },
           ],

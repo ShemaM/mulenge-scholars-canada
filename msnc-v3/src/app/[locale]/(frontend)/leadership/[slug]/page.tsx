@@ -12,7 +12,6 @@ import {
   Share2,
   ShieldCheck,
   FileText,
-  Hash,
   ArrowRight,
   Bookmark,
   Users,
@@ -23,6 +22,7 @@ import { Link } from '@/navigation'
 import Image from 'next/image'
 import { Metadata } from 'next'
 import { normalizeSiteLocale } from '@/lib/site-copy'
+import { SITE_URL } from '@/lib/site'
 
 interface LeadershipMember {
   id: number | string
@@ -46,19 +46,48 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug, locale } = await params
   const activeLocale = normalizeSiteLocale(locale)
-  const payload = await getCachedPayload()
-  const { docs } = await payload.find({
-    collection: 'leadership' as any,
-    where: { slug: { equals: slug } },
-    locale: activeLocale,
-    fallbackLocale: 'en',
-  })
-  const leader = docs[0] as unknown as LeadershipMember
-  if (!leader) return { title: 'Member Not Found' }
 
-  return {
-    title: `${leader.name} | MSNC Leadership`,
-    description: `Executive Profile: ${leader.role} at Mulenge Scholars' Network Canada.`,
+  try {
+    const payload = await getCachedPayload()
+    const { docs } = await payload.find({
+      collection: 'leadership' as any,
+      where: { slug: { equals: slug } },
+      locale: activeLocale,
+      fallbackLocale: 'en',
+    })
+
+    const leader = docs[0] as unknown as LeadershipMember
+    if (!leader) return { title: 'Member Not Found' }
+
+    const description = `Meet ${leader.name}, ${leader.role} at Mulenge Scholars' Network Canada (MSNC). Learn about their role in empowering Banyamulenge youth across Canada.`
+    const canonicalUrl = `${SITE_URL}/leadership/${slug}`
+
+    return {
+      title: `${leader.name} — ${leader.role}`,
+      description,
+      keywords: [
+        leader.name,
+        leader.role,
+        'MSNC leadership',
+        'Mulenge Scholars Network Canada',
+        'MSNC board',
+        'Banyamulenge leaders Canada',
+        leader.pillar ?? '',
+      ].filter(Boolean),
+      openGraph: {
+        title: `${leader.name} | MSNC Leadership`,
+        description,
+        url: canonicalUrl,
+        images: leader.image?.url
+          ? [{ url: leader.image.url, alt: leader.name }]
+          : [{ url: '/og-image.jpg', alt: 'MSNC Leadership' }],
+      },
+      alternates: {
+        canonical: canonicalUrl,
+      },
+    }
+  } catch {
+    return { title: 'Leadership | MSNC' }
   }
 }
 
@@ -96,7 +125,6 @@ export default async function LeaderProfilePage({
 }) {
   const { slug, locale } = await params
 
-  // Fix: Early validation for null/empty slugs (prevents /leadership/null)
   if (!slug || slug === 'null' || slug.trim() === '') {
     redirect('/leadership')
   }
@@ -104,30 +132,50 @@ export default async function LeaderProfilePage({
   const activeLocale = normalizeSiteLocale(locale)
   const payload = await getCachedPayload()
 
-  // Fetch Current Leader
-  const { docs } = await payload.find({
-    collection: 'leadership' as any,
-    where: { slug: { equals: slug } },
-    depth: 1,
-    locale: activeLocale,
-    fallbackLocale: 'en',
-  })
+  const [{ docs }, { docs: otherMembers }] = await Promise.all([
+    payload.find({
+      collection: 'leadership' as any,
+      where: { slug: { equals: slug } },
+      depth: 1,
+      locale: activeLocale,
+      fallbackLocale: 'en',
+    }),
+    payload.find({
+      collection: 'leadership' as any,
+      where: { slug: { not_equals: slug } },
+      limit: 3,
+      sort: 'order',
+      locale: activeLocale,
+      fallbackLocale: 'en',
+    }),
+  ])
 
   const leader = docs[0] as unknown as LeadershipMember
   if (!leader) notFound()
 
-  // Fetch Other Board Members (Collective Stewardship)
-  const { docs: otherMembers } = await payload.find({
-    collection: 'leadership' as any,
-    where: { slug: { not_equals: slug } },
-    limit: 3,
-    sort: 'order',
-    locale: activeLocale,
-    fallbackLocale: 'en',
-  })
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: leader.name,
+    jobTitle: leader.role,
+    worksFor: {
+      '@type': 'NGO',
+      name: "Mulenge Scholars' Network Canada",
+      url: SITE_URL,
+    },
+    url: `${SITE_URL}/leadership/${leader.slug}`,
+    image: leader.image?.url,
+    sameAs: leader.linkedinUrl ? [leader.linkedinUrl] : [],
+  }
 
   return (
     <main className="min-h-screen bg-white text-primary selection:bg-blue-100 pb-32 relative overflow-x-hidden">
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* Structural UI Grid Background */}
       <div className="fixed inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:40px_40px] opacity-[0.4] pointer-events-none" />
 
@@ -142,7 +190,6 @@ export default async function LeaderProfilePage({
             Back to Leadership Ledger
           </Link>
           <div className="flex items-center gap-8">
-            {/* Removed STEWARD_ID tag */}
             <button className="text-slate-300 hover:text-blue-600 transition-colors">
               <Share2 className="w-4 h-4" />
             </button>
@@ -156,7 +203,7 @@ export default async function LeaderProfilePage({
               {leader.image?.url ? (
                 <Image
                   src={leader.image.url}
-                  alt={leader.name}
+                  alt={leader.image.alt || leader.name}
                   fill
                   priority
                   className="object-cover transition-transform duration-[3s] group-hover:scale-105"
@@ -167,7 +214,7 @@ export default async function LeaderProfilePage({
                 </div>
               )}
               <div className="absolute bottom-8 left-8 right-8">
-                <div className="bg-white/95 backdrop-blur-md p-6 rounded-2xl shadow-2xl border border-slate-100"></div>
+                <div className="bg-white/95 backdrop-blur-md p-6 rounded-2xl shadow-2xl border border-slate-100" />
               </div>
             </div>
           </div>
@@ -218,14 +265,13 @@ export default async function LeaderProfilePage({
                 [&>div>p:first-of-type]:first-letter:float-left 
                 [&>div>p:first-of-type]:first-letter:mr-6 
                 [&>div>p:first-of-type]:first-letter:mt-3
-                [&>div>p:first-of-type]:first-letter:leading-none
-              "
+                [&>div>p:first-of-type]:first-letter:leading-none"
               >
                 <RenderBio content={leader.bio} />
               </div>
             </article>
 
-            {/* Impact Note */}
+            {/* Governance Statement */}
             <div className="p-10 bg-slate-50 border border-slate-100 rounded-[2.5rem] flex items-start gap-6">
               <FileText className="w-6 h-6 text-blue-600 shrink-0" />
               <div>
@@ -242,14 +288,12 @@ export default async function LeaderProfilePage({
           </div>
         </div>
 
-        {/* ─── PHASE 04: STRATEGIC ALIGNMENT (NEW) ─── */}
+        {/* ─── PHASE 04: STRATEGIC ALIGNMENT ─── */}
         <section className="mt-32 pt-24 border-t-2 border-slate-900">
           <div className="flex items-center justify-between mb-16">
             <div className="flex items-center gap-4 text-blue-600">
               <Bookmark className="w-6 h-6" />
-              <h2 className="text-3xl uppercase tracking-tighter">
-                Stewardship Alignment
-              </h2>
+              <h2 className="text-3xl uppercase tracking-tighter">Stewardship Alignment</h2>
             </div>
             <span className="text-2xs font-mono text-slate-300">REF_STRATEGY_LEDGER</span>
           </div>
@@ -284,12 +328,10 @@ export default async function LeaderProfilePage({
           </div>
         </section>
 
-        {/* ─── PHASE 05: COLLECTIVE STEWARDSHIP (RELATED BOARD MEMBERS) ─── */}
+        {/* ─── PHASE 05: COLLECTIVE STEWARDSHIP ─── */}
         <section className="mt-32">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
-            <h2 className="text-4xl md:text-6xl tracking-tighter uppercase">
-              The Collective.
-            </h2>
+            <h2 className="text-4xl md:text-6xl tracking-tighter uppercase">The Collective.</h2>
             <Link
               href="/leadership"
               className="text-2xs font-black uppercase tracking-widest text-blue-600 hover:text-primary transition-colors flex items-center gap-2"
@@ -310,14 +352,13 @@ export default async function LeaderProfilePage({
                   {member.image?.url && (
                     <Image
                       src={member.image.url}
-                      alt={member.name}
+                      alt={member.image.alt || member.name}
                       fill
                       className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
                     />
                   )}
                 </div>
                 <div>
-                  {/* Removed Executive_Registry tag */}
                   <h3 className="text-2xl group-hover:text-blue-600 transition-colors uppercase leading-tight">
                     {member.name}
                   </h3>
@@ -330,7 +371,7 @@ export default async function LeaderProfilePage({
           </div>
         </section>
 
-        {/* ─── PHASE 06: INSTITUTIONAL CTA (THE BRIDGE) ─── */}
+        {/* ─── PHASE 06: INSTITUTIONAL CTA ─── */}
         <section className="mt-40 section border-t border-border">
           <div className="bg-paper-50 border border-border rounded-[2.5rem] p-12 md:p-20 text-center">
             <span className="text-secondary font-black text-2xs uppercase tracking-widest mb-8 block">
@@ -340,7 +381,8 @@ export default async function LeaderProfilePage({
               Support Our <br /> Stewardship.
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed">
-              Join the leaders of MSNC in our mission to redefine educational equity. Whether through partnership or contribution, your involvement scales our impact.
+              Join the leaders of MSNC in our mission to redefine educational equity. Whether
+              through partnership or contribution, your involvement scales our impact.
             </p>
             <div className="flex flex-col md:flex-row items-center justify-center gap-4">
               <Link href="/donate" className="btn btn-primary">

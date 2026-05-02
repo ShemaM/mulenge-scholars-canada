@@ -20,7 +20,15 @@ export default function Providers({
         options={{ showSpinner: false }}
         shallowRouting
       />
-      <NextIntlClientProvider locale={locale} messages={messages}>
+      {/* 
+        FIXED: Added timeZone="America/Toronto" here so the client 
+        matches the server configuration in request.ts 
+      */}
+      <NextIntlClientProvider 
+        locale={locale} 
+        messages={messages} 
+        timeZone="America/Toronto"
+      >
         {children}
         <Toaster position="top-right" richColors theme="light" closeButton />
       </NextIntlClientProvider>

@@ -2,10 +2,14 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { fallbackScholarships, fallbackPartners } from '@/lib/fallbacks'
 
-let cachedPayload: any = (globalThis as any).payload || null
+// 1. FIXED RACE CONDITION: Cache both the client and the initialization promise
+let cached = (globalThis as any).payloadCache
+if (!cached) {
+  cached = (globalThis as any).payloadCache = { client: null, promise: null }
+}
 
 export async function getCachedPayload() {
-  if (cachedPayload) return cachedPayload
+  if (cached.client) return cached.client
 
   const requiredEnv = ['DATABASE_URL', 'PAYLOAD_SECRET']
   const missing = requiredEnv.filter((k) => !process.env[k])
@@ -15,16 +19,16 @@ export async function getCachedPayload() {
     return null
   }
 
+  if (!cached.promise) {
+    cached.promise = getPayload({ config: configPromise })
+  }
+
   try {
-    cachedPayload = await getPayload({
-      config: configPromise,
-    })
-
-    ;(globalThis as any).payload = cachedPayload
-
+    cached.client = await cached.promise
     console.log('✅ Payload connected')
-    return cachedPayload
+    return cached.client
   } catch (err) {
+    cached.promise = null // Reset promise so we can try again
     console.error('❌ Payload init failed:', err)
     return null
   }
@@ -39,7 +43,10 @@ async function safeFind(collection: string, args: any) {
   try {
     return await payload.find({
       collection,
-      overrideAccess: true,
+      // RESTORED: This stops Payload from checking if an admin is logged in (which crashes public views)
+      overrideAccess: true, 
+      // SAFEGUARD: This ensures we don't accidentally leak unpublished drafts
+      draft: false,         
       ...args,
     })
   } catch (err) {
@@ -51,23 +58,48 @@ async function safeFind(collection: string, args: any) {
 /* ---------------- SCHOLAR STATS ---------------- */
 
 export async function getScholarStats() {
-  const result = await safeFind('scholars', {
-    limit: 1000,
-  })
+  const payload = await getCachedPayload()
+  if (!payload) {
+    return { total: 500, active: 42, completed: 0, successRate: 94, locations: 12 }
+  }
 
-  const docs = result?.docs || []
+  try {
+    // FIXED: Added overrideAccess: true to bypass the auth check on these counts
+    const [totalRes, activeRes, completedRes] = await Promise.all([
+      payload.count({ collection: 'scholars', overrideAccess: true }),
+      payload.count({ collection: 'scholars', overrideAccess: true, where: { status: { equals: 'active' } } }),
+      payload.count({ collection: 'scholars', overrideAccess: true, where: { status: { equals: 'completed' } } })
+    ])
 
-  const total = docs.length
-  const active = docs.filter((d: any) => d.status === 'active').length
-  const completed = docs.filter((d: any) => d.status === 'completed').length
-  const locations = new Set(docs.map((d: any) => d.location).filter(Boolean)).size
+    const total = totalRes.totalDocs
+    const active = activeRes.totalDocs
+    const completed = completedRes.totalDocs
 
-  return {
-    total: total || 500,
-    active: active || 42,
-    completed,
-    successRate: total ? Math.round((completed / total) * 100) : 94,
-    locations: locations || 12,
+    // FIXED: Added overrideAccess: true here as well
+    const locationsQuery = await payload.find({
+      collection: 'scholars',
+      limit: 1000,
+      overrideAccess: true,
+      select: { location: true } // Fetch minimal data
+    })
+    
+    // FIXED SET BUG: Ensure we are comparing IDs or strings, not object references
+    const uniqueLocations = new Set(
+      locationsQuery.docs
+        .map((d: any) => typeof d.location === 'object' ? d.location?.id : d.location)
+        .filter(Boolean)
+    ).size
+
+    return {
+      total: total || 500,
+      active: active || 42,
+      completed,
+      successRate: total ? Math.round((completed / total) * 100) : 94,
+      locations: uniqueLocations || 12,
+    }
+  } catch (error) {
+    console.error('Failed to get stats', error)
+    return { total: 500, active: 42, completed: 0, successRate: 94, locations: 12 }
   }
 }
 
@@ -75,22 +107,16 @@ export async function getScholarStats() {
 
 export async function getScholarTestimonials(limit = 5) {
   const result = await safeFind('scholars', {
-    where: {
-      isFeatured: { equals: true },
-    },
+    where: { isFeatured: { equals: true } },
     limit,
     depth: 1,
   })
 
-  const docs = result?.docs || []
+  let docs = result?.docs || []
 
   if (!docs.length) {
-    const fallback = await safeFind('scholars', {
-      limit,
-      depth: 1,
-    })
-
-    return (fallback?.docs || []).map(mapScholarToTestimonial)
+    const fallback = await safeFind('scholars', { limit, depth: 1 })
+    docs = fallback?.docs || []
   }
 
   return docs.map(mapScholarToTestimonial)
@@ -110,8 +136,8 @@ function mapScholarToTestimonial(doc: any) {
     id: String(doc.id || ''),
     name: doc.fullName || 'Scholar',
     role: programLabels[doc.program] || 'MSNC Scholar',
-    location: doc.location || null,
-    institution: doc.cohortYear || null,
+    location: typeof doc.location === 'object' ? doc.location?.name : doc.location || null,
+    institution: doc.institution || doc.cohortYear || null, 
     quote: doc.quote || 'MSNC experience was transformative.',
     image: doc.photo?.url ? { url: doc.photo.url } : null,
     imageUrl: doc.photo?.url || null,
@@ -200,7 +226,6 @@ export async function getPrograms(locale?: string) {
 
   const docs = result?.docs || []
 
-  // Filter by locale if provided
   if (locale) {
     const normalized = locale === 'fr' ? 'fr' : 'en'
     return docs.filter((d: any) => d.locale === normalized || !d.locale)
@@ -218,8 +243,8 @@ export async function getSiteSettings() {
   try {
     return await payload.findGlobal({
       slug: 'site-settings',
-      draft: false,
-      overrideAccess: true,
+      overrideAccess: true, // Restored here as well
+      draft: false, 
     })
   } catch {
     return null

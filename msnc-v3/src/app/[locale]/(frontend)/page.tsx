@@ -31,7 +31,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params
 
-  const title       = 'MSNC — Mulenge Scholars Network Canada'
+  // ✅ FIXED: Updated metadata title per request
+  const title       = 'Home | MSNC'
   const description = 'Empowering Banyamulenge youth through mentorship, academic guidance, and leadership development. Supporting scholars across Canada and East Africa.'
   const url         = 'https://mulengescholars.org'
 
@@ -101,6 +102,7 @@ export default async function HomePage({
 }: {
   params: Promise<{ locale: string }>
 }) {
+  // Await params for Next.js 15+ compatibility
   const { locale } = await params
 
   return (
@@ -113,10 +115,11 @@ export default async function HomePage({
       <GlobalImpact />
       <Features />
 
-      <TestimonialsWrapper locale={locale} />
+      {/* ✅ FIXED: Removed unused locale props from wrappers */}
+      <TestimonialsWrapper />
 
       <Suspense fallback={<div className="h-96 animate-pulse bg-paper-50" />}>
-        <AsyncUpdatesSection locale={locale} />
+        <AsyncUpdatesSection />
       </Suspense>
 
       <GetInvolved />
@@ -132,7 +135,8 @@ export default async function HomePage({
 
 // ─── Async wrappers ───────────────────────────────────────────────────────────
 
-async function AsyncUpdatesSection({ locale }: { locale: string }) {
+// ✅ FIXED: Removed unused locale prop to prevent strict ESLint build failures
+async function AsyncUpdatesSection() {
   const [events, blogs] = await Promise.all([
     getEvents({ upcoming: true, limit: 3 }).catch(() => fallbackEvents),
     getBlogs({ limit: 3 }).catch(() => fallbackBlogs),
@@ -159,11 +163,14 @@ async function StatsGridWrapper() {
   return <StatsGrid stats={statItems} />
 }
 
-async function TestimonialsWrapper({ locale }: { locale: string }) {
+// ✅ FIXED: Removed unused locale prop
+async function TestimonialsWrapper() {
   const testimonials = await getScholarTestimonials(5).catch(() => [])
+  
   if (testimonials.length === 0) {
-    // Fallback to static blogs if no scholar testimonials
+    // Fallback to static blogs if no scholar testimonials exist yet
     return <Testimonials data={fallbackBlogs.slice(0, 3) as any} />
   }
+  
   return <Testimonials data={testimonials} />
 }

@@ -2,7 +2,8 @@ import type { CollectionConfig, FieldHook } from 'payload'
 
 const formatSlug: FieldHook = ({ value, data }) => {
   if (value) return value.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
-  if (data?.title) return data.title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
+  const title = typeof data?.title === 'string' ? data.title : data?.title?.en || ''
+  if (title) return title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
   return value
 }
 
@@ -97,9 +98,31 @@ export const Events: CollectionConfig = {
               name: 'slug',
               type: 'text',
               unique: true,
-              localized: true,
-              admin: { position: 'sidebar' },
+              localized: false, // ← shared across locales for consistent URLs
+              index: true,
+              admin: {
+                position: 'sidebar',
+                description: 'Auto-generates from the English title. Only edit if you need a specific URL.',
+              },
               hooks: { beforeValidate: [formatSlug] },
+            },
+            {
+              name: 'metaTitle',
+              type: 'text',
+              localized: true,
+              admin: {
+                position: 'sidebar',
+                description: 'Override SEO title (optional).',
+              },
+            },
+            {
+              name: 'metaDescription',
+              type: 'textarea',
+              localized: true,
+              admin: {
+                position: 'sidebar',
+                description: 'Override SEO description (optional). Recommended: 150-160 characters.',
+              },
             },
           ],
         },

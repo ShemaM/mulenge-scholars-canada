@@ -230,8 +230,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => handleLocaleChange(inactiveLocale)}
-              className="hidden items-center gap-1.5 text-[11px] font-black uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-primary outline-none focus-visible:underline md:flex"
-              aria-label={`Switch to ${inactiveLocaleLabel}`}
+              className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:text-primary outline-none focus-visible:underline"aria-label={`Switch to ${inactiveLocaleLabel}`}
             >
               <Globe className="h-3.5 w-3.5" aria-hidden="true" />
               {inactiveLocaleLabel}
